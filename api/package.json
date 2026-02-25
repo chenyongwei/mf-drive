@@ -6,12 +6,15 @@
   "scripts": {
     "dev:mock": "cross-env MODE=mock MOCK_PROFILE=${MOCK_PROFILE:-base} tsx src/index.ts",
     "dev:live": "cross-env MODE=live tsx src/index.ts",
+    "dev:live:watch": "cross-env MODE=live tsx watch src/index.ts",
     "dev:mock:watch": "cross-env MODE=mock MOCK_PROFILE=${MOCK_PROFILE:-base} tsx watch src/index.ts",
     "test:mock": "tsx src/mock/self-test.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "minio": "^8.0.6",
+    "mysql2": "^3.15.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
