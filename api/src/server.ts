@@ -1,10 +1,21 @@
 import cors from 'cors';
 import express, { type Express, type Request, type Response } from 'express';
+import { createPool, type Pool, type RowDataPacket } from 'mysql2/promise';
+import { Client as MinioClient } from 'minio';
 
 type RuntimeMode = 'mock' | 'live';
 type MockScenario = 'base' | 'demo' | 'edge' | 'failure';
 type FailureKind = '401' | '403' | '409' | '500' | 'timeout';
 type ApplyFailure = (req: Request, res: Response, defaultFailure: FailureKind | null) => Promise<boolean>;
+type StateStore = {
+  ready: Promise<void>;
+  state: DriveState;
+  save: () => Promise<void>;
+};
+
+type JsonPayloadRow = RowDataPacket & {
+  payload: string;
+};
 
 type ContainerMode = 'APP_DATA' | 'MY_DRIVE';
 type ArtifactType = 'DRAWING' | 'PARTS' | 'LAYOUT';
@@ -97,6 +108,11 @@ type IntrospectResponse = {
   client_id?: string;
   scope?: string;
   exp?: number;
+};
+
+type ObjectStoreBridge = {
+  ready: Promise<void>;
+  putVersionObject: (artifactId: string, versionId: string, payload: Buffer, mimeType: string) => Promise<void>;
 };
 
 type PdpDecisionResponse = {
@@ -451,11 +467,157 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
 }
 
 function ensureMockMode(mode: RuntimeMode, res: Response): boolean {
-  if (mode === 'mock') {
-    return true;
+  void mode;
+  void res;
+  return true;
+}
+
+function replaceState(target: DriveState, next: DriveState): void {
+  target.sequences = next.sequences;
+  target.containers = next.containers;
+  target.artifacts = next.artifacts;
+  target.aclByArtifact = next.aclByArtifact;
+  target.grants = next.grants;
+  target.auditLogs = next.auditLogs;
+}
+
+function createLivePool(env: NodeJS.ProcessEnv): Pool {
+  return createPool({
+    host: normalizeString(env.DRIVE_DB_HOST, '127.0.0.1'),
+    port: Math.max(1, Math.floor(normalizeNumber(env.DRIVE_DB_PORT, 3306))),
+    database: normalizeString(env.DRIVE_DB_NAME, 'drive_db'),
+    user: normalizeString(env.DRIVE_DB_USER, 'drive_user'),
+    password: normalizeString(env.DRIVE_DB_PASSWORD, 'drive_password'),
+    connectionLimit: 8,
+    namedPlaceholders: false,
+  });
+}
+
+function createEmptyState(): DriveState {
+  return {
+    sequences: {
+      container: 0,
+      artifact: 0,
+      version: 0,
+      grant: 0,
+      audit: 0,
+    },
+    containers: [],
+    artifacts: [],
+    aclByArtifact: {},
+    grants: [],
+    auditLogs: [],
+  };
+}
+
+function createStateStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, scenario: MockScenario): StateStore {
+  const state = createInitialState(nowIso, scenario);
+
+  if (mode !== 'live') {
+    return {
+      ready: Promise.resolve(),
+      state,
+      save: async () => undefined,
+    };
   }
-  res.status(501).json({ error: 'live mode not implemented yet' });
-  return false;
+
+  const pool = createLivePool(env);
+  const seedEnabled = normalizeString(env.DRIVE_LIVE_SEED, 'true').toLowerCase() !== 'false';
+  let saveQueue: Promise<void> = Promise.resolve();
+
+  const persist = async () => {
+    await pool.query(
+      'INSERT INTO drive_state (state_key, payload) VALUES (?, CAST(? AS JSON)) ON DUPLICATE KEY UPDATE payload = VALUES(payload)',
+      ['main', JSON.stringify(state)],
+    );
+  };
+
+  const ready = (async () => {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS drive_state (
+        state_key VARCHAR(64) PRIMARY KEY,
+        payload JSON NOT NULL,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    `);
+
+    const [rows] = await pool.query<JsonPayloadRow[]>(
+      'SELECT CAST(payload AS CHAR) AS payload FROM drive_state WHERE state_key = ? LIMIT 1',
+      ['main'],
+    );
+
+    if (rows.length > 0 && rows[0]?.payload) {
+      replaceState(state, JSON.parse(rows[0].payload) as DriveState);
+      return;
+    }
+
+    if (!seedEnabled) {
+      replaceState(state, createEmptyState());
+    }
+
+    await persist();
+  })();
+
+  const save = async () => {
+    saveQueue = saveQueue
+      .then(async () => {
+        await persist();
+      })
+      .catch((error) => {
+        console.error('[drive-api] state persistence failed', error);
+      });
+    await saveQueue;
+  };
+
+  return {
+    ready,
+    state,
+    save,
+  };
+}
+
+function createObjectStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, endpoint: string, bucket: string): ObjectStoreBridge {
+  if (mode !== 'live') {
+    return {
+      ready: Promise.resolve(),
+      putVersionObject: async () => undefined,
+    };
+  }
+
+  const parsed = new URL(endpoint);
+  const accessKey = normalizeString(env.DRIVE_MINIO_ACCESS_KEY, 'minioadmin');
+  const secretKey = normalizeString(env.DRIVE_MINIO_SECRET_KEY, 'minioadmin');
+  const client = new MinioClient({
+    endPoint: parsed.hostname,
+    port: Number(parsed.port || (parsed.protocol === 'https:' ? 443 : 80)),
+    useSSL: parsed.protocol === 'https:',
+    accessKey,
+    secretKey,
+  });
+
+  const ready = (async () => {
+    const exists = await client.bucketExists(bucket).catch(() => false);
+    if (!exists) {
+      await client.makeBucket(bucket, 'us-east-1').catch((error: unknown) => {
+        const code = String((error as { code?: string })?.code ?? '');
+        if (code === 'BucketAlreadyOwnedByYou' || code === 'BucketAlreadyExists') {
+          return;
+        }
+        throw error;
+      });
+    }
+  })();
+
+  return {
+    ready,
+    putVersionObject: async (artifactId: string, versionId: string, payload: Buffer, mimeType: string) => {
+      await ready;
+      const objectKey = `${artifactId}/${versionId}`;
+      await client.putObject(bucket, objectKey, payload, payload.length, {
+        'Content-Type': mimeType || 'application/octet-stream',
+      });
+    },
+  };
 }
 
 function appendAudit(state: DriveState, payload: Omit<DriveAuditLog, 'auditId' | 'createdAt'>): void {
@@ -470,14 +632,61 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
   const app = express();
   const mode: RuntimeMode = env.MODE === 'live' ? 'live' : 'mock';
   const scenario = resolveScenario(env);
-  const state = createInitialState(nowIso, scenario);
-  const applyFailure: ApplyFailure = (req, res, defaultFailure) => maybeApplyFailure(req, res, scenario, defaultFailure);
+  const minioEndpoint = normalizeString(env.DRIVE_MINIO_ENDPOINT, 'http://127.0.0.1:9000').replace(/\/$/, '');
+  const minioBucket = normalizeString(env.DRIVE_MINIO_BUCKET, 'drive-live');
+  const store = createStateStore(mode, env, scenario);
+  const objectStore = createObjectStore(mode, env, minioEndpoint, minioBucket);
+  const state = store.state;
+  const buildObjectUrl = (kind: 'upload' | 'download', artifactId: string, versionId: string): string => {
+    if (mode !== 'live') {
+      return `https://minio.local/mock-${kind}/${artifactId}/${versionId}`;
+    }
+    return `${minioEndpoint}/${minioBucket}/${artifactId}/${versionId}`;
+  };
+  const applyFailure: ApplyFailure = (req, res, defaultFailure) => {
+    if (mode === 'live') {
+      return Promise.resolve(false);
+    }
+    return maybeApplyFailure(req, res, scenario, defaultFailure);
+  };
 
   app.use(cors());
   app.use(express.json({ limit: '2mb' }));
+  app.use(async (_req, _res, next) => {
+    await store.ready;
+    await objectStore.ready;
+    next();
+  });
+  app.use((req, res, next) => {
+    if (mode !== 'live') {
+      next();
+      return;
+    }
+    res.on('finish', () => {
+      if (req.method === 'GET' || req.method === 'HEAD') {
+        return;
+      }
+      if (res.statusCode >= 500) {
+        return;
+      }
+      void store.save();
+    });
+    next();
+  });
 
   app.get('/health', (_req, res) => {
     res.json({ ok: true, service: 'drive-api', mode, scenario, at: nowIso() });
+  });
+
+  app.all('/api/drive/mock/*', (_req, res) => {
+    if (mode !== 'live') {
+      res.status(404).json({ error: 'NOT_FOUND' });
+      return;
+    }
+    res.status(410).json({
+      error: 'MOCK_ENDPOINT_DISABLED_IN_LIVE',
+      message: 'mock endpoints are disabled in live mode',
+    });
   });
 
   app.use('/api/drive', createAuthMiddleware(env, mode));
@@ -584,7 +793,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     res.json({
       artifactId,
       versionId,
-      uploadUrl: `https://minio.local/mock-upload/${artifactId}/${versionId}`,
+      uploadUrl: buildObjectUrl('upload', artifactId, versionId),
       expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
     });
   });
@@ -613,10 +822,32 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
       artifact.versions.push(version);
     }
 
-    version.sizeBytes = Math.max(0, normalizeNumber(req.body?.sizeBytes, version.sizeBytes));
+    const contentBase64 = normalizeString(req.body?.contentBase64);
+    const fallbackPayload = Buffer.from(
+      JSON.stringify({
+        artifactId,
+        versionId,
+        completedAt: nowIso(),
+      }),
+      'utf-8',
+    );
+    const objectPayload = contentBase64 ? Buffer.from(contentBase64, 'base64') : fallbackPayload;
+
+    version.sizeBytes = Math.max(0, normalizeNumber(req.body?.sizeBytes, version.sizeBytes || objectPayload.length));
     version.etag = normalizeString(req.body?.etag, version.etag);
     const sha256 = normalizeString(req.body?.sha256);
     version.sha256 = sha256 || version.sha256;
+
+    try {
+      await objectStore.putVersionObject(artifactId, versionId, objectPayload, artifact.mimeType);
+    } catch (error) {
+      console.error('[drive-api] failed to persist object payload', error);
+      res.status(502).json({
+        error: 'OBJECT_STORE_WRITE_FAILED',
+        message: 'failed to write object payload into minio',
+      });
+      return;
+    }
 
     artifact.currentVersionId = version.versionId;
     artifact.updatedAt = nowIso();
@@ -724,7 +955,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     res.json({
       artifactId,
       versionId,
-      downloadUrl: `https://minio.local/mock-download/${artifactId}/${versionId}`,
+      downloadUrl: buildObjectUrl('download', artifactId, versionId),
       expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
     });
   });
