@@ -18,6 +18,10 @@ vi.mock('@platform/ui-shared/mf-shell', () => ({
   ),
 }));
 
+vi.mock('@platform/ui-shared/appearance-controls', () => ({
+  AppAppearanceControls: () => <div data-testid="mock-appearance-controls" />,
+}));
+
 vi.mock('../auth/useDriveSession', () => ({
   useDriveSession: vi.fn(),
 }));
