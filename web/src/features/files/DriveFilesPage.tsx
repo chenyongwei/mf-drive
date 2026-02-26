@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MfAppShell } from '@platform/ui-shared/mf-shell';
 import { MfButton, MfPageShell, MfSectionCard, MfStatusBanner } from '@platform/ui-shared/components';
+import { AppAppearanceControls } from '@platform/ui-shared/appearance-controls';
 import { RequestError, isRequestError, toUserFacingOAuthError } from '../auth/oauth';
 import { useDriveSession } from '../auth/useDriveSession';
 import {
@@ -533,6 +534,7 @@ export function DriveFilesPage() {
         </MfSectionCard>
         </main>
       </MfPageShell>
+      <AppAppearanceControls appId="drive" />
     </MfAppShell>
   );
 }
