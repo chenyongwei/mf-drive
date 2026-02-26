@@ -12,8 +12,8 @@ import {
   queryDriveArtifacts,
 } from './api';
 
-vi.mock('@platform/ui-shared/mf-dock', () => ({
-  MfAppsDock: () => <div data-testid="mock-dock" />,
+vi.mock('@platform/ui-shared/appearance-controls', () => ({
+  AppHeaderAppearanceControls: () => <div data-testid="mock-appearance-controls" />,
 }));
 
 vi.mock('../auth/useDriveSession', () => ({
@@ -73,6 +73,16 @@ describe('DriveFilesPage', () => {
 
   afterEach(() => {
     cleanup();
+  });
+
+  it('hides authorize entry when session is ready', async () => {
+    render(<DriveFilesPage />);
+
+    await waitFor(() => {
+      expect(listDriveContainers).toHaveBeenCalled();
+    });
+
+    expect(screen.queryByTestId('oauth-authorize')).not.toBeInTheDocument();
   });
 
   it('creates container and refreshes data', async () => {
