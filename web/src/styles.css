@@ -1,15 +1,15 @@
 :root {
-  --drive-bg-top: #f2f6ff;
-  --drive-bg-bottom: #f8f7f2;
-  --drive-ink: #13263a;
-  --drive-ink-soft: #486078;
-  --drive-panel: #ffffffde;
-  --drive-panel-border: #d4deea;
-  --drive-accent: #146c84;
-  --drive-accent-strong: #0f5467;
-  --drive-danger: #b02a37;
-  --drive-success: #0f766e;
-  --drive-shadow: 0 20px 50px -30px rgba(10, 30, 60, 0.5);
+  --drive-bg-top: var(--mf-color-bg);
+  --drive-bg-bottom: var(--mf-color-bg-soft);
+  --drive-ink: var(--mf-color-text);
+  --drive-ink-soft: var(--mf-color-text-muted);
+  --drive-panel: color-mix(in srgb, var(--mf-color-surface), transparent 10%);
+  --drive-panel-border: var(--mf-color-border);
+  --drive-accent: var(--mf-color-primary);
+  --drive-accent-strong: var(--mf-color-primary-strong);
+  --drive-danger: var(--mf-color-danger);
+  --drive-success: var(--mf-color-success);
+  --drive-shadow: var(--mf-shadow-md);
 }
 
 * {
@@ -18,7 +18,7 @@
 
 body {
   margin: 0;
-  font-family: 'Avenir Next', 'Noto Sans SC', 'Segoe UI', sans-serif;
+  font-family: var(--mf-font-sans);
   color: var(--drive-ink);
   background: linear-gradient(180deg, var(--drive-bg-top) 0%, var(--drive-bg-bottom) 100%);
 }

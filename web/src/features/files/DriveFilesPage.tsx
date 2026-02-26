@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MfAppsDock } from '@platform/ui-shared/mf-dock';
+import { MfButton, MfPageShell, MfSectionCard, MfStatusBanner } from '@platform/ui-shared/components';
 import { RequestError, isRequestError, toUserFacingOAuthError } from '../auth/oauth';
 import { useDriveSession } from '../auth/useDriveSession';
 import {
@@ -283,43 +284,42 @@ export function DriveFilesPage() {
   }
 
   return (
-    <div className="drive-page-shell">
-      <div className="drive-background-glow" />
-      <header className="drive-header">
-        <div>
-          <p className="drive-kicker">Drive Cloud</p>
-          <h1>图纸云存储</h1>
-          <p className="drive-subtitle">容器化管理图纸、零件与排版文件，并通过 OAuth 会话安全访问。</p>
-        </div>
+    <MfPageShell
+      className="drive-page-shell"
+      title="图纸云存储"
+      subtitle="容器化管理图纸、零件与排版文件，并通过 OAuth 会话安全访问。"
+      actions={(
         <div className="drive-header-actions">
-          <button
+          <MfButton
             type="button"
-            className="button-secondary"
+            tone="secondary"
             onClick={() => void session.authorize()}
             disabled={session.status === 'authorizing'}
             data-testid="oauth-authorize"
           >
             {session.status === 'authorizing' ? '授权中...' : '执行 OAuth 授权'}
-          </button>
-          <button
+          </MfButton>
+          <MfButton
             type="button"
-            className="button-secondary"
+            tone="secondary"
             onClick={() => void refreshAll()}
             disabled={loading || session.status === 'authorizing'}
             data-testid="drive-refresh-all"
           >
             {loading ? '刷新中...' : '刷新数据'}
-          </button>
-          <button
+          </MfButton>
+          <MfButton
             type="button"
-            className="button-secondary"
+            tone="secondary"
             onClick={session.clearToken}
             data-testid="drive-clear-token"
           >
             清除 Token
-          </button>
+          </MfButton>
         </div>
-      </header>
+      )}
+    >
+      <div className="drive-background-glow" />
 
       <section className="drive-status-grid">
         <article className="drive-status-card">
@@ -343,12 +343,12 @@ export function DriveFilesPage() {
         </div>
       </section>
 
-      {session.error ? <div className="drive-banner drive-banner-error">{session.error}</div> : null}
-      {error ? <div className="drive-banner drive-banner-error">{error}</div> : null}
-      {status ? <div className="drive-banner drive-banner-status">{status}</div> : null}
+      {session.error ? <MfStatusBanner tone="danger" className="drive-banner drive-banner-error">{session.error}</MfStatusBanner> : null}
+      {error ? <MfStatusBanner tone="danger" className="drive-banner drive-banner-error">{error}</MfStatusBanner> : null}
+      {status ? <MfStatusBanner tone="success" className="drive-banner drive-banner-status">{status}</MfStatusBanner> : null}
 
       <main className="drive-layout">
-        <section className="drive-panel">
+        <MfSectionCard className="drive-panel">
           <header className="drive-panel-header">
             <h3>容器</h3>
             <span>{containers.length} 个</span>
@@ -394,18 +394,19 @@ export function DriveFilesPage() {
                 <option key={mode} value={mode}>{mode}</option>
               ))}
             </select>
-            <button
+            <MfButton
               type="button"
+              tone="secondary"
               onClick={() => void handleCreateContainer()}
               disabled={!ready || busy === 'creating-container'}
               data-testid="container-create-submit"
             >
               {busy === 'creating-container' ? '创建中...' : '创建容器'}
-            </button>
+            </MfButton>
           </div>
-        </section>
+        </MfSectionCard>
 
-        <section className="drive-panel">
+        <MfSectionCard className="drive-panel">
           <header className="drive-panel-header">
             <h3>文件检索</h3>
             <span>{artifacts.length} 条</span>
@@ -428,14 +429,15 @@ export function DriveFilesPage() {
                 <option key={type} value={type}>{type}</option>
               ))}
             </select>
-            <button
+            <MfButton
               type="button"
+              tone="secondary"
               onClick={() => void handleSearch()}
               disabled={!ready || loading}
               data-testid="artifact-search-submit"
             >
               检索
-            </button>
+            </MfButton>
           </div>
 
           <div className="drive-table-wrap">
@@ -474,9 +476,9 @@ export function DriveFilesPage() {
               </tbody>
             </table>
           </div>
-        </section>
+        </MfSectionCard>
 
-        <section className="drive-panel">
+        <MfSectionCard className="drive-panel">
           <header className="drive-panel-header">
             <h3>上传与下载</h3>
           </header>
@@ -504,14 +506,15 @@ export function DriveFilesPage() {
               placeholder="可选 projectId"
               data-testid="upload-project-id"
             />
-            <button
+            <MfButton
               type="button"
+              tone="secondary"
               onClick={() => void handleUpload()}
               disabled={!ready || busy === 'uploading-artifact'}
               data-testid="upload-submit"
             >
               {busy === 'uploading-artifact' ? '上传处理中...' : '执行上传闭环'}
-            </button>
+            </MfButton>
           </div>
 
           <div className="drive-form-block">
@@ -520,19 +523,20 @@ export function DriveFilesPage() {
               当前文件：{selectedArtifact ? selectedArtifact.displayName : '--'}
             </p>
             <p className="drive-detail-line">版本：{selectedArtifact?.currentVersionId ?? '--'}</p>
-            <button
+            <MfButton
               type="button"
+              tone="secondary"
               onClick={() => void handleDownload()}
               disabled={!ready || !selectedArtifact || busy === 'downloading-artifact'}
               data-testid="artifact-download-submit"
             >
               {busy === 'downloading-artifact' ? '生成中...' : '获取下载链接'}
-            </button>
+            </MfButton>
           </div>
-        </section>
+        </MfSectionCard>
       </main>
 
       <MfAppsDock currentAppId="drive" />
-    </div>
+    </MfPageShell>
   );
 }
