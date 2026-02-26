@@ -405,7 +405,7 @@ export function DriveFilesPage() {
               {busy === 'creating-container' ? '创建中...' : '创建容器'}
             </button>
           </div>
-        </section>
+        </MfSectionCard>
 
         <section className="drive-panel">
           <header className="drive-panel-header">
@@ -531,7 +531,7 @@ export function DriveFilesPage() {
               {busy === 'downloading-artifact' ? '生成中...' : '获取下载链接'}
             </button>
           </div>
-        </MfSectionCard>
+        </section>
         </main>
       </MfPageShell>
       <AppAppearanceControls appId="drive" />
