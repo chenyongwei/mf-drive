@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { MfAppsDock } from '@platform/ui-shared/mf-dock';
+import { AppAppearanceControls } from '@platform/ui-shared/appearance-controls';
 import { RequestError, isRequestError, toUserFacingOAuthError } from '../auth/oauth';
 import { useDriveSession } from '../auth/useDriveSession';
 import {
@@ -292,15 +292,17 @@ export function DriveFilesPage() {
           <p className="drive-subtitle">容器化管理图纸、零件与排版文件，并通过 OAuth 会话安全访问。</p>
         </div>
         <div className="drive-header-actions">
-          <button
-            type="button"
-            className="button-secondary"
-            onClick={() => void session.authorize()}
-            disabled={session.status === 'authorizing'}
-            data-testid="oauth-authorize"
-          >
-            {session.status === 'authorizing' ? '授权中...' : '执行 OAuth 授权'}
-          </button>
+          {!ready ? (
+            <button
+              type="button"
+              className="button-secondary"
+              onClick={() => void session.authorize()}
+              disabled={session.status === 'authorizing'}
+              data-testid="oauth-authorize"
+            >
+              {session.status === 'authorizing' ? '授权中...' : '执行 OAuth 授权'}
+            </button>
+          ) : null}
           <button
             type="button"
             className="button-secondary"
@@ -532,7 +534,7 @@ export function DriveFilesPage() {
         </section>
       </main>
 
-      <MfAppsDock currentAppId="drive" />
+      <AppAppearanceControls appId="drive" />
     </div>
   );
 }
