@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { MfAppsDock } from '@platform/ui-shared/mf-dock';
+import { MfAppShell } from '@platform/ui-shared/mf-shell';
+import { MfButton, MfPageShell, MfSectionCard, MfStatusBanner } from '@platform/ui-shared/components';
 import { RequestError, isRequestError, toUserFacingOAuthError } from '../auth/oauth';
 import { useDriveSession } from '../auth/useDriveSession';
 import {
@@ -283,43 +284,43 @@ export function DriveFilesPage() {
   }
 
   return (
-    <div className="drive-page-shell">
-      <div className="drive-background-glow" />
-      <header className="drive-header">
-        <div>
-          <p className="drive-kicker">Drive Cloud</p>
-          <h1>图纸云存储</h1>
-          <p className="drive-subtitle">容器化管理图纸、零件与排版文件，并通过 OAuth 会话安全访问。</p>
-        </div>
-        <div className="drive-header-actions">
-          <button
-            type="button"
-            className="button-secondary"
-            onClick={() => void session.authorize()}
-            disabled={session.status === 'authorizing'}
-            data-testid="oauth-authorize"
-          >
-            {session.status === 'authorizing' ? '授权中...' : '执行 OAuth 授权'}
-          </button>
-          <button
-            type="button"
-            className="button-secondary"
-            onClick={() => void refreshAll()}
-            disabled={loading || session.status === 'authorizing'}
-            data-testid="drive-refresh-all"
-          >
-            {loading ? '刷新中...' : '刷新数据'}
-          </button>
-          <button
-            type="button"
-            className="button-secondary"
-            onClick={session.clearToken}
-            data-testid="drive-clear-token"
-          >
-            清除 Token
-          </button>
-        </div>
-      </header>
+    <MfAppShell currentAppId="drive">
+      <MfPageShell
+        className="drive-page-shell"
+        title="图纸云存储"
+        subtitle="容器化管理图纸、零件与排版文件，并通过 OAuth 会话安全访问。"
+        actions={(
+          <div className="drive-header-actions">
+            <MfButton
+              type="button"
+              tone="secondary"
+              onClick={() => void session.authorize()}
+              disabled={session.status === 'authorizing'}
+              data-testid="oauth-authorize"
+            >
+              {session.status === 'authorizing' ? '授权中...' : '执行 OAuth 授权'}
+            </MfButton>
+            <MfButton
+              type="button"
+              tone="secondary"
+              onClick={() => void refreshAll()}
+              disabled={loading || session.status === 'authorizing'}
+              data-testid="drive-refresh-all"
+            >
+              {loading ? '刷新中...' : '刷新数据'}
+            </MfButton>
+            <MfButton
+              type="button"
+              tone="secondary"
+              onClick={session.clearToken}
+              data-testid="drive-clear-token"
+            >
+              清除 Token
+            </MfButton>
+          </div>
+        )}
+      >
+        <div className="drive-background-glow" />
 
       <section className="drive-status-grid">
         <article className="drive-status-card">
@@ -347,8 +348,8 @@ export function DriveFilesPage() {
       {error ? <div className="drive-banner drive-banner-error">{error}</div> : null}
       {status ? <div className="drive-banner drive-banner-status">{status}</div> : null}
 
-      <main className="drive-layout">
-        <section className="drive-panel">
+        <main className="drive-layout">
+        <MfSectionCard className="drive-panel">
           <header className="drive-panel-header">
             <h3>容器</h3>
             <span>{containers.length} 个</span>
@@ -529,10 +530,9 @@ export function DriveFilesPage() {
               {busy === 'downloading-artifact' ? '生成中...' : '获取下载链接'}
             </button>
           </div>
-        </section>
-      </main>
-
-      <MfAppsDock currentAppId="drive" />
-    </div>
+        </MfSectionCard>
+        </main>
+      </MfPageShell>
+    </MfAppShell>
   );
 }

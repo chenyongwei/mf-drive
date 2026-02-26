@@ -12,8 +12,10 @@ import {
   queryDriveArtifacts,
 } from './api';
 
-vi.mock('@platform/ui-shared/mf-dock', () => ({
-  MfAppsDock: () => <div data-testid="mock-dock" />,
+vi.mock('@platform/ui-shared/mf-shell', () => ({
+  MfAppShell: ({ children }: { children: unknown }) => (
+    <div data-testid="mock-app-shell">{children as any}</div>
+  ),
 }));
 
 vi.mock('../auth/useDriveSession', () => ({
