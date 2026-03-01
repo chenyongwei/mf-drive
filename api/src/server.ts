@@ -174,6 +174,48 @@ function allocateId(state: DriveState, sequenceKey: string, prefix: string): str
   return `${prefix}-${next}`;
 }
 
+function buildDefaultOrderingContainers(now: () => string, tenantId: string): DriveContainer[] {
+  return [
+    {
+      containerId: 'ctr-ordering-appdata',
+      tenantId,
+      ownerAppId: 'ordering',
+      mode: 'APP_DATA',
+      name: 'Ordering Internal Drawings',
+      quotaBytes: 50 * 1024 * 1024 * 1024,
+      usedBytes: 8 * 1024 * 1024 * 1024,
+      createdAt: now(),
+    },
+    {
+      containerId: 'ctr-ordering-my-drive',
+      tenantId,
+      ownerAppId: 'ordering',
+      mode: 'MY_DRIVE',
+      name: 'Ordering My Drive',
+      quotaBytes: 50 * 1024 * 1024 * 1024,
+      usedBytes: 0,
+      createdAt: now(),
+    },
+  ];
+}
+
+function ensureDefaultContainers(state: DriveState, now: () => string): boolean {
+  const existingIds = new Set(state.containers.map((item) => item.containerId));
+  const fallbackTenantId = normalizeString(state.containers[0]?.tenantId, 'tenant-001');
+  let changed = false;
+
+  for (const container of buildDefaultOrderingContainers(now, fallbackTenantId)) {
+    if (existingIds.has(container.containerId)) {
+      continue;
+    }
+    state.containers.push(container);
+    existingIds.add(container.containerId);
+    changed = true;
+  }
+
+  return changed;
+}
+
 function resolveScenario(env: NodeJS.ProcessEnv): MockScenario {
   const raw = normalizeString(env.MOCK_PROFILE, 'base').toLowerCase();
   if (raw === 'base' || raw === 'demo' || raw === 'edge' || raw === 'failure') {
@@ -233,16 +275,12 @@ function parseBearerToken(req: Request): string | null {
 
 function createInitialState(now: () => string, scenario: MockScenario): DriveState {
   const edgeMode = scenario === 'edge';
-  const baseContainer: DriveContainer = {
-    containerId: 'ctr-ordering-appdata',
-    tenantId: edgeMode ? 'tenant-edge' : 'tenant-001',
-    ownerAppId: 'ordering',
-    mode: 'APP_DATA',
-    name: edgeMode ? 'Edge Empty Container' : 'Ordering Internal Drawings',
-    quotaBytes: 50 * 1024 * 1024 * 1024,
-    usedBytes: edgeMode ? 0 : 8 * 1024 * 1024 * 1024,
-    createdAt: now(),
-  };
+  const tenantId = edgeMode ? 'tenant-edge' : 'tenant-001';
+  const [baseContainer, myDriveContainer] = buildDefaultOrderingContainers(now, tenantId);
+  if (edgeMode) {
+    baseContainer.name = 'Edge Empty Container';
+    baseContainer.usedBytes = 0;
+  }
 
   const baseArtifact: DriveArtifact = {
     artifactId: 'art-ordering-001',
@@ -275,7 +313,7 @@ function createInitialState(now: () => string, scenario: MockScenario): DriveSta
       grant: 1,
       audit: 1,
     },
-    containers: [baseContainer],
+    containers: [baseContainer, myDriveContainer],
     artifacts: edgeMode ? [] : [baseArtifact],
     aclByArtifact: {
       [baseArtifact.artifactId]: [
@@ -294,6 +332,7 @@ function createInitialState(now: () => string, scenario: MockScenario): DriveSta
 function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
   const skipAuth = normalizeString(env.DRIVE_SKIP_AUTH, 'false').toLowerCase() === 'true'
     || (mode === 'mock' && normalizeString(env.DRIVE_SKIP_AUTH_IN_MOCK, 'false').toLowerCase() === 'true');
+  const enforceContainerPdp = normalizeString(env.DRIVE_ENFORCE_CONTAINER_PDP, 'false').toLowerCase() === 'true';
   const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31301').replace(/\/$/, '');
   const cache = new Map<string, TokenCacheRecord>();
 
@@ -301,6 +340,14 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
     const path = String(req.originalUrl ?? req.path).split('?')[0];
     if (!path.startsWith('/api/drive/')) {
       return null;
+    }
+
+    if (path === '/api/drive/artifacts/query') {
+      return [
+        'drive.appdata.read',
+        'drive.drive.read',
+        'drive.delegated.read',
+      ];
     }
 
     if (path.includes('/acl') || path.includes('/grants')) {
@@ -322,12 +369,44 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
     return ['drive.appdata.write', 'drive.drive.write', 'drive.drive.share'];
   }
 
+  function isFoundationInternalAllowed(path: string, method: string): boolean {
+    if (method !== 'POST' && !(method === 'GET' && path === '/api/drive/containers')) {
+      return false;
+    }
+    if (path === '/api/drive/artifacts/init-upload') {
+      return true;
+    }
+    if (/^\/api\/drive\/artifacts\/[^/]+\/complete-upload$/.test(path)) {
+      return true;
+    }
+    if (path === '/api/drive/artifacts/query') {
+      return true;
+    }
+    if (path === '/api/drive/containers' && method === 'GET') {
+      return true;
+    }
+    return false;
+  }
+
+  function isFoundationOnlyPath(path: string): boolean {
+    if (path === '/api/drive/artifacts/init-upload') {
+      return true;
+    }
+    if (/^\/api\/drive\/artifacts\/[^/]+\/complete-upload$/.test(path)) {
+      return true;
+    }
+    return false;
+  }
+
   function resolvePdpContext(req: Request): {
     consumerAppId: 'drive';
     dataDomain: 'FILE';
     purpose: 'FILE_ARCHIVAL';
     action: 'read';
   } | null {
+    if (!enforceContainerPdp) {
+      return null;
+    }
     const path = String(req.originalUrl ?? req.path).split('?')[0];
     if (path === '/api/drive/containers' && req.method === 'GET') {
       return {
@@ -398,6 +477,29 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
   return async (req: Request, res: Response, next: () => void) => {
     if (skipAuth || req.method === 'OPTIONS') {
       next();
+      return;
+    }
+
+    const path = String(req.originalUrl ?? req.path).split('?')[0];
+    const sourceApp = normalizeString(req.header('x-source-app')).toLowerCase();
+    if (isFoundationOnlyPath(path) && sourceApp !== 'foundation') {
+      res.status(403).json({
+        error: 'DRIVE_SOURCE_APP_REQUIRED',
+        message: 'x-source-app=foundation is required for this path',
+        path,
+      });
+      return;
+    }
+    if (sourceApp === 'foundation') {
+      if (isFoundationInternalAllowed(path, req.method)) {
+        next();
+        return;
+      }
+      res.status(403).json({
+        error: 'DRIVE_SOURCE_APP_DENY',
+        message: 'foundation sourceApp is not allowed for this path',
+        path,
+      });
       return;
     }
 
@@ -546,16 +648,20 @@ function createStateStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, scenario: M
       ['main'],
     );
 
+    let loadedFromStore = false;
     if (rows.length > 0 && rows[0]?.payload) {
       replaceState(state, JSON.parse(rows[0].payload) as DriveState);
-      return;
+      loadedFromStore = true;
+    } else {
+      if (!seedEnabled) {
+        replaceState(state, createEmptyState());
+      }
     }
 
-    if (!seedEnabled) {
-      replaceState(state, createEmptyState());
+    const normalized = ensureDefaultContainers(state, nowIso);
+    if (normalized || !loadedFromStore) {
+      await persist();
     }
-
-    await persist();
   })();
 
   const save = async () => {
@@ -631,6 +737,7 @@ function appendAudit(state: DriveState, payload: Omit<DriveAuditLog, 'auditId' |
 export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
   const app = express();
   const mode: RuntimeMode = env.MODE === 'live' ? 'live' : 'mock';
+  const bodyLimit = normalizeString(env.DRIVE_BODY_LIMIT, '64mb');
   const scenario = resolveScenario(env);
   const minioEndpoint = normalizeString(env.DRIVE_MINIO_ENDPOINT, 'http://127.0.0.1:9000').replace(/\/$/, '');
   const minioBucket = normalizeString(env.DRIVE_MINIO_BUCKET, 'drive-live');
@@ -651,7 +758,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
   };
 
   app.use(cors());
-  app.use(express.json({ limit: '2mb' }));
+  app.use(express.json({ limit: bodyLimit }));
   app.use(async (_req, _res, next) => {
     await store.ready;
     await objectStore.ready;

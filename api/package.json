@@ -6,8 +6,8 @@
   "scripts": {
     "dev:mock": "cross-env MODE=mock MOCK_PROFILE=${MOCK_PROFILE:-base} tsx src/index.ts",
     "dev:live": "cross-env MODE=live tsx src/index.ts",
-    "dev:live:watch": "cross-env MODE=live tsx watch src/index.ts",
-    "dev:mock:watch": "cross-env MODE=mock MOCK_PROFILE=${MOCK_PROFILE:-base} tsx watch src/index.ts",
+    "dev:watch:live": "cross-env MODE=live tsx watch src/index.ts",
+    "dev:watch:mock": "cross-env MODE=mock MOCK_PROFILE=${MOCK_PROFILE:-base} tsx watch src/index.ts",
     "test:mock": "tsx src/mock/self-test.ts"
   },
   "dependencies": {
