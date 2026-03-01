@@ -99,6 +99,7 @@ type DriveState = {
 type TokenCacheRecord = {
   active: boolean;
   scopes: Set<string>;
+  clientId?: string;
   expiresAtEpoch?: number;
   cachedAtMs: number;
 };
@@ -113,6 +114,7 @@ type IntrospectResponse = {
 type ObjectStoreBridge = {
   ready: Promise<void>;
   putVersionObject: (artifactId: string, versionId: string, payload: Buffer, mimeType: string) => Promise<void>;
+  getVersionDownloadUrl: (artifactId: string, versionId: string, expiresSeconds: number) => Promise<string>;
 };
 
 type PdpDecisionResponse = {
@@ -229,6 +231,11 @@ function parseBearerToken(req: Request): string | null {
   }
   const token = match[1].trim();
   return token.length > 0 ? token : null;
+}
+
+function isDriveSelfClient(clientId: string | undefined): boolean {
+  const normalized = String(clientId ?? '').trim().toLowerCase();
+  return normalized === 'drive-web' || normalized === 'drive-api' || normalized === 'drive';
 }
 
 function createInitialState(now: () => string, scenario: MockScenario): DriveState {
@@ -360,6 +367,7 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
     const nextRecord: TokenCacheRecord = {
       active: Boolean(payload.active),
       scopes,
+      clientId: normalizeString(payload.client_id) || undefined,
       expiresAtEpoch: typeof payload.exp === 'number' ? payload.exp : undefined,
       cachedAtMs: Date.now(),
     };
@@ -436,16 +444,19 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
 
       const pdpContext = resolvePdpContext(req);
       if (pdpContext) {
-        const decision = await evaluatePdp(token, pdpContext);
-        const allowed = decision.allow === true || decision.decision === 'ALLOW';
-        if (!allowed) {
-          res.status(403).json({
-            error: 'DRIVE_PDP_DENY',
-            reason: decision.reason ?? 'pdp denied',
-            decisionId: decision.decisionId,
-            policyId: decision.policyId,
-          });
-          return;
+        const skipPdpForDriveSelfAccess = pdpContext.consumerAppId === 'drive' && isDriveSelfClient(record.clientId);
+        if (!skipPdpForDriveSelfAccess) {
+          const decision = await evaluatePdp(token, pdpContext);
+          const allowed = decision.allow === true || decision.decision === 'ALLOW';
+          if (!allowed) {
+            res.status(403).json({
+              error: 'DRIVE_PDP_DENY',
+              reason: decision.reason ?? 'pdp denied',
+              decisionId: decision.decisionId,
+              policyId: decision.policyId,
+            });
+            return;
+          }
         }
       }
 
@@ -581,6 +592,9 @@ function createObjectStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, endpoint: 
     return {
       ready: Promise.resolve(),
       putVersionObject: async () => undefined,
+      getVersionDownloadUrl: async (artifactId: string, versionId: string) => {
+        return `https://minio.local/mock-download/${artifactId}/${versionId}`;
+      },
     };
   }
 
@@ -617,6 +631,12 @@ function createObjectStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, endpoint: 
         'Content-Type': mimeType || 'application/octet-stream',
       });
     },
+    getVersionDownloadUrl: async (artifactId: string, versionId: string, expiresSeconds: number) => {
+      await ready;
+      const objectKey = `${artifactId}/${versionId}`;
+      const ttlSeconds = Number.isFinite(expiresSeconds) ? Math.max(1, Math.floor(expiresSeconds)) : 600;
+      return client.presignedGetObject(bucket, objectKey, ttlSeconds);
+    },
   };
 }
 
@@ -634,12 +654,13 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
   const scenario = resolveScenario(env);
   const minioEndpoint = normalizeString(env.DRIVE_MINIO_ENDPOINT, 'http://127.0.0.1:9000').replace(/\/$/, '');
   const minioBucket = normalizeString(env.DRIVE_MINIO_BUCKET, 'drive-live');
+  const downloadUrlTtlSeconds = Math.max(60, Math.floor(normalizeNumber(env.DRIVE_DOWNLOAD_URL_TTL_SECONDS, 10 * 60)));
   const store = createStateStore(mode, env, scenario);
   const objectStore = createObjectStore(mode, env, minioEndpoint, minioBucket);
   const state = store.state;
-  const buildObjectUrl = (kind: 'upload' | 'download', artifactId: string, versionId: string): string => {
+  const buildUploadObjectUrl = (artifactId: string, versionId: string): string => {
     if (mode !== 'live') {
-      return `https://minio.local/mock-${kind}/${artifactId}/${versionId}`;
+      return `https://minio.local/mock-upload/${artifactId}/${versionId}`;
     }
     return `${minioEndpoint}/${minioBucket}/${artifactId}/${versionId}`;
   };
@@ -793,7 +814,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     res.json({
       artifactId,
       versionId,
-      uploadUrl: buildObjectUrl('upload', artifactId, versionId),
+      uploadUrl: buildUploadObjectUrl(artifactId, versionId),
       expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
     });
   });
@@ -952,12 +973,21 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
       reason: 'signed url generated',
     });
 
-    res.json({
-      artifactId,
-      versionId,
-      downloadUrl: buildObjectUrl('download', artifactId, versionId),
-      expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
-    });
+    try {
+      const downloadUrl = await objectStore.getVersionDownloadUrl(artifactId, versionId, downloadUrlTtlSeconds);
+      res.json({
+        artifactId,
+        versionId,
+        downloadUrl,
+        expiresAt: new Date(Date.now() + downloadUrlTtlSeconds * 1000).toISOString(),
+      });
+    } catch (error) {
+      console.error('[drive-api] failed to sign object download url', error);
+      res.status(502).json({
+        error: 'OBJECT_STORE_SIGN_FAILED',
+        message: 'failed to generate signed download url',
+      });
+    }
   });
 
   app.put('/api/drive/artifacts/:artifactId/acl', async (req, res) => {

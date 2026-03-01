@@ -160,10 +160,22 @@ export async function getArtifactDownloadUrl(
 
 export function toDriveApiError(error: unknown): string {
   if (isRequestError(error)) {
+    const payload =
+      typeof error.payload === 'object' && error.payload !== null && !Array.isArray(error.payload)
+        ? error.payload as Record<string, unknown>
+        : null;
+    const errorCode = typeof payload?.error === 'string' ? payload.error : '';
+
     if (error.status === 401) {
       return 'Token 已失效，请重新执行 OAuth 授权。';
     }
     if (error.status === 403) {
+      if (errorCode === 'DRIVE_PDP_DENY') {
+        return '当前未命中 Foundation 授权策略（PDP 拒绝），请为来源应用配置到 drive 的 FILE_ARCHIVAL 策略。';
+      }
+      if (errorCode === 'DRIVE_SCOPE_REQUIRED') {
+        return '当前授权 scope 不足，请在顶部重新执行 OAuth 授权。';
+      }
       return '当前授权 scope 不足，请在顶部重新执行 OAuth 授权。';
     }
     if (error.status === 409) {

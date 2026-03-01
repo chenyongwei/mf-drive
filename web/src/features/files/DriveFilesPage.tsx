@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { MfAppShell } from '@platform/ui-shared/mf-shell';
 import { MfButton, MfPageShell, MfSectionCard, MfStatusBanner } from '@platform/ui-shared/components';
-import { RequestError, isRequestError, toUserFacingOAuthError } from '../auth/oauth';
+import { isRequestError } from '../auth/oauth';
 import { useDriveSession } from '../auth/useDriveSession';
 import {
   completeArtifactUpload,
@@ -98,12 +98,12 @@ export function DriveFilesPage() {
     }
 
     if (isRequestError(requestError) && requestError.status === 0) {
-      setFeedback({ error: toUserFacingOAuthError(requestError), status: null });
+      setFeedback({ error: '无法连接 Drive 服务，请确认网关与 drive-api 可用。', status: null });
       return;
     }
 
     setFeedback({ error: toDriveApiError(requestError), status: null });
-  }, [session, setFeedback]);
+  }, [session.clearToken, setFeedback]);
 
   const loadContainers = useCallback(async (accessToken: string): Promise<string> => {
     const payload = await listDriveContainers(accessToken);

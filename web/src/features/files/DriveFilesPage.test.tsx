@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { DriveFilesPage } from './DriveFilesPage';
 import { useDriveSession } from '../auth/useDriveSession';
+import { RequestError } from '../auth/oauth';
 import {
   createDriveContainer,
   getArtifactDownloadUrl,
@@ -203,5 +204,20 @@ describe('DriveFilesPage', () => {
       );
       expect(openSpy).toHaveBeenCalledWith('https://example.com/download/art-1', '_blank', 'noopener,noreferrer');
     });
+  });
+
+  it('does not loop container refresh when session object identity changes', async () => {
+    vi.mocked(useDriveSession).mockImplementation(() => ({ ...baseSession }));
+    vi.mocked(listDriveContainers).mockRejectedValue(new RequestError(403, 'forbidden'));
+
+    render(<DriveFilesPage />);
+
+    await waitFor(() => {
+      expect(listDriveContainers).toHaveBeenCalled();
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    expect(vi.mocked(listDriveContainers).mock.calls.length).toBeLessThanOrEqual(2);
   });
 });
