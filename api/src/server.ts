@@ -120,7 +120,7 @@ type PdpDecisionResponse = {
   allow?: boolean;
   reason?: string;
   decisionId?: string;
-  policyId?: string;
+  matchedGrantId?: string;
 };
 
 const FAILURE_STATUS: Record<FailureKind, number> = {
@@ -332,7 +332,7 @@ function createInitialState(now: () => string, scenario: MockScenario): DriveSta
 function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
   const skipAuth = normalizeString(env.DRIVE_SKIP_AUTH, 'false').toLowerCase() === 'true'
     || (mode === 'mock' && normalizeString(env.DRIVE_SKIP_AUTH_IN_MOCK, 'false').toLowerCase() === 'true');
-  const enforceContainerPdp = normalizeString(env.DRIVE_ENFORCE_CONTAINER_PDP, 'false').toLowerCase() === 'true';
+  const enforceContainerPdp = normalizeString(env.DRIVE_ENFORCE_CONTAINER_PDP, 'true').toLowerCase() === 'true';
   const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31301').replace(/\/$/, '');
   const cache = new Map<string, TokenCacheRecord>();
 
@@ -400,8 +400,12 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
 
   function resolvePdpContext(req: Request): {
     consumerAppId: 'drive';
-    dataDomain: 'FILE';
-    purpose: 'FILE_ARCHIVAL';
+    resourcePackId: 'drive.storage.containers.read';
+    selector: {
+      dataDomains: ['FILE'];
+      objectTypes: ['Container'];
+      containerIds: ['default'];
+    };
     action: 'read';
   } | null {
     if (!enforceContainerPdp) {
@@ -411,8 +415,12 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
     if (path === '/api/drive/containers' && req.method === 'GET') {
       return {
         consumerAppId: 'drive',
-        dataDomain: 'FILE',
-        purpose: 'FILE_ARCHIVAL',
+        resourcePackId: 'drive.storage.containers.read',
+        selector: {
+          dataDomains: ['FILE'],
+          objectTypes: ['Container'],
+          containerIds: ['default'],
+        },
         action: 'read',
       };
     }
@@ -446,10 +454,14 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
     return nextRecord;
   }
 
-  async function evaluatePdp(token: string, context: {
+  async function evaluatePdp(token: string, tenantId: string, context: {
     consumerAppId: 'drive';
-    dataDomain: 'FILE';
-    purpose: 'FILE_ARCHIVAL';
+    resourcePackId: 'drive.storage.containers.read';
+    selector: {
+      dataDomains: ['FILE'];
+      objectTypes: ['Container'];
+      containerIds: ['default'];
+    };
     action: 'read';
   }): Promise<PdpDecisionResponse> {
     const response = await fetch(`${iamUrl}/api/foundation/security/pdp/evaluate`, {
@@ -459,10 +471,12 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
       },
       body: JSON.stringify({
         token,
+        tenantId,
         consumerAppId: context.consumerAppId,
-        dataDomain: context.dataDomain,
-        purpose: context.purpose,
+        resourcePackId: context.resourcePackId,
+        selector: context.selector,
         action: context.action,
+        at: nowIso(),
       }),
     });
 
@@ -538,14 +552,15 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
 
       const pdpContext = resolvePdpContext(req);
       if (pdpContext) {
-        const decision = await evaluatePdp(token, pdpContext);
+        const tenantId = normalizeString(req.header('x-tenant-id'), 'tenant-001');
+        const decision = await evaluatePdp(token, tenantId, pdpContext);
         const allowed = decision.allow === true || decision.decision === 'ALLOW';
         if (!allowed) {
           res.status(403).json({
             error: 'DRIVE_PDP_DENY',
             reason: decision.reason ?? 'pdp denied',
             decisionId: decision.decisionId,
-            policyId: decision.policyId,
+            matchedGrantId: decision.matchedGrantId,
           });
           return;
         }
