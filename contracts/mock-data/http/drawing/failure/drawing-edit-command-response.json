@@ -1,8 +1,0 @@
-{
-  "success": false,
-  "message": "boundary is required",
-  "errorCode": "BOUNDARY_REQUIRED",
-  "updatedEntities": [],
-  "deletedEntityIds": [],
-  "affectedEntityIds": ["ent-failure-1"]
-}
