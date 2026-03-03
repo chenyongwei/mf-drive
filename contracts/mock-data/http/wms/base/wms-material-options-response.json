@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "id": "sheet:mat-1",
+      "label": "板材 / Q235 / Q235",
+      "type": "SHEET",
+      "code": "Q235"
+    },
+    {
+      "id": "pipe:pipe-1:spec-1",
+      "label": "管材 / PIPE-Q235 / OD60x3",
+      "type": "PIPE",
+      "code": "PIPE-Q235"
+    }
+  ],
+  "total": 2
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["item", "updated"],
+  "properties": {
+    "item": {
+      "type": "object",
+      "required": ["id", "name", "code", "enabled", "updatedAt"],
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" },
+        "enabled": { "type": "boolean" },
+        "updatedAt": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "updated": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

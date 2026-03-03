@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-security-relationship-revoke-response.schema.json",
+  "type": "object",
+  "required": [
+    "success",
+    "sourceAppId",
+    "targetAppId",
+    "scope",
+    "affectedGrantIds",
+    "updatedAt"
+  ],
+  "properties": {
+    "success": {
+      "type": "boolean"
+    },
+    "sourceAppId": {
+      "type": "string",
+      "enum": [
+        "nesting",
+        "drawing",
+        "ordering",
+        "crm",
+        "aps",
+        "wms",
+        "drive",
+        "foundation_workbench"
+      ]
+    },
+    "targetAppId": {
+      "type": "string",
+      "enum": [
+        "nesting",
+        "drawing",
+        "ordering",
+        "crm",
+        "aps",
+        "wms",
+        "drive",
+        "foundation_workbench"
+      ]
+    },
+    "scope": {
+      "type": "string"
+    },
+    "affectedGrantIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "updatedAt": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-apps-catalog-response.schema.json",
+  "type": "object",
+  "required": ["accountAuthorized", "items", "total"],
+  "properties": {
+    "accountAuthorized": { "type": "boolean" },
+    "accountAuthorizedAt": { "type": "string" },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "foundation-app-catalog-item.schema.json"
+      }
+    },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

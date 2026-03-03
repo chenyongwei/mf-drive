@@ -1,0 +1,15 @@
+{
+  "items": [
+        {
+          "versionId": "BOM-REL-FAIL-002",
+          "stage": "EBOM",
+          "status": "ARCHIVED",
+          "createdAt": "2026-02-22T11:10:00Z",
+          "createdBy": "tekla-adapter",
+          "partCount": 3,
+          "parentVersionId": "BOM-REL-FAIL-001",
+          "changeSummary": "Rejected due to invalid dimensions"
+        }
+      ],
+  "total": 1
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "pipeId", "pipeName", "specId", "outerDiameterMm", "wallThicknessMm", "lengthMm", "quantity", "status", "location", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string" },
+    "pipeId": { "type": "string" },
+    "pipeName": { "type": "string" },
+    "specId": { "type": "string" },
+    "outerDiameterMm": { "type": "number" },
+    "wallThicknessMm": { "type": "number" },
+    "lengthMm": { "type": "number" },
+    "quantity": { "type": "integer" },
+    "status": { "type": "string", "enum": ["in_stock", "reserved", "hidden"] },
+    "location": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "additionalProperties": false
+}

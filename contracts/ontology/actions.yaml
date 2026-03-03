@@ -1,0 +1,58 @@
+version: 1
+actions:
+  - name: refreshObjects
+    description: Resolve objects from upstream services and refresh ontology cache.
+    method: POST
+    path: /api/foundation/ontology/actions/refreshObjects
+    input:
+      type: object
+      properties:
+        types:
+          type: array
+          items: { type: string }
+        keysByType:
+          type: object
+      additionalProperties: true
+
+  - name: rebuildLinks
+    description: Rebuild inferred links from current object cache.
+    method: POST
+    path: /api/foundation/ontology/actions/rebuildLinks
+    input:
+      type: object
+      properties: {}
+
+  - name: clearStore
+    description: Clear object and link cache.
+    method: POST
+    path: /api/foundation/ontology/actions/clearStore
+    input:
+      type: object
+      properties: {}
+
+  - name: syncObjects
+    description: Upsert objects and links from CDC or adapters.
+    method: POST
+    path: /api/foundation/ontology/actions/syncObjects
+    input:
+      type: object
+      properties:
+        objects:
+          type: array
+          items: { type: object }
+        links:
+          type: array
+          items: { type: object }
+        source:
+          type: string
+      additionalProperties: true
+
+  - name: exportCsv
+    description: Export object type rows as CSV.
+    method: GET
+    path: /api/foundation/ontology/export/{type}?format=csv
+
+  - name: importCsv
+    description: Import object type rows from CSV.
+    method: POST
+    path: /api/foundation/ontology/import?type={type}&format=csv

@@ -1,0 +1,239 @@
+openapi: 3.0.3
+info:
+  title: foundation-material-api
+  version: 0.1.0
+paths:
+  /api/foundation/materials/sheets/available:
+    get:
+      operationId: listFoundationAvailableSheets
+      summary: Query available sheet materials
+      parameters:
+        - name: materialCode
+          in: query
+          schema:
+            type: string
+        - name: thickness
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Available sheets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheetAvailableResponse'
+  /api/foundation/materials/sheets/reserve:
+    post:
+      operationId: reserveFoundationSheets
+      summary: Reserve sheets for one nesting task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheetReserveRequest'
+      responses:
+        '200':
+          description: Reservation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheetReservationResponse'
+  /api/foundation/materials/sheets/consume:
+    post:
+      operationId: consumeFoundationSheets
+      summary: Commit sheet consumption
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheetConsumeRequest'
+      responses:
+        '200':
+          description: Consumption committed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheetConsumptionResponse'
+  /api/foundation/materials/sheets/scrap:
+    post:
+      operationId: createFoundationScrapSheet
+      summary: Create remnant/scrap sheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SheetScrapRequest'
+      responses:
+        '200':
+          description: Scrap created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SheetScrapResponse'
+  /api/foundation/materials/sheets/release-reservation:
+    post:
+      operationId: releaseFoundationSheetReservation
+      summary: Release one reservation in compensation flow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reservationId]
+              properties:
+                reservationId:
+                  type: string
+      responses:
+        '200':
+          description: Reservation released
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationReleaseResponse'
+components:
+  schemas:
+    SheetMaterial:
+      type: object
+      required: [sheetId, materialCode, thickness, width, height, quantity, status]
+      properties:
+        sheetId:
+          type: string
+        materialCode:
+          type: string
+        thickness:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+        quantity:
+          type: integer
+        status:
+          type: string
+          enum: [AVAILABLE, RESERVED, CONSUMED]
+        location:
+          type: string
+    SheetAvailableResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SheetMaterial'
+        total:
+          type: integer
+          minimum: 0
+    SheetReserveRequest:
+      type: object
+      required: [nestingId, items]
+      properties:
+        nestingId:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            required: [sheetId, quantity]
+            properties:
+              sheetId:
+                type: string
+              quantity:
+                type: integer
+                minimum: 1
+    SheetReservation:
+      type: object
+      required: [reservationId, sheetId, quantity, status, createdAt]
+      properties:
+        reservationId:
+          type: string
+        sheetId:
+          type: string
+        quantity:
+          type: integer
+        status:
+          type: string
+          enum: [RESERVED, RELEASED, CONSUMED]
+        createdAt:
+          type: string
+        idempotencyKey:
+          type: string
+    SheetReservationResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/SheetReservation'
+        total:
+          type: integer
+          minimum: 0
+    SheetConsumeRequest:
+      type: object
+      required: [reservationId, nestingId, consumedQuantity]
+      properties:
+        reservationId:
+          type: string
+        nestingId:
+          type: string
+        consumedQuantity:
+          type: integer
+          minimum: 1
+        scrap:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+    SheetConsumptionResponse:
+      type: object
+      required: [recordId, reservationId, status, synced]
+      properties:
+        recordId:
+          type: string
+        reservationId:
+          type: string
+        status:
+          type: string
+          enum: [COMMITTED, ROLLEDBACK]
+        synced:
+          type: boolean
+    SheetScrapRequest:
+      type: object
+      required: [sourceSheetId, width, height]
+      properties:
+        sourceSheetId:
+          type: string
+        width:
+          type: number
+        height:
+          type: number
+        quantity:
+          type: integer
+          minimum: 1
+    SheetScrapResponse:
+      type: object
+      required: [scrapSheetId, sourceSheetId, status]
+      properties:
+        scrapSheetId:
+          type: string
+        sourceSheetId:
+          type: string
+        status:
+          type: string
+          enum: [CREATED]
+    ReservationReleaseResponse:
+      type: object
+      required: [success, reservationId]
+      properties:
+        success:
+          type: boolean
+        reservationId:
+          type: string

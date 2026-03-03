@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "totalPages"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "orderId",
+          "partNo",
+          "drawingName",
+          "material",
+          "thickness",
+          "quantity",
+          "status",
+          "updatedAt",
+          "orderCode",
+          "orderName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "partNo": {
+            "type": "string"
+          },
+          "drawingName": {
+            "type": "string"
+          },
+          "artifactRef": {
+            "type": "object",
+            "required": [
+              "artifactId",
+              "versionId",
+              "containerId",
+              "artifactType",
+              "ownerAppId",
+              "displayName"
+            ],
+            "properties": {
+              "artifactId": {
+                "type": "string"
+              },
+              "versionId": {
+                "type": "string"
+              },
+              "containerId": {
+                "type": "string"
+              },
+              "artifactType": {
+                "type": "string",
+                "enum": [
+                  "DRAWING",
+                  "PARTS",
+                  "LAYOUT"
+                ]
+              },
+              "ownerAppId": {
+                "type": "string"
+              },
+              "displayName": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "material": {
+            "type": "string"
+          },
+          "thickness": {
+            "type": "integer"
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "orderCode": {
+            "type": "string"
+          },
+          "orderName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "total": {
+      "type": "integer"
+    },
+    "page": {
+      "type": "integer"
+    },
+    "pageSize": {
+      "type": "integer"
+    },
+    "totalPages": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

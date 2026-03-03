@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-security-policy-create-request.schema.json",
+  "type": "object",
+  "required": [
+    "sourceAppId",
+    "allowedConsumers",
+    "dataDomain",
+    "purpose",
+    "retention",
+    "revocationMode"
+  ],
+  "properties": {
+    "sourceAppId": {
+      "type": "string",
+      "enum": [
+        "nesting",
+        "drawing",
+        "ordering",
+        "crm",
+        "aps",
+        "wms",
+        "drive",
+        "foundation_workbench"
+      ]
+    },
+    "allowedConsumers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "nesting",
+          "drawing",
+          "ordering",
+          "crm",
+          "aps",
+          "wms",
+          "drive",
+          "foundation_workbench"
+        ]
+      }
+    },
+    "dataDomain": {
+      "type": "string",
+      "enum": [
+        "ORDER",
+        "DRAWING",
+        "NESTING",
+        "INVENTORY",
+        "FILE",
+        "FOUNDATION_MODEL",
+        "CUSTOMER",
+        "SCHEDULING"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "OPS_DISPATCH",
+        "PRODUCTION_PLANNING",
+        "QUALITY_TRACEABILITY",
+        "SUPPLY_CHAIN_COLLAB",
+        "FILE_ARCHIVAL",
+        "ANALYTICS_REPORTING",
+        "CUSTOMER_DELIVERY",
+        "ALGORITHM_TRAINING"
+      ]
+    },
+    "retention": {
+      "type": "string",
+      "enum": [
+        "P7D",
+        "P30D",
+        "P90D",
+        "P180D"
+      ]
+    },
+    "revocationMode": {
+      "type": "string",
+      "enum": [
+        "IMMEDIATE_CASCADE",
+        "SOFT_GRACE_24H"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

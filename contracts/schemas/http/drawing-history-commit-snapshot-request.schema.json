@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-history-commit-snapshot-request.schema.json",
+  "type": "object",
+  "required": ["snapshot"],
+  "properties": {
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "operationType": { "type": "string" },
+    "operationData": { "type": "object" },
+    "userId": { "type": "string" },
+    "username": { "type": "string" },
+    "entityId": { "type": "string" },
+    "entityIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "folders",
+    "total"
+  ],
+  "properties": {
+    "folders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "parentId",
+          "createdAt",
+          "orderCount"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "null"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "orderCount": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "total": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "items",
+    "total",
+    "page",
+    "pageSize",
+    "totalPages"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "jobId",
+          "layoutNo",
+          "status",
+          "utilization",
+          "sheetCount",
+          "machine",
+          "updatedAt",
+          "jobCode",
+          "jobName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "jobId": {
+            "type": "string"
+          },
+          "layoutNo": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "utilization": {
+            "type": "number"
+          },
+          "sheetCount": {
+            "type": "integer"
+          },
+          "machine": {
+            "type": "null"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "jobCode": {
+            "type": "string"
+          },
+          "jobName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "total": {
+      "type": "integer"
+    },
+    "page": {
+      "type": "integer"
+    },
+    "pageSize": {
+      "type": "integer"
+    },
+    "totalPages": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

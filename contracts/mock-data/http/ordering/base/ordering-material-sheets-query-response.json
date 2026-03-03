@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "sheet-2",
+      "materialId": "mat-1",
+      "materialName": "Q235",
+      "thickness": 3,
+      "width": 900,
+      "height": 600,
+      "quantity": 2,
+      "source": "remnant",
+      "status": "in_stock",
+      "location": "R-12",
+      "createdAt": "2026-02-13T02:00:00.000Z",
+      "updatedAt": "2026-02-13T02:00:00.000Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 1
+}

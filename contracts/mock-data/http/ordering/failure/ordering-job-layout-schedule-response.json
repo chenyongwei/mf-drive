@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "layout": {
+    "id": "layout-1",
+    "jobId": "job-1",
+    "layoutNo": "L-0001",
+    "status": "scheduled",
+    "utilization": 0.78,
+    "sheetCount": 2,
+    "machine": "laser-01",
+    "updatedAt": "2026-02-13T02:00:00.000Z"
+  },
+  "boostRecord": {
+    "id": "boost-10",
+    "layoutId": "layout-1",
+    "jobId": "job-1",
+    "machine": "laser-01",
+    "operator": "scheduler",
+    "status": "queued",
+    "startedAt": "2026-02-13T02:00:00.000Z"
+  }
+}

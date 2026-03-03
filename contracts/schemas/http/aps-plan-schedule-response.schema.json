@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aps-plan-schedule-response.schema.json",
+  "type": "object",
+  "required": ["success", "plan", "machine", "record"],
+  "properties": {
+    "success": { "type": "boolean" },
+    "plan": { "$ref": "aps-plan-row.schema.json" },
+    "machine": { "$ref": "aps-machine-row.schema.json" },
+    "record": { "$ref": "aps-schedule-record-row.schema.json" }
+  },
+  "additionalProperties": false
+}

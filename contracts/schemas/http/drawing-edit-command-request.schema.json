@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-edit-command-request.schema.json",
+  "type": "object",
+  "required": ["fileId", "command", "params"],
+  "properties": {
+    "fileId": { "type": "string" },
+    "command": {
+      "type": "string",
+      "enum": [
+        "trim",
+        "extend",
+        "delete",
+        "explode",
+        "create",
+        "move",
+        "update-text"
+      ]
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "entityId": { "type": "string" },
+        "entityIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "targetEntityId": { "type": "string" },
+        "clickPoint": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "delta": {
+          "type": "object",
+          "required": ["x", "y"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "entityData": { "type": "object" },
+        "textData": {
+          "type": "object",
+          "properties": {
+            "content": { "type": "string" },
+            "fontId": { "type": "string" },
+            "fontSize": { "type": "number" },
+            "lineHeight": { "type": "number" },
+            "rotation": { "type": "number" },
+            "alignH": { "type": "string", "enum": ["left", "center", "right"] },
+            "alignV": {
+              "type": "string",
+              "enum": ["top", "middle", "baseline", "bottom"]
+            },
+            "lineMode": { "type": "string", "enum": ["single", "double"] },
+            "tolerance": { "type": "number" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

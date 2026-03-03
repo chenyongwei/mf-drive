@@ -1,0 +1,16 @@
+{
+  "sheet": {
+    "id": "sheet-20",
+    "materialId": "mat-1",
+    "materialName": "Q235",
+    "thickness": 3,
+    "width": 3000,
+    "height": 1500,
+    "quantity": 1,
+    "source": "plate",
+    "status": "in_stock",
+    "location": "A-NEW",
+    "createdAt": "2026-02-13T02:00:00.000Z",
+    "updatedAt": "2026-02-13T02:00:00.000Z"
+  }
+}

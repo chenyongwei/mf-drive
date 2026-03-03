@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-edit-command-response.schema.json",
+  "type": "object",
+  "required": [
+    "success",
+    "updatedEntities",
+    "deletedEntityIds",
+    "affectedEntityIds"
+  ],
+  "properties": {
+    "success": { "type": "boolean" },
+    "message": { "type": "string" },
+    "errorCode": {
+      "type": "string",
+      "enum": [
+        "BOUNDARY_REQUIRED",
+        "NO_INTERSECTION",
+        "UNSUPPORTED_TARGET",
+        "UNSUPPORTED_BOUNDARY",
+        "TARGET_NOT_FOUND"
+      ]
+    },
+    "updatedEntities": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "deletedEntityIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "affectedEntityIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "boundaryEntityId": { "type": "string" },
+    "boundarySource": {
+      "type": "string",
+      "enum": ["auto", "manual"]
+    },
+    "intersectionPoint": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "operation": { "type": "object" }
+  },
+  "additionalProperties": true
+}

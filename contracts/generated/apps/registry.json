@@ -1,0 +1,412 @@
+[
+  {
+    "appId": "nesting",
+    "aliases": [],
+    "name": "套料",
+    "route": "/nesting/workbench",
+    "clientId": "nesting-web",
+    "requiredBaseScope": "foundation.read",
+    "legacyConnectScope": "mf.connect.nesting.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 10,
+      "icon": "nesting"
+    },
+    "marketplace": {
+      "category": "manufacturing",
+      "tagline": "订单到排样的一体化套料工作台",
+      "shortDescription": "支持批量板材计算、产线优先级设置与结果追踪。",
+      "longDescription": "套料应用用于统一执行排样任务并回写结果，可与订单、库存能力形成闭环。",
+      "tags": [
+        "nesting",
+        "manufacturing",
+        "workflow"
+      ],
+      "highlights": [
+        "多工单并行",
+        "结果可回写",
+        "支持 mini 启动"
+      ],
+      "screenshots": [
+        "/assets/store/nesting-1.png",
+        "/assets/store/nesting-2.png"
+      ],
+      "version": "1.6.0",
+      "ratingAverage": 4.8,
+      "ratingCount": 125,
+      "installCount": 920,
+      "featured": true,
+      "updatedAt": "2026-02-22T09:30:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "NESTING",
+        "purpose": "PRODUCTION_PLANNING",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "drawing",
+    "aliases": [],
+    "name": "图纸",
+    "route": "/drawing/editor",
+    "clientId": "drawing-web",
+    "requiredBaseScope": "foundation.read",
+    "legacyConnectScope": "mf.connect.drawing.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 20,
+      "icon": "drawing"
+    },
+    "marketplace": {
+      "category": "engineering",
+      "tagline": "统一图纸浏览、标注与版本对比",
+      "shortDescription": "内置 CAD 编辑能力，支持质量校验与协作标注。",
+      "longDescription": "图纸应用提供设计与工艺协作能力，可在跨应用场景中被调用并保持授权隔离。",
+      "tags": [
+        "cad",
+        "drawing",
+        "review"
+      ],
+      "highlights": [
+        "三渲染模式",
+        "文本编辑",
+        "图层检视"
+      ],
+      "screenshots": [
+        "/assets/store/drawing-1.png",
+        "/assets/store/drawing-2.png"
+      ],
+      "version": "2.6.1",
+      "ratingAverage": 4.6,
+      "ratingCount": 88,
+      "installCount": 730,
+      "featured": true,
+      "updatedAt": "2026-02-22T10:10:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "DRAWING",
+        "purpose": "QUALITY_TRACEABILITY",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "ordering",
+    "aliases": [],
+    "name": "订单",
+    "route": "/ordering/orders",
+    "clientId": "ordering-web",
+    "requiredBaseScope": "foundation.read",
+    "legacyConnectScope": "mf.connect.ordering.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 30,
+      "icon": "ordering"
+    },
+    "marketplace": {
+      "category": "operations",
+      "tagline": "业务订单中心与跨域联调入口",
+      "shortDescription": "提供订单流转、设置中心和安全活动可视化。",
+      "longDescription": "订单应用是业务入口，支持与图纸、套料、库存进行授权连接和流程打通。",
+      "tags": [
+        "ordering",
+        "portal",
+        "ops"
+      ],
+      "highlights": [
+        "订单卡片视图",
+        "设置中心",
+        "安全中心跳转"
+      ],
+      "screenshots": [
+        "/assets/store/ordering-1.png",
+        "/assets/store/ordering-2.png"
+      ],
+      "version": "3.2.0",
+      "ratingAverage": 4.7,
+      "ratingCount": 101,
+      "installCount": 860,
+      "featured": true,
+      "updatedAt": "2026-02-22T09:20:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "ORDER",
+        "purpose": "OPS_DISPATCH",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "crm",
+    "aliases": [],
+    "name": "CRM",
+    "route": "/crm/customers",
+    "clientId": "crm-web",
+    "requiredBaseScope": "foundation.read",
+    "legacyConnectScope": "mf.connect.crm.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 40,
+      "icon": "crm"
+    },
+    "marketplace": {
+      "category": "operations",
+      "tagline": "客户主数据独立治理与全域复用",
+      "shortDescription": "统一管理客户主数据并为订单、排样等业务提供标准客户源。",
+      "longDescription": "CRM 应用负责客户主数据域，支持客户新增、编辑、启停与跨应用授权访问。",
+      "tags": [
+        "crm",
+        "customer",
+        "master-data"
+      ],
+      "highlights": [
+        "客户主数据",
+        "停启管理",
+        "跨应用复用"
+      ],
+      "screenshots": [
+        "/assets/store/crm-1.png",
+        "/assets/store/crm-2.png"
+      ],
+      "version": "1.0.0",
+      "ratingAverage": 4.6,
+      "ratingCount": 8,
+      "installCount": 180,
+      "featured": false,
+      "updatedAt": "2026-02-24T10:10:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "CUSTOMER",
+        "purpose": "CUSTOMER_DELIVERY",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "aps",
+    "aliases": [],
+    "name": "APS 排产",
+    "route": "/aps/plans",
+    "clientId": "aps-web",
+    "requiredBaseScope": "aps.read",
+    "legacyConnectScope": "mf.connect.aps.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 50,
+      "icon": "aps"
+    },
+    "marketplace": {
+      "category": "operations",
+      "tagline": "独立排产工作台与机台负载调度",
+      "shortDescription": "提供计划排产、机台负载观察与批量调度能力。",
+      "longDescription": "APS 作为独立排产系统，采用读写分离授权（aps.read / aps.write），并通过 pair scope 与来源应用建立连接关系。",
+      "tags": [
+        "aps",
+        "scheduling",
+        "operations"
+      ],
+      "highlights": [
+        "计划列表",
+        "单条/批量排产",
+        "机台负载看板"
+      ],
+      "screenshots": [
+        "/assets/store/aps-1.png",
+        "/assets/store/aps-2.png"
+      ],
+      "version": "0.1.0",
+      "ratingAverage": 4.6,
+      "ratingCount": 9,
+      "installCount": 150,
+      "featured": true,
+      "updatedAt": "2026-02-23T14:30:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "SCHEDULING",
+        "purpose": "PRODUCTION_PLANNING",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "wms",
+    "aliases": [],
+    "name": "WMS",
+    "route": "/wms/materials",
+    "clientId": "wms-web",
+    "requiredBaseScope": "wms.read",
+    "legacyConnectScope": "mf.connect.wms.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 60,
+      "icon": "wms"
+    },
+    "marketplace": {
+      "category": "inventory",
+      "tagline": "板材与管材库存全量管理",
+      "shortDescription": "覆盖库存、预占、消耗和工艺配置。",
+      "longDescription": "WMS 应用提供库存视角下的管理能力，可通过 pair scope 授权给来源应用调用。",
+      "tags": [
+        "wms",
+        "inventory",
+        "materials"
+      ],
+      "highlights": [
+        "库存可视化",
+        "工艺参数",
+        "权限分级"
+      ],
+      "screenshots": [
+        "/assets/store/wms-1.png",
+        "/assets/store/wms-2.png"
+      ],
+      "version": "1.4.0",
+      "ratingAverage": 4.5,
+      "ratingCount": 74,
+      "installCount": 640,
+      "featured": false,
+      "updatedAt": "2026-02-22T10:22:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "INVENTORY",
+        "purpose": "PRODUCTION_PLANNING",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "drive",
+    "aliases": [],
+    "name": "Drive",
+    "route": "/drive/files",
+    "clientId": "drive-web",
+    "requiredBaseScope": "drive.appdata.read",
+    "legacyConnectScope": "mf.connect.drive.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": true,
+      "order": 70,
+      "icon": "drive"
+    },
+    "marketplace": {
+      "category": "engineering",
+      "tagline": "工程图纸云存储与协作授权中心",
+      "shortDescription": "提供图纸、零件、排版文件的容器化存储与跨应用授权访问。",
+      "longDescription": "Drive 应用提供工程图纸场景下的独立存储能力，支持 app data、用户可见空间与域级委托。",
+      "tags": [
+        "drive",
+        "drawing",
+        "storage"
+      ],
+      "highlights": [
+        "签名URL直传直下",
+        "跨应用ACL授权",
+        "访问审计日志"
+      ],
+      "screenshots": [
+        "/assets/store/drive-1.png",
+        "/assets/store/drive-2.png"
+      ],
+      "version": "1.0.0",
+      "ratingAverage": 4.7,
+      "ratingCount": 12,
+      "installCount": 220,
+      "featured": true,
+      "updatedAt": "2026-02-22T11:00:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "FILE",
+        "purpose": "FILE_ARCHIVAL",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  },
+  {
+    "appId": "foundation_workbench",
+    "aliases": [
+      "foundation"
+    ],
+    "name": "Foundation 工作台",
+    "route": "/foundation/workbench/",
+    "clientId": "foundation-workbench-web",
+    "requiredBaseScope": "foundation.read",
+    "legacyConnectScope": "mf.connect.foundation.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "enabledByUser": true,
+    "dock": {
+      "visible": false,
+      "order": 80,
+      "icon": "foundation"
+    },
+    "marketplace": {
+      "category": "platform",
+      "tagline": "授权、BOM、MCP 与 Saga 一站式工作台",
+      "shortDescription": "用于底座链路验收和跨应用权限调试。",
+      "longDescription": "Foundation 工作台用于串联 IAM、BOM、Material、MCP 和 Saga 全链路能力。",
+      "tags": [
+        "foundation",
+        "security",
+        "saga"
+      ],
+      "highlights": [
+        "实时请求日志",
+        "Saga 轨迹",
+        "Mock/Live 切换"
+      ],
+      "screenshots": [
+        "/assets/store/foundation-1.png",
+        "/assets/store/foundation-2.png"
+      ],
+      "version": "1.8.2",
+      "ratingAverage": 4.9,
+      "ratingCount": 44,
+      "installCount": 510,
+      "featured": true,
+      "updatedAt": "2026-02-23T00:58:00Z"
+    },
+    "security": {
+      "recommendedTemplate": {
+        "dataDomain": "FOUNDATION_MODEL",
+        "purpose": "ANALYTICS_REPORTING",
+        "retention": "P30D",
+        "revocationMode": "IMMEDIATE_CASCADE"
+      }
+    }
+  }
+]

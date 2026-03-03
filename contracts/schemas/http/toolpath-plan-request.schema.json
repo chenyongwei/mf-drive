@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "toolpath-plan-request.schema.json",
+  "type": "object",
+  "required": ["mode", "layout", "parts", "parameters"],
+  "properties": {
+    "mode": { "type": "string", "enum": ["AUTO", "MANUAL"] },
+    "layout": {
+      "type": "object",
+      "required": ["layoutId", "material", "placedParts"],
+      "properties": {
+        "layoutId": { "type": "string" },
+        "material": {
+          "type": "object",
+          "required": ["width", "height", "thickness"],
+          "properties": {
+            "width": { "type": "number", "exclusiveMinimum": 0 },
+            "height": { "type": "number", "exclusiveMinimum": 0 },
+            "thickness": { "type": "number", "exclusiveMinimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "placedParts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["partId", "x", "y", "rotation"],
+            "properties": {
+              "partId": { "type": "string" },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "rotation": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["partId", "outerContour", "innerContours", "sourceEntityIds", "bbox", "geometryVersion"],
+        "properties": {
+          "partId": { "type": "string" },
+          "outerContour": {
+            "type": "object",
+            "required": ["contourId", "closed", "points"],
+            "properties": {
+              "contourId": { "type": "string" },
+              "closed": { "type": "boolean" },
+              "points": {
+                "type": "array",
+                "minItems": 3,
+                "items": {
+                  "type": "object",
+                  "required": ["x", "y"],
+                  "properties": {
+                    "x": { "type": "number" },
+                    "y": { "type": "number" }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "innerContours": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["contourId", "closed", "points"],
+              "properties": {
+                "contourId": { "type": "string" },
+                "closed": { "type": "boolean" },
+                "points": {
+                  "type": "array",
+                  "minItems": 3,
+                  "items": {
+                    "type": "object",
+                    "required": ["x", "y"],
+                    "properties": {
+                      "x": { "type": "number" },
+                      "y": { "type": "number" }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "sourceEntityIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "bbox": {
+            "type": "object",
+            "required": ["minX", "minY", "maxX", "maxY"],
+            "properties": {
+              "minX": { "type": "number" },
+              "minY": { "type": "number" },
+              "maxX": { "type": "number" },
+              "maxY": { "type": "number" }
+            },
+            "additionalProperties": false
+          },
+          "geometryVersion": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "parameters": {
+      "type": "object",
+      "required": [
+        "leadIn",
+        "leadOut",
+        "microJoint",
+        "commonEdge",
+        "cutRateMmPerSec",
+        "rapidRateMmPerSec",
+        "thermalWeight"
+      ],
+      "properties": {
+        "leadIn": {
+          "type": "object",
+          "required": ["enabled", "length", "angleDeg"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "length": { "type": "number", "minimum": 0 },
+            "angleDeg": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "leadOut": {
+          "type": "object",
+          "required": ["enabled", "length", "angleDeg"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "length": { "type": "number", "minimum": 0 },
+            "angleDeg": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        "microJoint": {
+          "type": "object",
+          "required": ["enabled", "count", "minSegmentLength"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "count": { "type": "integer", "minimum": 0 },
+            "minSegmentLength": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "commonEdge": {
+          "type": "object",
+          "required": ["enabled", "overlapMin", "gapTolerance"],
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "overlapMin": { "type": "number", "minimum": 0 },
+            "gapTolerance": { "type": "number", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "cutRateMmPerSec": { "type": "number", "exclusiveMinimum": 0 },
+        "rapidRateMmPerSec": { "type": "number", "exclusiveMinimum": 0 },
+        "thermalWeight": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "overrides": { "$ref": "toolpath-override.schema.json" }
+  },
+  "additionalProperties": false
+}

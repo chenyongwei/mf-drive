@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-app-marketplace-detail-response.schema.json",
+  "type": "object",
+  "required": ["accountAuthorized", "app"],
+  "properties": {
+    "accountAuthorized": { "type": "boolean" },
+    "accountAuthorizedAt": { "type": "string" },
+    "app": {
+      "allOf": [
+        { "$ref": "foundation-app-marketplace-item.schema.json" },
+        {
+          "type": "object",
+          "required": ["longDescription", "screenshots", "version", "permissionScopes", "permissionsSummary"],
+          "properties": {
+            "longDescription": { "type": "string" },
+            "screenshots": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "version": { "type": "string" },
+            "permissionScopes": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "permissionsSummary": { "type": "string" }
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "eventId": "evt-foundation-bom-version-adopted-demo-001",
+  "eventType": "foundation.bom.version.adopted",
+  "occurredAt": "2026-02-22T12:00:00Z",
+  "producer": "foundation",
+  "workspaceId": "workspace-demo",
+  "payloadVersion": "1.0.0",
+  "payload": {"versionId":"BOM-demo-active","status":"ACTIVE","adoptedBy":"planner-demo"}
+}

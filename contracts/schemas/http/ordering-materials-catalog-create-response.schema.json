@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "material"
+  ],
+  "properties": {
+    "material": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "code",
+        "hidden",
+        "updatedAt",
+        "thicknesses"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "thicknesses": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

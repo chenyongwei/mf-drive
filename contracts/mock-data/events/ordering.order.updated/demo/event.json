@@ -1,0 +1,12 @@
+{
+  "eventId": "evt-ordering-demo-001",
+  "eventType": "ordering.order.updated",
+  "occurredAt": "2026-02-10T10:21:00Z",
+  "producer": "ordering-api",
+  "workspaceId": "workspace-demo",
+  "payloadVersion": "1.0.0",
+  "payload": {
+    "orderId": "order-demo-001",
+    "status": "done"
+  }
+}

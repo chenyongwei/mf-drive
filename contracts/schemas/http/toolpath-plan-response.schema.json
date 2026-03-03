@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "toolpath-plan-response.schema.json",
+  "type": "object",
+  "required": ["planId", "mode", "status", "entries", "segments", "metrics", "check", "warnings", "generatedAt"],
+  "properties": {
+    "planId": { "type": "string" },
+    "mode": { "type": "string", "enum": ["AUTO", "MANUAL"] },
+    "status": { "type": "string", "enum": ["ready", "warning", "invalid"] },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "toolpath-entry.schema.json" }
+    },
+    "segments": {
+      "type": "array",
+      "items": { "$ref": "toolpath-segment.schema.json" }
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["cutLength", "rapidLength", "pierceCount", "estimatedTimeSec", "thermalPenalty"],
+      "properties": {
+        "cutLength": { "type": "number", "minimum": 0 },
+        "rapidLength": { "type": "number", "minimum": 0 },
+        "pierceCount": { "type": "integer", "minimum": 0 },
+        "estimatedTimeSec": { "type": "number", "minimum": 0 },
+        "thermalPenalty": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "check": { "$ref": "toolpath-check-result.schema.json" },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "appliedOverrides": { "$ref": "toolpath-override.schema.json" },
+    "generatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

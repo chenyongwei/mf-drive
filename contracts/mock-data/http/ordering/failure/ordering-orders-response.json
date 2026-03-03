@@ -1,0 +1,11 @@
+{
+  "orders": [
+    {
+      "id": "order-failure-001",
+      "status": "blocked",
+      "amount": 900,
+      "createdAt": "2026-02-10T05:45:00Z"
+    }
+  ],
+  "total": 1
+}

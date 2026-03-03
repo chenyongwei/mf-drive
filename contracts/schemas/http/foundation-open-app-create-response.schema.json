@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-open-app-create-response.schema.json",
+  "type": "object",
+  "required": ["success", "openApp", "credential"],
+  "properties": {
+    "success": { "type": "boolean" },
+    "openApp": {
+      "type": "object",
+      "required": ["openAppId", "tenantId", "name", "appKey", "status", "createdAt", "updatedAt"],
+      "properties": {
+        "openAppId": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "appKey": { "type": "string" },
+        "status": { "type": "string", "enum": ["ACTIVE", "REVOKED"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "credential": {
+      "type": "object",
+      "required": ["credentialId", "appKey", "appSecret", "createdAt"],
+      "properties": {
+        "credentialId": { "type": "string" },
+        "appKey": { "type": "string" },
+        "appSecret": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

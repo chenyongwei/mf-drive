@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "toolpath-entry.schema.json",
+  "type": "object",
+  "required": ["partId", "contourId", "startPointParam", "direction", "leadIn", "leadOut"],
+  "properties": {
+    "partId": { "type": "string" },
+    "contourId": { "type": "string" },
+    "startPointParam": { "type": "number", "minimum": 0, "maximum": 1 },
+    "direction": { "type": "string", "enum": ["CW", "CCW"] },
+    "leadIn": {
+      "type": "object",
+      "required": ["enabled", "length", "angleDeg"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "length": { "type": "number", "minimum": 0 },
+        "angleDeg": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "leadOut": {
+      "type": "object",
+      "required": ["enabled", "length", "angleDeg"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "length": { "type": "number", "minimum": 0 },
+        "angleDeg": { "type": "number" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

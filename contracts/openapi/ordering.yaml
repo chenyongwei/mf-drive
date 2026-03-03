@@ -1,0 +1,742 @@
+openapi: 3.0.3
+info:
+  title: ordering-api
+  version: 0.2.0
+paths:
+  /api/ordering/orders:
+    get:
+      operationId: listOrderingOrders
+      summary: Query ordering orders list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: createOrderingOrder
+      summary: Create ordering order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                code:
+                  type: string
+                name:
+                  type: string
+                folderId:
+                  type: string
+                  nullable: true
+                customerId:
+                  type: string
+                  nullable: true
+                customerName:
+                  type: string
+                  nullable: true
+                material:
+                  type: string
+                dueAt:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/admin/summary:
+    get:
+      operationId: getAdminSummary
+      summary: Get ordering admin summary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderingAdminSummaryResponse'
+
+  /api/ordering/orders/folders:
+    get:
+      operationId: listOrderingOrderFolders
+      summary: Query ordering order folders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: createOrderingOrderFolder
+      summary: Create ordering order folder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                parentId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/parts/query:
+    post:
+      operationId: queryOrderingOrderParts
+      summary: Query parts list in orders module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/layouts/query:
+    post:
+      operationId: queryOrderingOrderLayouts
+      summary: Query layouts list in orders module
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/layouts/{layoutId}/schedule:
+    post:
+      operationId: scheduleOrderingOrderLayout
+      summary: Schedule one layout
+      parameters:
+        - name: layoutId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/parts/batch:
+    post:
+      operationId: batchOperateOrderingOrderParts
+      summary: Batch operation for parts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/layouts/batch:
+    post:
+      operationId: batchOperateOrderingOrderLayouts
+      summary: Batch operation for layouts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/orders/boost-records:
+    get:
+      operationId: listOrderingOrderBoostRecords
+      summary: Query recent boost records
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/ordering/materials/catalog:
+    get:
+      operationId: listOrderingMaterialCatalog
+      summary: Query material catalog
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: createOrderingMaterial
+      summary: Create one material item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                code:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/{materialId}/thickness:
+    post:
+      operationId: createOrderingMaterialThickness
+      summary: Add thickness to one material
+      parameters:
+        - name: materialId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [valueMm]
+              properties:
+                valueMm:
+                  type: number
+                stockSheets:
+                  type: integer
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/sheets:
+    get:
+      operationId: listOrderingSheets
+      summary: Query sheet list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: createOrderingSheet
+      summary: Create a stock sheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/remnant-sheets:
+    post:
+      operationId: createOrderingRemnantSheet
+      summary: Create a remnant sheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/sheets/query:
+    post:
+      operationId: queryOrderingSheets
+      summary: Query sheets with advanced filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/sheets/batch:
+    post:
+      operationId: batchOperateOrderingSheets
+      summary: Batch operation for sheets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/sheets/label-print:
+    post:
+      operationId: labelPrintOrderingSheets
+      summary: Mock label print action
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/process/auto:
+    get:
+      operationId: listOrderingAutoProcessConfigs
+      summary: Query auto process configs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingAutoProcessConfig
+      summary: Create or update auto process config
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/process/cutting:
+    get:
+      operationId: listOrderingCuttingProcessConfigs
+      summary: Query cutting process configs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingCuttingProcessConfig
+      summary: Create or update cutting process config
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/materials/process/quote:
+    get:
+      operationId: listOrderingQuoteProcessConfigs
+      summary: Query quote process configs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingQuoteProcessConfig
+      summary: Create or update quote process config
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/ordering/settings/suites:
+    get:
+      operationId: listOrderingSuites
+      summary: Query suite settings list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingSuite
+      summary: Create or update suite settings item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/settings/sorting-plans:
+    get:
+      operationId: listOrderingSortingPlans
+      summary: Query sorting plan settings list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingSortingPlan
+      summary: Create or update sorting plan settings item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/settings/machines:
+    get:
+      operationId: listOrderingMachines
+      summary: Query machine settings list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingMachine
+      summary: Create or update machine settings item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/settings/boost-params:
+    get:
+      operationId: listOrderingBoostParams
+      summary: Query boost parameter settings list
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: upsertOrderingBoostParam
+      summary: Create or update boost parameter settings item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/settings/recycle:
+    get:
+      operationId: listOrderingRecycleItems
+      summary: Query recycle bin items
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    post:
+      operationId: operateOrderingRecycleItems
+      summary: Restore or purge recycle items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/ordering/settings/general:
+    get:
+      operationId: getOrderingGeneralSettings
+      summary: Get general settings with 7 tabs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      operationId: putOrderingGeneralSettings
+      summary: Save general settings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/identity/login:
+    post:
+      operationId: identityLogin
+      summary: Login and return session payload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdentityLoginResponse'
+  /api/workspace/current:
+    get:
+      operationId: getCurrentWorkspace
+      summary: Get current workspace context
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceCurrentResponse'
+  /api/team-management/{teamId}/members/{memberId}/permissions:
+    get:
+      operationId: getTeamMemberPermissions
+      summary: Get team member permissions
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamMemberPermissionsResponse'
+
+components:
+  schemas:
+    OrderingOrdersResponse:
+      type: object
+      required: [orders, total]
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+        total:
+          type: integer
+    OrderingAdminSummaryResponse:
+      type: object
+      required: [activeUsers, openOrders, overdueOrders]
+      properties:
+        activeUsers:
+          type: integer
+        openOrders:
+          type: integer
+        overdueOrders:
+          type: integer
+    IdentityLoginResponse:
+      type: object
+      required: [token, expiresAt, user]
+      properties:
+        token:
+          type: string
+        expiresAt:
+          type: string
+        user:
+          type: object
+          required: [id, email, role]
+          properties:
+            id:
+              type: string
+            email:
+              type: string
+            role:
+              type: string
+    WorkspaceCurrentResponse:
+      type: object
+      required: [type]
+      properties:
+        type:
+          type: string
+          enum: [personal, team]
+        team:
+          type: object
+          required: [id, name, teamCode, role]
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            teamCode:
+              type: string
+            role:
+              type: string
+    TeamMemberPermissionsResponse:
+      type: object
+      required: [memberId, role, permissions]
+      properties:
+        memberId:
+          type: integer
+        role:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    Order:
+      type: object
+      required: [id, status, amount, createdAt]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        amount:
+          type: number
+        createdAt:
+          type: string

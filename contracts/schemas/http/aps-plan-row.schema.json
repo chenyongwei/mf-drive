@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aps-plan-row.schema.json",
+  "type": "object",
+  "required": ["planId", "planCode", "orderCode", "layoutCode", "material", "priority", "dueAt", "status", "machineId", "updatedAt"],
+  "properties": {
+    "planId": { "type": "string" },
+    "planCode": { "type": "string" },
+    "orderCode": { "type": "string" },
+    "layoutCode": { "type": "string" },
+    "material": { "type": "string" },
+    "priority": { "type": "integer" },
+    "dueAt": { "type": "string" },
+    "status": { "type": "string", "enum": ["pending", "ready", "scheduled", "done", "blocked"] },
+    "machineId": { "type": ["string", "null"] },
+    "updatedAt": { "type": "string" }
+  },
+  "additionalProperties": false
+}

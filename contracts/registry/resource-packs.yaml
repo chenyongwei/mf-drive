@@ -1,0 +1,33 @@
+resourcePacks:
+  - resourcePackId: wms.inventory.material-options.read
+    consumerAppId: wms
+    description: Read WMS material options for ordering flows
+    selectorSchema:
+      dataDomains: [INVENTORY]
+      objectTypes: [MaterialOption]
+      containerIds: []
+    actions: [read]
+  - resourcePackId: drive.storage.containers.read
+    consumerAppId: drive
+    description: Read Drive storage containers
+    selectorSchema:
+      dataDomains: [FILE]
+      objectTypes: [Container]
+      containerIds: []
+    actions: [read]
+  - resourcePackId: drive.storage.artifacts.read
+    consumerAppId: drive
+    description: Read Drive artifacts
+    selectorSchema:
+      dataDomains: [FILE]
+      objectTypes: [Artifact]
+      containerIds: []
+    actions: [read]
+  - resourcePackId: foundation.model.read
+    consumerAppId: foundation_workbench
+    description: Read foundation shared model data
+    selectorSchema:
+      dataDomains: [FOUNDATION_MODEL]
+      objectTypes: []
+      containerIds: []
+    actions: [read]

@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "id": "boost-1",
+      "layoutId": "layout-3",
+      "jobId": "job-2",
+      "machine": "laser-01",
+      "operator": "tom",
+      "status": "done",
+      "startedAt": "2026-02-13T02:00:00.000Z"
+    }
+  ],
+  "total": 1
+}

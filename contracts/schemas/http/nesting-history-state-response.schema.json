@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nesting-history-state-response.schema.json",
+  "type": "object",
+  "required": ["currentVersion", "operations", "canUndo", "canRedo", "snapshot"],
+  "properties": {
+    "currentVersion": { "type": "integer", "minimum": 0 },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["workspaceId", "operationType", "operationData", "userId", "username", "timestamp", "version"],
+        "properties": {
+          "id": { "type": ["integer", "string"] },
+          "workspaceId": { "type": "string" },
+          "operationType": { "type": "string" },
+          "operationData": { "type": "object" },
+          "userId": { "type": "string" },
+          "username": { "type": "string" },
+          "timestamp": { "type": "integer" },
+          "version": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "canUndo": { "type": "boolean" },
+    "canRedo": { "type": "boolean" },
+    "snapshot": {
+      "type": "object",
+      "required": ["nestingParts", "plates", "partQuantities"],
+      "properties": {
+        "nestingParts": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "plates": {
+          "type": "array",
+          "items": { "type": "object" }
+        },
+        "partQuantities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["partId", "quantity"],
+            "properties": {
+              "partId": { "type": "string" },
+              "quantity": { "type": "integer", "minimum": 1, "maximum": 9999 }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "operation": {
+      "type": ["object", "null"],
+      "required": ["workspaceId", "operationType", "operationData", "userId", "username", "timestamp", "version"],
+      "properties": {
+        "id": { "type": ["integer", "string"] },
+        "workspaceId": { "type": "string" },
+        "operationType": { "type": "string" },
+        "operationData": { "type": "object" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "timestamp": { "type": "integer" },
+        "version": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

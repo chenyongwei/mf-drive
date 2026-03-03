@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "containerId": "ctr-ordering-appdata",
+      "tenantId": "tenant-001",
+      "ownerAppId": "ordering",
+      "mode": "APP_DATA",
+      "name": "Ordering Internal Drawings",
+      "quotaBytes": 53687091200,
+      "usedBytes": 8589934592,
+      "createdAt": "2026-02-23T10:00:00Z"
+    }
+  ],
+  "total": 1
+}

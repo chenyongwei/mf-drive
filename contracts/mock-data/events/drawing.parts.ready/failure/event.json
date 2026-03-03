@@ -1,0 +1,31 @@
+{
+  "eventId": "evt-drawing-failure-001",
+  "eventType": "drawing.parts.ready",
+  "occurredAt": "2026-02-10T10:03:00Z",
+  "producer": "drawing-api",
+  "workspaceId": "workspace-failure",
+  "payloadVersion": "2.0.0",
+  "payload": {
+    "fileId": "drawing-file-failure-001",
+    "partsCount": 1,
+    "parts": [
+      {
+        "partId": "part-failure-001",
+        "outerContour": {
+          "contourId": "part-failure-001-outer",
+          "closed": true,
+          "points": [
+            { "x": 0, "y": 0 },
+            { "x": 80, "y": 0 },
+            { "x": 80, "y": 40 },
+            { "x": 0, "y": 40 }
+          ]
+        },
+        "innerContours": [],
+        "sourceEntityIds": ["ent-failure-001-outer"],
+        "bbox": { "minX": 0, "minY": 0, "maxX": 80, "maxY": 40 },
+        "geometryVersion": "geom-v2-failure-001"
+      }
+    ]
+  }
+}

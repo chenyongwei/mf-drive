@@ -1,0 +1,57 @@
+{
+  "planId": "tp-demo-001",
+  "mode": "AUTO",
+  "status": "warning",
+  "entries": [
+    {
+      "partId": "part-demo-001",
+      "contourId": "part-demo-001-inner-1",
+      "startPointParam": 0,
+      "direction": "CW",
+      "leadIn": { "enabled": true, "length": 4, "angleDeg": 45 },
+      "leadOut": { "enabled": true, "length": 3, "angleDeg": 30 }
+    }
+  ],
+  "segments": [
+    {
+      "segmentId": "seg-demo-001",
+      "kind": "RAPID",
+      "sequence": 0,
+      "partId": "part-demo-001",
+      "contourId": "part-demo-001-inner-1",
+      "from": { "x": 0, "y": 0 },
+      "to": { "x": 60, "y": 25 },
+      "length": 65
+    },
+    {
+      "segmentId": "seg-demo-002",
+      "kind": "CUT",
+      "sequence": 1,
+      "partId": "part-demo-001",
+      "contourId": "part-demo-001-inner-1",
+      "from": { "x": 60, "y": 25 },
+      "to": { "x": 120, "y": 25 },
+      "length": 60,
+      "preserve": true
+    }
+  ],
+  "metrics": {
+    "cutLength": 460,
+    "rapidLength": 180,
+    "pierceCount": 1,
+    "estimatedTimeSec": 24.2,
+    "thermalPenalty": 4.8
+  },
+  "check": {
+    "valid": true,
+    "violations": [],
+    "warnings": ["thermal risk elevated"]
+  },
+  "warnings": ["thermal risk elevated"],
+  "appliedOverrides": {
+    "startPointOverrides": [],
+    "leadOverrides": [],
+    "sequenceOverrides": []
+  },
+  "generatedAt": "2026-02-17T08:05:00Z"
+}

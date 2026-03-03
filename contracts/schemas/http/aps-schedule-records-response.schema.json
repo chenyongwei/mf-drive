@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aps-schedule-records-response.schema.json",
+  "type": "object",
+  "required": ["items", "total", "page", "pageSize"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": { "$ref": "aps-schedule-record-row.schema.json" }
+    },
+    "total": { "type": "integer", "minimum": 0 },
+    "page": { "type": "integer", "minimum": 1 },
+    "pageSize": { "type": "integer", "minimum": 1 }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,612 @@
+openapi: 3.0.3
+info:
+  title: Foundation Ontology API
+  version: 0.1.0
+servers:
+  - url: http://localhost:31310
+paths:
+  /api/foundation/ontology/types:
+    get:
+      operationId: listFoundationOntologyTypes
+      summary: List all ontology object types
+      responses:
+        '200':
+          description: Object type definitions
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyObjectTypeDefinition'
+                  total:
+                    type: integer
+
+  /api/foundation/ontology/types/{type}:
+    get:
+      operationId: getFoundationOntologyType
+      summary: Get one ontology object type definition
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+      responses:
+        '200':
+          description: Type definition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OntologyObjectTypeDefinition'
+        '404':
+          description: Not found
+
+  /api/foundation/ontology/objects/{type}:
+    get:
+      operationId: listFoundationOntologyObjects
+      summary: List objects for one ontology type
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: keys
+          schema:
+            type: string
+        - in: query
+          name: q
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        '200':
+          description: Object list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyObject'
+                  total:
+                    type: integer
+
+  /api/foundation/ontology/objects/{type}/{key}:
+    get:
+      operationId: getFoundationOntologyObject
+      summary: Get one ontology object by key
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OntologyObject'
+        '404':
+          description: Not found
+
+  /api/foundation/ontology/objects/{type}/{key}/links:
+    get:
+      operationId: listFoundationOntologyObjectLinks
+      summary: List links for one object
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: direction
+          schema:
+            type: string
+            enum: [inbound, outbound, both]
+      responses:
+        '200':
+          description: Object links
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyLink'
+                  total:
+                    type: integer
+
+  /api/foundation/ontology/links:
+    get:
+      operationId: listFoundationOntologyLinks
+      summary: List ontology links with filters
+      parameters:
+        - in: query
+          name: linkType
+          schema:
+            $ref: '#/components/schemas/OntologyLinkType'
+        - in: query
+          name: fromType
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: fromKey
+          schema:
+            type: string
+        - in: query
+          name: toType
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: toKey
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Links
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyLink'
+                  total:
+                    type: integer
+
+  /api/foundation/ontology/search:
+    post:
+      operationId: searchFoundationOntology
+      summary: Search ontology objects across one or many types
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OntologyObjectType'
+                query:
+                  $ref: '#/components/schemas/SearchQuery'
+      responses:
+        '200':
+          description: Search result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyObject'
+                  total:
+                    type: integer
+
+  /api/foundation/ontology/actions/{action}:
+    post:
+      operationId: executeFoundationOntologyAction
+      summary: Execute ontology action
+      parameters:
+        - in: path
+          name: action
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Action result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  action:
+                    type: string
+                  result:
+                    type: object
+                    additionalProperties: true
+        '400':
+          description: Invalid action
+
+  /api/foundation/ontology/sync:
+    post:
+      operationId: syncFoundationOntology
+      summary: Sync ontology objects from external system or adapter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                source:
+                  type: string
+                vendorId:
+                  type: string
+                targetType:
+                  $ref: '#/components/schemas/OntologyObjectType'
+                vendorData:
+                  type: object
+                  additionalProperties: true
+                objects:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OntologyObject'
+                links:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/OntologyLink'
+              additionalProperties: true
+      responses:
+        '200':
+          description: Sync result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  upsertedObjects:
+                    type: integer
+                  upsertedLinks:
+                    type: integer
+
+  /api/foundation/ontology/lineage/{type}/{key}:
+    get:
+      operationId: getFoundationOntologyLineage
+      summary: Get data lineage for one object
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: path
+          name: key
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: depth
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+      responses:
+        '200':
+          description: Lineage graph
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [root, nodes, links]
+                properties:
+                  root:
+                    $ref: '#/components/schemas/OntologyObjectRef'
+                  nodes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyObjectRef'
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OntologyLink'
+
+  /api/foundation/ontology/export/{type}:
+    get:
+      operationId: exportFoundationOntologyType
+      summary: Export one object type as CSV
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [csv]
+      responses:
+        '200':
+          description: CSV stream
+          content:
+            text/csv:
+              schema:
+                type: string
+
+  /api/foundation/ontology/import:
+    post:
+      operationId: importFoundationOntologyType
+      summary: Import one object type from CSV
+      parameters:
+        - in: query
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: format
+          schema:
+            type: string
+            enum: [csv]
+      requestBody:
+        required: true
+        content:
+          text/csv:
+            schema:
+              type: string
+          application/json:
+            schema:
+              type: object
+              properties:
+                csv:
+                  type: string
+      responses:
+        '200':
+          description: Import result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  imported:
+                    type: integer
+
+  /api/foundation/ontology/odata/{type}:
+    get:
+      operationId: queryFoundationOntologyOData
+      summary: OData-like query endpoint for one ontology type
+      parameters:
+        - in: path
+          name: type
+          required: true
+          schema:
+            $ref: '#/components/schemas/OntologyObjectType'
+        - in: query
+          name: $filter
+          schema:
+            type: string
+        - in: query
+          name: $select
+          schema:
+            type: string
+        - in: query
+          name: $orderby
+          schema:
+            type: string
+        - in: query
+          name: $top
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: $skip
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: $expand
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OData-like result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [value]
+                properties:
+                  '@odata.count':
+                    type: integer
+                  value:
+                    type: array
+                    items:
+                      type: object
+                      additionalProperties: true
+
+components:
+  schemas:
+    FoundationAppId:
+      type: string
+      enum: [nesting, drawing, ordering, crm, aps, wms, drive, foundation_workbench]
+
+    OntologyDataDomainV1:
+      type: string
+      enum: [ORDER, DRAWING, NESTING, INVENTORY, FILE, FOUNDATION_MODEL, CUSTOMER, SCHEDULING]
+
+    OntologyObjectType:
+      type: string
+      enum:
+        - Customer
+        - SalesOrder
+        - OrderFolder
+        - DrawingFile
+        - CadEntity
+        - Part
+        - Font
+        - NestingJob
+        - NestingLayout
+        - ToolpathPlan
+        - GcodeConfig
+        - SheetMaterial
+        - Sheet
+        - PipeMaterial
+        - PipeStock
+        - ProcessConfig
+        - Container
+        - Artifact
+        - ArtifactVersion
+        - BomVersion
+        - FoundationSheet
+        - SheetReservation
+        - App
+        - SecurityPolicy
+        - ProductionPlan
+        - Machine
+        - ScheduleRecord
+
+    OntologyLinkType:
+      type: string
+      enum:
+        - CustomerPlacesOrder
+        - OrderContainsDrawing
+        - OrderStoredInContainer
+        - DrawingContainsEntity
+        - DrawingContainsPart
+        - DrawingPersistedAsArtifact
+        - PartPlacedInLayout
+        - NestingJobProducesLayout
+        - LayoutGeneratesToolpath
+        - LayoutConsumesSheet
+        - LayoutCreatesProductionPlan
+        - PlanAssignedToMachine
+        - PlanProducesScheduleRecord
+        - MaterialHasSheet
+        - SheetReservedBy
+        - BomReferencePart
+        - ContainerStoresArtifact
+        - ArtifactHasVersion
+        - AppGovernedByPolicy
+        - OrderReferenceMaterial
+
+    SearchQuery:
+      type: object
+      properties:
+        text:
+          type: string
+        filters:
+          type: object
+          additionalProperties: true
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 500
+        offset:
+          type: integer
+          minimum: 0
+      additionalProperties: false
+
+    OntologyObjectRef:
+      type: object
+      required: [objectType, primaryKey]
+      properties:
+        objectType:
+          $ref: '#/components/schemas/OntologyObjectType'
+        primaryKey:
+          type: string
+
+    OntologyObject:
+      type: object
+      required: [objectType, primaryKey, properties, sourceApp, dataDomain, syncedAt]
+      properties:
+        objectType:
+          $ref: '#/components/schemas/OntologyObjectType'
+        primaryKey:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+        sourceApp:
+          $ref: '#/components/schemas/FoundationAppId'
+        dataDomain:
+          $ref: '#/components/schemas/OntologyDataDomainV1'
+        syncedAt:
+          type: string
+          format: date-time
+
+    OntologyLink:
+      type: object
+      required: [linkType, fromType, fromKey, toType, toKey]
+      properties:
+        linkType:
+          $ref: '#/components/schemas/OntologyLinkType'
+        fromType:
+          $ref: '#/components/schemas/OntologyObjectType'
+        fromKey:
+          type: string
+        toType:
+          $ref: '#/components/schemas/OntologyObjectType'
+        toKey:
+          type: string
+        properties:
+          type: object
+          additionalProperties: true
+
+    OntologyObjectTypeDefinition:
+      type: object
+      required: [objectType, dataDomain, sourceApp, primaryKey, properties]
+      properties:
+        objectType:
+          $ref: '#/components/schemas/OntologyObjectType'
+        description:
+          type: string
+        dataDomain:
+          $ref: '#/components/schemas/OntologyDataDomainV1'
+        sourceApp:
+          $ref: '#/components/schemas/FoundationAppId'
+        sourceService:
+          type: string
+        primaryKey:
+          type: string
+        properties:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: true

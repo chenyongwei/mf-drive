@@ -1,0 +1,526 @@
+openapi: 3.0.3
+info:
+  title: drive-api
+  version: 0.1.0
+paths:
+  /api/drive/containers:
+    get:
+      operationId: listDriveContainers
+      summary: List drive containers in current tenant scope
+      responses:
+        '200':
+          description: Container list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveContainersResponse'
+    post:
+      operationId: createDriveContainer
+      summary: Create one drive container
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, mode]
+              properties:
+                name:
+                  type: string
+                mode:
+                  type: string
+                  enum: [APP_DATA, MY_DRIVE]
+                quotaBytes:
+                  type: integer
+                  minimum: 1
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [container]
+                properties:
+                  container:
+                    $ref: '#/components/schemas/DriveContainer'
+
+  /api/drive/artifacts/init-upload:
+    post:
+      operationId: initDriveArtifactUpload
+      summary: Initialize artifact upload and return signed upload URL
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [containerId, artifactType, fileName]
+              properties:
+                containerId:
+                  type: string
+                artifactType:
+                  type: string
+                  enum: [DRAWING, PARTS, LAYOUT]
+                fileName:
+                  type: string
+                mimeType:
+                  type: string
+                sizeBytes:
+                  type: integer
+                  minimum: 0
+                projectId:
+                  type: string
+      responses:
+        '200':
+          description: Upload initialized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveUploadInitResponse'
+
+  /api/drive/artifacts/{artifactId}/complete-upload:
+    post:
+      operationId: completeDriveArtifactUpload
+      summary: Complete upload and finalize artifact version metadata
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                versionId:
+                  type: string
+                etag:
+                  type: string
+                sha256:
+                  type: string
+                sizeBytes:
+                  type: integer
+                  minimum: 0
+      responses:
+        '200':
+          description: Upload completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveArtifactResponse'
+
+  /api/drive/artifacts/query:
+    post:
+      operationId: queryDriveArtifacts
+      summary: Query artifacts by keyword/type/container/project
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Artifact query result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveArtifactsResponse'
+
+  /api/drive/artifacts/{artifactId}:
+    get:
+      operationId: getDriveArtifact
+      summary: Get one artifact metadata
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artifact metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveArtifactResponse'
+
+  /api/drive/artifacts/{artifactId}/versions:
+    get:
+      operationId: listDriveArtifactVersions
+      summary: List all versions for one artifact
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Artifact versions
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DriveArtifactVersion'
+                  total:
+                    type: integer
+                    minimum: 0
+
+  /api/drive/artifacts/{artifactId}/download-url:
+    post:
+      operationId: getDriveArtifactDownloadUrl
+      summary: Get a short-lived signed download URL
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: Signed URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveDownloadUrlResponse'
+
+  /api/drive/artifacts/{artifactId}/acl:
+    put:
+      operationId: updateDriveArtifactAcl
+      summary: Replace ACL entries for one artifact
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [entries]
+              properties:
+                entries:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/DriveAclEntry'
+      responses:
+        '200':
+          description: ACL updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveAclResponse'
+
+  /api/drive/artifacts/{artifactId}/grants:
+    post:
+      operationId: createDriveCrossAppGrant
+      summary: Create one cross-app grant for artifact access
+      parameters:
+        - name: artifactId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sourceAppId, targetAppId, permissions]
+              properties:
+                sourceAppId:
+                  type: string
+                targetAppId:
+                  type: string
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                expiresAt:
+                  type: string
+      responses:
+        '200':
+          description: Grant created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveGrantResponse'
+
+  /api/drive/grants/{grantId}:
+    delete:
+      operationId: revokeDriveCrossAppGrant
+      summary: Revoke one cross-app grant
+      parameters:
+        - name: grantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Grant revoked
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success, grantId, revokedAt]
+                properties:
+                  success:
+                    type: boolean
+                  grantId:
+                    type: string
+                  revokedAt:
+                    type: string
+
+  /api/drive/audit/logs:
+    get:
+      operationId: listDriveAuditLogs
+      summary: List drive audit logs
+      responses:
+        '200':
+          description: Audit logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DriveAuditLogsResponse'
+
+components:
+  schemas:
+    DriveContainer:
+      type: object
+      required: [containerId, tenantId, ownerAppId, mode, name, quotaBytes, usedBytes, createdAt]
+      properties:
+        containerId:
+          type: string
+        tenantId:
+          type: string
+        ownerAppId:
+          type: string
+        mode:
+          type: string
+          enum: [APP_DATA, MY_DRIVE]
+        name:
+          type: string
+        quotaBytes:
+          type: integer
+          minimum: 0
+        usedBytes:
+          type: integer
+          minimum: 0
+        createdAt:
+          type: string
+
+    DriveArtifactVersion:
+      type: object
+      required: [versionId, versionNo, sizeBytes, etag, createdAt]
+      properties:
+        versionId:
+          type: string
+        versionNo:
+          type: integer
+          minimum: 1
+        sizeBytes:
+          type: integer
+          minimum: 0
+        etag:
+          type: string
+        sha256:
+          type: string
+        createdAt:
+          type: string
+
+    DriveArtifact:
+      type: object
+      required:
+        - artifactId
+        - tenantId
+        - containerId
+        - artifactType
+        - ownerAppId
+        - displayName
+        - mimeType
+        - currentVersionId
+        - createdAt
+        - updatedAt
+      properties:
+        artifactId:
+          type: string
+        tenantId:
+          type: string
+        containerId:
+          type: string
+        artifactType:
+          type: string
+          enum: [DRAWING, PARTS, LAYOUT]
+        ownerAppId:
+          type: string
+        displayName:
+          type: string
+        mimeType:
+          type: string
+        currentVersionId:
+          type: string
+        projectId:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        versions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveArtifactVersion'
+
+    DriveAclEntry:
+      type: object
+      required: [principalType, principalId, permissions]
+      properties:
+        principalType:
+          type: string
+          enum: [USER, APP, ROLE, DOMAIN]
+        principalId:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        expiresAt:
+          type: string
+
+    DriveAuditLog:
+      type: object
+      required: [auditId, action, actorAppId, result, createdAt]
+      properties:
+        auditId:
+          type: string
+        action:
+          type: string
+        actorAppId:
+          type: string
+        actorUserId:
+          type: string
+        artifactId:
+          type: string
+        result:
+          type: string
+          enum: [ALLOW, DENY]
+        reason:
+          type: string
+        createdAt:
+          type: string
+
+    DriveContainersResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveContainer'
+        total:
+          type: integer
+          minimum: 0
+
+    DriveArtifactsResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveArtifact'
+        total:
+          type: integer
+          minimum: 0
+
+    DriveUploadInitResponse:
+      type: object
+      required: [artifactId, versionId, uploadUrl, expiresAt]
+      properties:
+        artifactId:
+          type: string
+        versionId:
+          type: string
+        uploadUrl:
+          type: string
+        expiresAt:
+          type: string
+
+    DriveArtifactResponse:
+      type: object
+      required: [artifact]
+      properties:
+        artifact:
+          $ref: '#/components/schemas/DriveArtifact'
+
+    DriveDownloadUrlResponse:
+      type: object
+      required: [artifactId, versionId, downloadUrl, expiresAt]
+      properties:
+        artifactId:
+          type: string
+        versionId:
+          type: string
+        downloadUrl:
+          type: string
+        expiresAt:
+          type: string
+
+    DriveAclResponse:
+      type: object
+      required: [artifactId, entries]
+      properties:
+        artifactId:
+          type: string
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveAclEntry'
+
+    DriveGrantResponse:
+      type: object
+      required: [grantId, artifactId, sourceAppId, targetAppId, permissions, status, createdAt]
+      properties:
+        grantId:
+          type: string
+        artifactId:
+          type: string
+        sourceAppId:
+          type: string
+        targetAppId:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED]
+        expiresAt:
+          type: string
+        createdAt:
+          type: string
+
+    DriveAuditLogsResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DriveAuditLog'
+        total:
+          type: integer
+          minimum: 0

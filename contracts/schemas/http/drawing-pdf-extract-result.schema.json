@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-pdf-extract-result.schema.json",
+  "type": "object",
+  "required": ["fileName", "source", "confidence", "table", "cad", "warnings", "errors"],
+  "properties": {
+    "fileName": { "type": "string" },
+    "inputKind": { "type": "string", "enum": ["pdf", "image"] },
+    "source": { "type": "string", "enum": ["text", "ocr", "mixed"] },
+    "confidence": { "type": "number" },
+    "table": { "$ref": "drawing-pdf-table-result.schema.json" },
+    "cad": { "$ref": "drawing-pdf-cad-result.schema.json" },
+    "partRecognition": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "errors": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

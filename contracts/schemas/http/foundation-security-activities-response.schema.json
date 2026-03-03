@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-security-activities-response.schema.json",
+  "type": "object",
+  "required": ["items", "total"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["activityId", "activityType", "actor", "scopes", "status", "createdAt"],
+        "properties": {
+          "activityId": { "type": "string" },
+          "activityType": {
+            "type": "string",
+            "enum": [
+              "GRANT_CREATED",
+              "GRANT_INCREMENTED",
+              "GRANT_REVOKED",
+              "APP_INSTALLED",
+              "ACCOUNT_AUTHORIZED",
+              "ACCOUNT_AUTH_REVOKED"
+            ]
+          },
+          "actor": { "type": "string" },
+          "scopes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "grantId": { "type": "string" },
+          "appId": { "type": "string" },
+          "clientId": { "type": "string" },
+          "sourceAppId": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING_CONFIRMATION", "CONFIRMED"]
+          },
+          "createdAt": { "type": "string" },
+          "confirmedAt": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}
