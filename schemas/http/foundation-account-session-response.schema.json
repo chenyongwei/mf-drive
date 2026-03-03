@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-account-session-response.schema.json",
+  "type": "object",
+  "required": ["accountAuthorized"],
+  "properties": {
+    "accountAuthorized": { "type": "boolean" },
+    "accountAuthorizedAt": { "type": "string" },
+    "revokedAt": { "type": "string" }
+  },
+  "additionalProperties": false
+}

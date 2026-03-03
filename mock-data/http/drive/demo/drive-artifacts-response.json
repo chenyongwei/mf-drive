@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "artifactId": "art-demo-001",
+      "tenantId": "tenant-demo",
+      "containerId": "ctr-demo-shared",
+      "artifactType": "DRAWING",
+      "ownerAppId": "drawing",
+      "displayName": "demo-bracket.dxf",
+      "mimeType": "application/dxf",
+      "currentVersionId": "ver-demo-2",
+      "projectId": "proj-demo-9",
+      "createdAt": "2026-02-23T08:10:00Z",
+      "updatedAt": "2026-02-23T09:40:00Z"
+    }
+  ],
+  "total": 1
+}

@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "cfg-1",
+      "name": "华东机电",
+      "code": "CUS-001",
+      "enabled": true,
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    },
+    {
+      "id": "cfg-2",
+      "name": "北方激光",
+      "code": "CUS-002",
+      "enabled": true,
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 1
+}

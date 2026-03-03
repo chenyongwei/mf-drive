@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-sheet-available-response.schema.json",
+  "type": "object",
+  "required": ["items", "total"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sheetId", "materialCode", "thickness", "width", "height", "quantity", "status"],
+        "properties": {
+          "sheetId": { "type": "string" },
+          "materialCode": { "type": "string" },
+          "thickness": { "type": "number" },
+          "width": { "type": "number", "minimum": 0 },
+          "height": { "type": "number", "minimum": 0 },
+          "quantity": { "type": "integer", "minimum": 0 },
+          "status": {
+            "type": "string",
+            "enum": ["AVAILABLE", "RESERVED", "CONSUMED"]
+          },
+          "location": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "items": [
+        {
+          "sheetId": "sheet-demo-001",
+          "materialCode": "304",
+          "thickness": 6,
+          "width": 3000,
+          "height": 1500,
+          "quantity": 12,
+          "status": "AVAILABLE",
+          "location": "D-03"
+        }
+      ],
+  "total": 1
+}

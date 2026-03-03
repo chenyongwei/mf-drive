@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "planId": "plan-demo-1",
+      "planCode": "APS-DEMO-0001",
+      "orderCode": "ORD-DEMO-0201",
+      "layoutCode": "L-DEMO-0201",
+      "material": "Q355-8mm",
+      "priority": 1,
+      "dueAt": "2026-02-23T08:00:00Z",
+      "status": "ready",
+      "machineId": null,
+      "updatedAt": "2026-02-23T08:00:00Z"
+    },
+    {
+      "planId": "plan-demo-2",
+      "planCode": "APS-DEMO-0002",
+      "orderCode": "ORD-DEMO-0202",
+      "layoutCode": "L-DEMO-0202",
+      "material": "304-5mm",
+      "priority": 2,
+      "dueAt": "2026-02-23T09:00:00Z",
+      "status": "scheduled",
+      "machineId": "machine-2",
+      "updatedAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "pageSize": 20
+}

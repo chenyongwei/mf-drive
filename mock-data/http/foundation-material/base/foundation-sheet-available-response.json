@@ -1,0 +1,15 @@
+{
+  "items": [
+        {
+          "sheetId": "sheet-base-001",
+          "materialCode": "Q355B",
+          "thickness": 12,
+          "width": 6000,
+          "height": 2000,
+          "quantity": 6,
+          "status": "AVAILABLE",
+          "location": "A-01"
+        }
+      ],
+  "total": 1
+}

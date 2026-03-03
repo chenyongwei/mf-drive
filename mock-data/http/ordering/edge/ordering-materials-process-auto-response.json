@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "proc-1",
+      "name": "默认自动工艺",
+      "enabled": true,
+      "params": {
+        "leadIn": 3,
+        "leadOut": 2,
+        "microJoint": true
+      },
+      "updatedAt": "2026-02-13T02:00:00.000Z"
+    }
+  ],
+  "total": 1
+}

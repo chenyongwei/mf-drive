@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "recordId": "record-demo-1",
+      "action": "batch",
+      "planId": "plan-demo-2",
+      "planCode": "APS-DEMO-0002",
+      "machineId": "machine-2",
+      "machineName": "Laser-02",
+      "operator": "demo-user",
+      "status": "scheduled",
+      "createdAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20
+}

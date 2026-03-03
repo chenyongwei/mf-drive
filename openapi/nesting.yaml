@@ -1,0 +1,822 @@
+openapi: 3.0.3
+info:
+  title: nesting-api
+  version: 1.0.0
+paths:
+  /api/nesting/jobs:
+    get:
+      operationId: listNestingJobs
+      summary: List nesting jobs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingJobsResponse'
+  /api/nesting/jobs/{jobId}:
+    get:
+      operationId: getNestingJob
+      summary: Get one nesting job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingJob'
+  /api/nesting/jobs/start:
+    post:
+      operationId: startNestingJob
+      summary: Start a nesting job
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestStartResponse'
+  /api/nesting/jobs/{jobId}/status:
+    get:
+      operationId: getNestingJobStatus
+      summary: Get one nesting job status
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/jobs/{jobId}/stop:
+    post:
+      operationId: stopNestingJob
+      summary: Stop one nesting job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/jobs/{jobId}/result:
+    get:
+      operationId: getNestingJobResult
+      summary: Get one nesting job result
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/jobs/{jobId}/layouts/{layoutId}:
+    get:
+      operationId: getNestingJobLayout
+      summary: Get one layout from nesting result
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: layoutId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/jobs/{jobId}/commit:
+    post:
+      operationId: commitNestingResult
+      summary: Commit one nesting result and bind part and sheet traces
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bomVersionId:
+                  type: string
+                records:
+                  type: array
+                  items:
+                    type: object
+                    required: [partId, sheetId, quantity]
+                    properties:
+                      partId:
+                        type: string
+                      sheetId:
+                        type: string
+                      quantity:
+                        type: integer
+                        minimum: 1
+      responses:
+        '200':
+          description: Committed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [nestingId, status, committedAt]
+                properties:
+                  nestingId:
+                    type: string
+                  status:
+                    type: string
+                    enum: [committed]
+                  committedAt:
+                    type: string
+  /api/nesting/parts:
+    get:
+      operationId: listNestingParts
+      summary: List nesting parts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /api/nesting/parts/{partId}:
+    get:
+      operationId: getNestingPart
+      summary: Get one nesting part
+      parameters:
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/prts/all:
+    get:
+      operationId: listNestingPrtsAll
+      summary: List nesting prts compatibility view
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/prts/{partId}:
+    get:
+      operationId: getNestingPrtsPart
+      summary: Get nesting prts compatibility detail
+      parameters:
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/parts/quantities:
+    get:
+      operationId: listNestingPartQuantities
+      summary: List quantities for all nesting parts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingPartQuantitiesResponse'
+  /api/nesting/parts/{partId}/quantity:
+    put:
+      operationId: updateNestingPartQuantity
+      summary: Update quantity for one nesting part
+      parameters:
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NestingPartQuantityUpdateRequest'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingPartQuantityUpdateResponse'
+  /api/nesting/toolpath/plan:
+    post:
+      operationId: createToolpathPlan
+      summary: Create toolpath plan from layout, contour snapshot, and process params
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolpathPlanRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolpathPlanResponse'
+  /api/nesting/toolpath/plan/{planId}:
+    get:
+      operationId: getToolpathPlan
+      summary: Get toolpath plan by planId
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolpathPlanResponse'
+  /api/nesting/toolpath/check:
+    post:
+      operationId: checkToolpathPlan
+      summary: Run hard-constraint checks for toolpath request and overrides
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolpathPlanRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ToolpathCheckResult'
+  /api/nesting/export/gcode:
+    post:
+      operationId: exportNestGcode
+      summary: Export GCode from layout or from toolpath planId
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NestExportGcodeRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestExportGcodeResponse'
+  /api/nesting/export/{fileId}:
+    post:
+      operationId: exportNestingLayoutByFileId
+      summary: Export nesting output by file id
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/gcode/presets:
+    get:
+      operationId: listGcodePresets
+      summary: List GCode presets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GcodeConfigsResponse'
+  /api/nesting/gcode/presets/{deviceType}:
+    get:
+      operationId: listGcodePresetsByDeviceType
+      summary: List GCode presets by device type
+      parameters:
+        - name: deviceType
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GcodeConfigsResponse'
+  /api/nesting/gcode/configs:
+    get:
+      operationId: listGcodeConfigs
+      summary: List GCode configs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GcodeConfigsResponse'
+    post:
+      operationId: createGcodeConfig
+      summary: Create one GCode config
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/gcode/configs/{configId}:
+    get:
+      operationId: getGcodeConfig
+      summary: Get one GCode config
+      parameters:
+        - name: configId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    put:
+      operationId: updateGcodeConfig
+      summary: Update one GCode config
+      parameters:
+        - name: configId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+    delete:
+      operationId: deleteGcodeConfig
+      summary: Delete one GCode config
+      parameters:
+        - name: configId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+  /api/nesting/gcode/configs/{configId}/duplicate:
+    post:
+      operationId: duplicateGcodeConfig
+      summary: Duplicate one GCode config
+      parameters:
+        - name: configId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/gcode/preview:
+    post:
+      operationId: previewGcode
+      summary: Preview GCode
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/nesting/gcode/files/{fileId}/export/gcode:
+    post:
+      operationId: exportGcodeByFileId
+      summary: Export GCode by file id
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/nesting/history/{workspaceId}/state:
+    get:
+      operationId: getNestingHistoryState
+      summary: Get nesting history state
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingHistoryStateResponse'
+  /api/nesting/history/{workspaceId}/commit:
+    post:
+      operationId: commitNestingHistorySnapshot
+      summary: Commit nesting history snapshot
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NestingHistoryCommitSnapshotRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingHistoryStateResponse'
+  /api/nesting/history/{workspaceId}/undo:
+    post:
+      operationId: undoNestingHistory
+      summary: Undo one nesting history operation
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingHistoryStateResponse'
+  /api/nesting/history/{workspaceId}/redo:
+    post:
+      operationId: redoNestingHistory
+      summary: Redo one nesting history operation
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingHistoryStateResponse'
+  /api/nesting/history/{workspaceId}/jump-to/{targetVersion}:
+    post:
+      operationId: jumpNestingHistoryToVersion
+      summary: Jump nesting history to target version
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: targetVersion
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NestingHistoryStateResponse'
+  /api/nesting/history/{workspaceId}/preview/{targetVersion}:
+    get:
+      operationId: previewNestingHistoryVersion
+      summary: Preview nesting history target version
+      parameters:
+        - name: workspaceId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: targetVersion
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    NestingJobsResponse:
+      type: object
+      required: [jobs, total]
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/NestingJob'
+        total:
+          type: integer
+    NestingJob:
+      type: object
+      required: [id, status, progress, utilization, createdAt]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        progress:
+          type: integer
+        utilization:
+          type: number
+        createdAt:
+          type: string
+    NestingPartQuantityRecord:
+      type: object
+      required: [partId, quantity]
+      properties:
+        partId:
+          type: string
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 9999
+    NestingPartQuantitiesResponse:
+      $ref: '../schemas/http/nesting-part-quantities-response.schema.json'
+    NestingPartQuantityUpdateRequest:
+      $ref: '../schemas/http/nesting-part-quantity-update-request.schema.json'
+    NestingPartQuantityUpdateResponse:
+      $ref: '../schemas/http/nesting-part-quantity-update-response.schema.json'
+    NestStartResponse:
+      type: object
+      required: [id, nestingId, status, progress, currentUtilization, currentLayout]
+      properties:
+        id:
+          type: string
+        nestingId:
+          type: string
+        status:
+          type: string
+        progress:
+          type: integer
+        currentUtilization:
+          type: number
+        currentLayout:
+          type: object
+          required: [id, utilization, parts, placedParts, material]
+          properties:
+            id:
+              type: string
+            utilization:
+              type: number
+            parts:
+              type: array
+              items:
+                type: object
+                required: [partId, partName, position, bbox, rotation]
+                properties:
+                  partId:
+                    type: string
+                  partName:
+                    type: string
+                  rotation:
+                    type: number
+                  position:
+                    type: object
+                    required: [x, y]
+                    properties:
+                      x:
+                        type: number
+                      y:
+                        type: number
+                  bbox:
+                    type: object
+                    required: [minX, minY, maxX, maxY]
+                    properties:
+                      minX:
+                        type: number
+                      minY:
+                        type: number
+                      maxX:
+                        type: number
+                      maxY:
+                        type: number
+            placedParts:
+              type: array
+              items:
+                type: object
+                required: [partId, x, y, rotation]
+                properties:
+                  partId:
+                    type: string
+                  x:
+                    type: number
+                  y:
+                    type: number
+                  rotation:
+                    type: number
+            material:
+              type: object
+              required: [width, height, thickness]
+              properties:
+                width:
+                  type: number
+                height:
+                  type: number
+                thickness:
+                  type: number
+        material:
+          type: object
+          required: [width, height, thickness]
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+            thickness:
+              type: number
+    GcodeConfigsResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            required: [id, name, deviceType, controlSystem, feedRate, rapidRate, leadIn, leadOut, microJoint]
+            properties:
+              id:
+                type: string
+              name:
+                type: string
+              deviceType:
+                type: string
+              controlSystem:
+                type: string
+              feedRate:
+                type: number
+              rapidRate:
+                type: number
+              leadIn:
+                type: object
+              leadOut:
+                type: object
+              microJoint:
+                type: object
+    NestExportGcodeRequest:
+      type: object
+      properties:
+        layoutId:
+          type: string
+        configId:
+          type: string
+        fileName:
+          type: string
+        planId:
+          type: string
+    NestExportGcodeResponse:
+      type: object
+      required: [downloadUrl, fileName]
+      properties:
+        downloadUrl:
+          type: string
+        fileName:
+          type: string
+        planId:
+          type: string
+    ToolpathPlanRequest:
+      $ref: '../schemas/http/toolpath-plan-request.schema.json'
+    ToolpathPlanResponse:
+      $ref: '../schemas/http/toolpath-plan-response.schema.json'
+    ToolpathEntry:
+      $ref: '../schemas/http/toolpath-entry.schema.json'
+    ToolpathSegment:
+      $ref: '../schemas/http/toolpath-segment.schema.json'
+    ToolpathOverride:
+      $ref: '../schemas/http/toolpath-override.schema.json'
+    ToolpathCheckResult:
+      $ref: '../schemas/http/toolpath-check-result.schema.json'
+    NestingHistoryOperation:
+      $ref: '../schemas/http/nesting-history-operation.schema.json'
+    NestingHistoryStateResponse:
+      $ref: '../schemas/http/nesting-history-state-response.schema.json'
+    NestingHistoryCommitSnapshotRequest:
+      $ref: '../schemas/http/nesting-history-commit-snapshot-request.schema.json'

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "toolpath-segment.schema.json",
+  "type": "object",
+  "required": ["segmentId", "kind", "sequence", "from", "to", "length"],
+  "properties": {
+    "segmentId": { "type": "string" },
+    "kind": { "type": "string", "enum": ["CUT", "RAPID", "LEAD_IN", "LEAD_OUT"] },
+    "sequence": { "type": "integer", "minimum": 0 },
+    "partId": { "type": "string" },
+    "contourId": { "type": "string" },
+    "from": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "to": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "length": { "type": "number", "minimum": 0 },
+    "preserve": { "type": "boolean" },
+    "commonEdgeGroupId": { "type": "string" }
+  },
+  "additionalProperties": false
+}

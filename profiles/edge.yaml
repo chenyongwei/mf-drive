@@ -1,0 +1,13 @@
+name: edge
+description: Boundary and sparse datasets for edge-case testing
+http:
+  ordering: edge
+  drawing: edge
+  nesting: edge
+events:
+  drawing.parts.ready: edge
+  nesting.job.completed: edge
+  ordering.order.updated: edge
+failureInjection:
+  enabled: false
+  latencyMs: 0

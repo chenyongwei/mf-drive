@@ -1,0 +1,9 @@
+{
+  "token": "mock-token-edge",
+  "expiresAt": "2026-02-10T10:10:00Z",
+  "user": {
+    "id": "user-edge-001",
+    "email": "viewer@example.com",
+    "role": "viewer"
+  }
+}

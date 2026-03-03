@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["grantId", "accessToken", "scopes", "introspectActive"],
+  "properties": {
+    "grantId": { "type": "string" },
+    "accessToken": { "type": "string" },
+    "scopes": {
+      "type": "array",
+      "items": { "$ref": "wms-scope.schema.json" }
+    },
+    "introspectActive": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

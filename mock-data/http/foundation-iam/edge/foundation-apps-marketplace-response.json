@@ -1,0 +1,63 @@
+{
+  "accountAuthorized": true,
+  "accountAuthorizedAt": "2026-03-02T01:00:00Z",
+  "items": [
+    {
+      "appId": "wms",
+      "name": "WMS",
+      "route": "/wms/materials",
+      "clientId": "wms-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "wms.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "l1Authorized": false,
+      "resourceGrantCount": 0,
+      "category": "inventory",
+      "tagline": "板材与管材库存全量管理",
+      "shortDescription": "覆盖库存、预占、消耗和工艺配置。",
+      "tags": ["wms", "inventory", "materials"],
+      "highlights": ["库存可视化", "工艺参数", "权限分级"],
+      "updatedAt": "2026-02-22T10:22:00Z",
+      "ratingAverage": 4.5,
+      "ratingCount": 74,
+      "installCount": 640,
+      "featured": false
+    },
+    {
+      "appId": "ordering",
+      "name": "订单",
+      "route": "/ordering/orders",
+      "clientId": "ordering-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "foundation.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "installedAt": "2026-02-22T09:04:00Z",
+      "l1Authorized": true,
+      "membershipRole": "OWNER",
+      "resourceGrantCount": 2,
+      "authorizationWindow": {
+        "startsAt": "2026-03-02T00:00:00Z",
+        "endsAt": "2026-04-01T00:00:00Z"
+      },
+      "category": "operations",
+      "tagline": "业务订单中心与跨域联调入口",
+      "shortDescription": "提供订单流转、设置中心和安全活动可视化。",
+      "tags": ["ordering", "portal", "ops"],
+      "highlights": ["订单卡片视图", "设置中心", "安全中心跳转"],
+      "updatedAt": "2026-02-22T09:20:00Z",
+      "ratingAverage": 4.7,
+      "ratingCount": 101,
+      "installCount": 860,
+      "featured": true
+    }
+  ],
+  "total": 2,
+  "page": 1,
+  "pageSize": 20,
+  "categories": [
+    { "key": "inventory", "label": "库存仓储", "count": 1 },
+    { "key": "operations", "label": "运营管理", "count": 1 }
+  ]
+}

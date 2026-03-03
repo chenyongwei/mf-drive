@@ -1,0 +1,1462 @@
+openapi: 3.0.3
+info:
+  title: drawing-api
+  version: 1.0.0
+paths:
+  /api/drawing/files:
+    get:
+      operationId: listDrawingFiles
+      summary: List drawing files
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingFilesResponse'
+  /api/drawing/files/{fileId}:
+    get:
+      operationId: getDrawingFile
+      summary: Get one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingFile'
+  /api/drawing/files/{fileId}/status:
+    get:
+      operationId: getDrawingFileStatus
+      summary: Get drawing file status with entities
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingFileStatusResponse'
+  /api/drawing/files/{fileId}/edit:
+    post:
+      operationId: editDrawingEntities
+      summary: Execute trim/extend/delete/explode/create/move/update-text command for one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrawingEditCommandRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingEditCommandResponse'
+  /api/drawing/files/{fileId}/layers:
+    get:
+      operationId: listDrawingFileLayers
+      summary: List layers in one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/{fileId}/parts:
+    get:
+      operationId: listDrawingFileParts
+      summary: List recognized parts inside one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/{fileId}/parts/{partId}:
+    get:
+      operationId: getDrawingFilePart
+      summary: Get one recognized part inside one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/{fileId}/thumbnail:
+    get:
+      operationId: getDrawingFileThumbnail
+      summary: Get drawing file thumbnail
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/drawing/files/{fileId}/parts/{partId}/thumbnail:
+    get:
+      operationId: getDrawingFilePartThumbnail
+      summary: Get drawing file part thumbnail
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/drawing/files/{fileId}/entities:
+    post:
+      operationId: listDrawingFileEntitiesByIds
+      summary: Query entities by ids for one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/{fileId}/fix-all:
+    post:
+      operationId: fixAllDrawingFileIssues
+      summary: Apply auto fix for all detected issues
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/{fileId}/inspect:
+    get:
+      operationId: inspectDrawingFile
+      summary: Inspect one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingInspectionResult'
+  /api/drawing/files/{fileId}/inspect/status:
+    get:
+      operationId: getDrawingInspectStatus
+      summary: Get inspection progress status for one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/files/inspect-batch:
+    post:
+      operationId: inspectDrawingFilesBatch
+      summary: Batch inspect drawing files
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingInspectionResult'
+  /api/drawing/files/{fileId}/part-recognition/analyze:
+    post:
+      operationId: analyzeDrawingPartRecognition
+      summary: Analyze recognition risks before creating parts
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingPartRecognitionAnalyzeResponse'
+  /api/drawing/files/{fileId}/part-recognition/recognize:
+    post:
+      operationId: recognizeDrawingParts
+      summary: Recognize valid parts from drawing entities
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingPartRecognitionRecognizeResponse'
+  /api/drawing/files/{fileId}/part-recognition/force-set:
+    post:
+      operationId: forceSetDrawingParts
+      summary: Force set selected entities as parts
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingPartRecognitionForceSetResponse'
+  /api/drawing/files/{fileId}/part-recognition/unset:
+    post:
+      operationId: unsetDrawingParts
+      summary: Revert parts back to graphics and delete artifacts
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingPartRecognitionUnsetResponse'
+  /api/drawing/files/{fileId}/part-recognition/parts:
+    get:
+      operationId: listDrawingFileRecognitionParts
+      summary: List recognized parts for one drawing file
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/parts:
+    get:
+      operationId: listDrawingParts
+      summary: List drawing parts
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /api/drawing/parts/{partId}:
+    get:
+      operationId: getDrawingPart
+      summary: Get drawing part detail
+      parameters:
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/prts/all:
+    get:
+      operationId: listDrawingPrtsAll
+      summary: List drawing prts compatibility view
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/prts/{partId}:
+    get:
+      operationId: getDrawingPrtsPart
+      summary: Get drawing prts part compatibility detail
+      parameters:
+        - name: partId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/upload:
+    post:
+      operationId: uploadDrawingFile
+      summary: Upload one drawing file
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/prts-upload:
+    post:
+      operationId: uploadDrawingPrts
+      summary: Upload one prts file
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/rules/apply:
+    post:
+      operationId: applyDrawingRules
+      summary: Apply drawing rules
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/rules/preview:
+    post:
+      operationId: previewDrawingRules
+      summary: Preview drawing rules
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/rules/templates:
+    get:
+      operationId: listDrawingRuleTemplates
+      summary: List drawing rule templates
+      responses:
+        '200':
+          description: OK
+  /api/drawing/dimensions:
+    post:
+      operationId: createDrawingDimension
+      summary: Create drawing dimension
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/documents/{fileId}:
+    get:
+      operationId: getDrawingDocument
+      summary: Get drawing document snapshot
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/documents/{fileId}/operations:
+    get:
+      operationId: getDrawingDocumentOperations
+      summary: Get drawing document operations
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    post:
+      operationId: appendDrawingDocumentOperations
+      summary: Append drawing document operations
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/documents/{fileId}/convert:
+    post:
+      operationId: convertDrawingDocument
+      summary: Convert drawing document
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/documents/{fileId}/compact:
+    post:
+      operationId: compactDrawingDocument
+      summary: Compact drawing document
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+  /api/drawing/history/{fileId}/state:
+    get:
+      operationId: getDrawingHistoryState
+      summary: Get drawing history state
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingHistoryStateResponse'
+  /api/drawing/history/{fileId}/undo:
+    post:
+      operationId: undoDrawingHistory
+      summary: Undo one drawing history operation
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingHistoryStateResponse'
+  /api/drawing/history/{fileId}/redo:
+    post:
+      operationId: redoDrawingHistory
+      summary: Redo one drawing history operation
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingHistoryStateResponse'
+  /api/drawing/history/{fileId}/transform:
+    post:
+      operationId: transformDrawingHistoryOperation
+      summary: Transform drawing history operation
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/history/{fileId}/jump-to/{targetVersion}:
+    post:
+      operationId: jumpDrawingHistoryToVersion
+      summary: Jump drawing history to target version
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: targetVersion
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingHistoryStateResponse'
+  /api/drawing/history/{fileId}/preview/{targetVersion}:
+    get:
+      operationId: previewDrawingHistoryVersion
+      summary: Preview drawing history target version
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: targetVersion
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/drawing/history/{fileId}/commit:
+    post:
+      operationId: commitDrawingHistorySnapshot
+      summary: Commit drawing history snapshot from client-side transform
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrawingHistoryCommitSnapshotRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingHistoryStateResponse'
+  /api/drawing/fonts:
+    get:
+      operationId: listDrawingFonts
+      summary: List drawing fonts (system fonts + current user private fonts)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingFontListResponse'
+  /api/drawing/fonts/upload:
+    post:
+      operationId: uploadDrawingFont
+      summary: Upload a private font for current user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrawingFontUploadRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingFontUploadResponse'
+  /api/drawing/fonts/{fontId}:
+    delete:
+      operationId: deleteDrawingFont
+      summary: Delete one private font of current user
+      parameters:
+        - name: fontId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [success]
+                properties:
+                  success:
+                    type: boolean
+  /api/drawing/pdf/extract:
+    post:
+      operationId: extractDrawingPdf
+      summary: Extract table and CAD structure from PDF and image files
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DrawingPdfExtractRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DrawingPdfExtractResponse'
+components:
+  schemas:
+    DrawingFilesResponse:
+      type: object
+      required: [files, total]
+      properties:
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingFile'
+        total:
+          type: integer
+    DrawingFile:
+      type: object
+      required: [id, name, status, createdAt]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+    DrawingFileStatusResponse:
+      type: object
+      required: [id, name, status, entityCount, partCount, entities]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+        entityCount:
+          type: integer
+        partCount:
+          type: integer
+        entities:
+          type: array
+          items:
+            type: object
+            required: [id, type, geometry]
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              layer:
+                type: string
+              geometry:
+                type: object
+    DrawingInspectionResult:
+      type: object
+      required: [fileId, timestamp, tolerance, summary, issues]
+      properties:
+        fileId:
+          type: string
+        timestamp:
+          type: integer
+        tolerance:
+          type: number
+        summary:
+          type: object
+          required: [total, info, warning, error]
+          properties:
+            total:
+              type: integer
+            info:
+              type: integer
+            warning:
+              type: integer
+            error:
+              type: integer
+        issues:
+          type: array
+          items:
+            type: object
+            required: [id, type, level, message, location]
+            properties:
+              id:
+                type: string
+              type:
+                type: string
+              level:
+                type: string
+              message:
+                type: string
+              fileId:
+                type: string
+              entities:
+                type: array
+                items:
+                  type: string
+              location:
+                type: object
+                required: [position]
+                properties:
+                  position:
+                    type: object
+                    required: [x, y]
+                    properties:
+                      x:
+                        type: number
+                      y:
+                        type: number
+                  radius:
+                    type: number
+        recommendations:
+          type: array
+          items:
+            type: string
+    DrawingPartRecognitionAnalyzeResponse:
+      type: object
+      required: [fileId, fileVersion, inspection, summary, recommendedActions]
+      properties:
+        fileId:
+          type: string
+        fileVersion:
+          type: integer
+        inspection:
+          $ref: '#/components/schemas/DrawingInspectionResult'
+        summary:
+          type: object
+          required: [totalIssues, safeAutoCount, confirmAutoCount, manualCount]
+          properties:
+            totalIssues:
+              type: integer
+            safeAutoCount:
+              type: integer
+            confirmAutoCount:
+              type: integer
+            manualCount:
+              type: integer
+        recommendedActions:
+          type: object
+          required: [safeAutoFixIssueIds, confirmIssueIds, manualIssueIds]
+          properties:
+            safeAutoFixIssueIds:
+              type: array
+              items:
+                type: string
+            confirmIssueIds:
+              type: array
+              items:
+                type: string
+            manualIssueIds:
+              type: array
+              items:
+                type: string
+    DrawingPartRecognitionRecognizeResponse:
+      type: object
+      required: [fileId, fileVersion, recognized, skippedGroups, inspection]
+      properties:
+        fileId:
+          type: string
+        fileVersion:
+          type: integer
+        recognized:
+          type: array
+          items:
+            type: object
+            required: [partId, sourceFileId, sourceEntityIds, geometry, entities, metadata, createdAt, storagePath]
+            properties:
+              partId:
+                type: string
+              sourceFileId:
+                type: string
+              sourceEntityIds:
+                type: array
+                items:
+                  type: string
+              geometry:
+                type: object
+              entities:
+                type: array
+                items:
+                  type: object
+              metadata:
+                type: object
+              createdAt:
+                type: string
+              storagePath:
+                type: string
+        skippedGroups:
+          type: array
+          items:
+            type: object
+            required: [groupId, reason, issues]
+            properties:
+              groupId:
+                type: string
+              reason:
+                type: string
+              issues:
+                type: array
+                items:
+                  type: string
+        inspection:
+          $ref: '#/components/schemas/DrawingInspectionResult'
+    DrawingPartRecognitionForceSetResponse:
+      type: object
+      required: [fileId, fileVersion, created, inspection]
+      properties:
+        fileId:
+          type: string
+        fileVersion:
+          type: integer
+        created:
+          type: array
+          items:
+            type: object
+            required: [partId, sourceFileId, sourceEntityIds, geometry, entities, metadata, createdAt, storagePath]
+            properties:
+              partId:
+                type: string
+              sourceFileId:
+                type: string
+              sourceEntityIds:
+                type: array
+                items:
+                  type: string
+              geometry:
+                type: object
+              entities:
+                type: array
+                items:
+                  type: object
+              metadata:
+                type: object
+              createdAt:
+                type: string
+              storagePath:
+                type: string
+        inspection:
+          $ref: '#/components/schemas/DrawingInspectionResult'
+    DrawingPartRecognitionUnsetResponse:
+      type: object
+      required: [fileId, removedPartIds]
+      properties:
+        fileId:
+          type: string
+        removedPartIds:
+          type: array
+          items:
+            type: string
+    DrawingPdfExtractRequest:
+      type: object
+      required: [files]
+      properties:
+        files:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [fileName, mimeType, base64]
+            properties:
+              fileName:
+                type: string
+              mimeType:
+                type: string
+                enum:
+                  - application/pdf
+                  - image/png
+                  - image/jpeg
+                  - image/jpg
+                  - image/webp
+                  - image/bmp
+                  - image/tiff
+                  - image/x-tiff
+              base64:
+                type: string
+        options:
+          type: object
+          properties:
+            table:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [balanced, recall, precision]
+                extractTitleBlock:
+                  type: boolean
+                extractBom:
+                  type: boolean
+            cad:
+              type: object
+              properties:
+                enable:
+                  type: boolean
+                extractContours:
+                  type: boolean
+                partRecognitionMode:
+                  type: string
+                  enum: [off, analyze, recognize]
+            ocr:
+              type: object
+              properties:
+                enableFallback:
+                  type: boolean
+                language:
+                  type: string
+                minTextChars:
+                  type: integer
+            entityLimit:
+              type: integer
+              minimum: 100
+      additionalProperties: false
+    DrawingPdfExtractResponse:
+      type: object
+      required: [jobId, summary, results, errors]
+      properties:
+        jobId:
+          type: string
+        summary:
+          type: object
+          required: [totalFiles, succeeded, failed, ocrUsedFiles, durationMs]
+          properties:
+            totalFiles:
+              type: integer
+            succeeded:
+              type: integer
+            failed:
+              type: integer
+            ocrUsedFiles:
+              type: integer
+            durationMs:
+              type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingPdfExtractResult'
+        errors:
+          type: array
+          items:
+            type: object
+            required: [code, message]
+            properties:
+              fileName:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+              detail:
+                type: string
+    DrawingPdfExtractResult:
+      type: object
+      required: [fileName, source, confidence, table, cad, warnings, errors]
+      properties:
+        fileName:
+          type: string
+        inputKind:
+          type: string
+          enum: [pdf, image]
+        source:
+          type: string
+          enum: [text, ocr, mixed]
+        confidence:
+          type: number
+        table:
+          $ref: '#/components/schemas/DrawingPdfTableResult'
+        cad:
+          $ref: '#/components/schemas/DrawingPdfCadResult'
+        partRecognition:
+          type: object
+          additionalProperties: true
+        warnings:
+          type: array
+          items:
+            type: string
+        errors:
+          type: array
+          items:
+            type: string
+    DrawingPdfTableAttribute:
+      type: object
+      required: [key, value]
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+        confidence:
+          type: number
+        source:
+          type: string
+          enum: [text, ocr, mixed]
+      additionalProperties: false
+    DrawingPdfTableResult:
+      type: object
+      required: [strategyUsed, titleBlock, attributes, bomRows, fieldConfidence]
+      properties:
+        strategyUsed:
+          type: array
+          items:
+            type: string
+        titleBlock:
+          $ref: '#/components/schemas/DrawingPdfTitleBlock'
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingPdfTableAttribute'
+        bomRows:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingPdfBomRow'
+        fieldConfidence:
+          type: object
+          additionalProperties:
+            type: number
+    DrawingPdfTitleBlock:
+      type: object
+      properties:
+        drawingNo:
+          type: string
+        partName:
+          type: string
+        projectName:
+          type: string
+        material:
+          type: string
+        surfaceTreatment:
+          type: string
+        quantity:
+          type: string
+        revision:
+          type: string
+        date:
+          type: string
+      additionalProperties: false
+    DrawingPdfBomRow:
+      type: object
+      required: [rowIndex]
+      properties:
+        rowIndex:
+          type: integer
+        itemNo:
+          type: string
+        partNo:
+          type: string
+        partName:
+          type: string
+        quantity:
+          type: string
+      additionalProperties: false
+    DrawingPdfCadEntity:
+      type: object
+      required: [id, type, geometry]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [LINE, POLYLINE, ARC]
+        closed:
+          type: boolean
+        geometry:
+          type: object
+          additionalProperties: true
+        bbox:
+          type: object
+          properties:
+            minX:
+              type: number
+            minY:
+              type: number
+            maxX:
+              type: number
+            maxY:
+              type: number
+      additionalProperties: true
+    DrawingPdfCadContour:
+      type: object
+      required: [id, closed, length, bbox, entityIds]
+      properties:
+        id:
+          type: string
+        closed:
+          type: boolean
+        length:
+          type: number
+        bbox:
+          type: object
+          required: [minX, minY, maxX, maxY]
+          properties:
+            minX:
+              type: number
+            minY:
+              type: number
+            maxX:
+              type: number
+            maxY:
+              type: number
+        entityIds:
+          type: array
+          items:
+            type: string
+    DrawingPdfCadResult:
+      type: object
+      required: [entities, contours, stats, truncated, page]
+      properties:
+        approximate:
+          type: boolean
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingPdfCadEntity'
+        contours:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingPdfCadContour'
+        stats:
+          type: object
+          required: [entityCount, lineCount, polylineCount, arcCount, closedContourCount, openContourCount]
+          properties:
+            entityCount:
+              type: integer
+            lineCount:
+              type: integer
+            polylineCount:
+              type: integer
+            arcCount:
+              type: integer
+            closedContourCount:
+              type: integer
+            openContourCount:
+              type: integer
+        truncated:
+          type: boolean
+        page:
+          type: object
+          required: [width, height]
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+    DrawingEditCommandRequest:
+      type: object
+      required: [fileId, command, params]
+      properties:
+        fileId:
+          type: string
+        command:
+          type: string
+          enum: [trim, extend, delete, explode, create, move, update-text]
+        params:
+          type: object
+          properties:
+            entityId:
+              type: string
+            entityIds:
+              type: array
+              items:
+                type: string
+            targetEntityId:
+              type: string
+            clickPoint:
+              type: object
+              required: [x, y]
+              properties:
+                x:
+                  type: number
+                y:
+                  type: number
+            delta:
+              type: object
+              required: [x, y]
+              properties:
+                x:
+                  type: number
+                y:
+                  type: number
+            entityData:
+              type: object
+            textData:
+              type: object
+              properties:
+                content:
+                  type: string
+                fontId:
+                  type: string
+                fontSize:
+                  type: number
+                lineHeight:
+                  type: number
+                rotation:
+                  type: number
+                alignH:
+                  type: string
+                  enum: [left, center, right]
+                alignV:
+                  type: string
+                  enum: [top, middle, baseline, bottom]
+                lineMode:
+                  type: string
+                  enum: [single, double]
+                tolerance:
+                  type: number
+          additionalProperties: true
+      additionalProperties: false
+    DrawingFontInfo:
+      type: object
+      required:
+        - id
+        - family
+        - script
+        - license
+        - source
+        - fileName
+        - mimeType
+        - format
+        - supportsSingleLine
+        - supportsDoubleLine
+        - createdAt
+      properties:
+        id:
+          type: string
+        family:
+          type: string
+        script:
+          type: string
+        license:
+          type: string
+        source:
+          type: string
+          enum: [system, user, builtin]
+        ownerUserId:
+          type: string
+        fileName:
+          type: string
+        mimeType:
+          type: string
+        format:
+          type: string
+          enum: [ttf, otf, woff2, builtin]
+        supportsSingleLine:
+          type: boolean
+        supportsDoubleLine:
+          type: boolean
+        createdAt:
+          type: string
+    DrawingFontListResponse:
+      type: object
+      required: [success, fonts]
+      properties:
+        success:
+          type: boolean
+        fonts:
+          type: array
+          items:
+            $ref: '#/components/schemas/DrawingFontInfo'
+    DrawingFontUploadRequest:
+      type: object
+      required: [fileName, mimeType, base64, size]
+      properties:
+        fileName:
+          type: string
+        mimeType:
+          type: string
+        base64:
+          type: string
+        size:
+          type: integer
+    DrawingFontUploadResponse:
+      type: object
+      required: [success, font]
+      properties:
+        success:
+          type: boolean
+        font:
+          $ref: '#/components/schemas/DrawingFontInfo'
+    DrawingEditCommandResponse:
+      type: object
+      required: [success, updatedEntities, deletedEntityIds, affectedEntityIds]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        errorCode:
+          type: string
+          enum:
+            - BOUNDARY_REQUIRED
+            - NO_INTERSECTION
+            - UNSUPPORTED_TARGET
+            - UNSUPPORTED_BOUNDARY
+            - TARGET_NOT_FOUND
+        updatedEntities:
+          type: array
+          items:
+            type: object
+        deletedEntityIds:
+          type: array
+          items:
+            type: string
+        affectedEntityIds:
+          type: array
+          items:
+            type: string
+        boundaryEntityId:
+          type: string
+        boundarySource:
+          type: string
+          enum: [auto, manual]
+        intersectionPoint:
+          type: object
+          required: [x, y]
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+        operation:
+          type: object
+      additionalProperties: true
+    DrawingHistoryOperation:
+      $ref: '../schemas/http/drawing-history-operation.schema.json'
+    DrawingHistoryStateResponse:
+      $ref: '../schemas/http/drawing-history-state-response.schema.json'
+    DrawingHistoryCommitSnapshotRequest:
+      $ref: '../schemas/http/drawing-history-commit-snapshot-request.schema.json'

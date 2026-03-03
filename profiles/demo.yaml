@@ -1,0 +1,13 @@
+name: demo
+description: Rich sample data for product demos
+http:
+  ordering: demo
+  drawing: demo
+  nesting: demo
+events:
+  drawing.parts.ready: demo
+  nesting.job.completed: demo
+  ordering.order.updated: demo
+failureInjection:
+  enabled: false
+  latencyMs: 0

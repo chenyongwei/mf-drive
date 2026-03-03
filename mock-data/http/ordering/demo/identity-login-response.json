@@ -1,0 +1,9 @@
+{
+  "token": "mock-token-demo",
+  "expiresAt": "2026-02-12T10:00:00Z",
+  "user": {
+    "id": "user-demo-001",
+    "email": "demo-admin@example.com",
+    "role": "super_admin"
+  }
+}

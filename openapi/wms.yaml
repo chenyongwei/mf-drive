@@ -1,0 +1,629 @@
+openapi: 3.0.3
+info:
+  title: wms-api
+  version: 0.1.0
+paths:
+  /api/wms/materials/catalog:
+    get:
+      operationId: listWmsMaterialsCatalog
+      summary: Query sheet material catalog
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+        - name: includeHidden
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Material catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsMaterialsCatalogResponse'
+    post:
+      operationId: createWmsMaterial
+      summary: Create one sheet material
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                code:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [material]
+                properties:
+                  material:
+                    $ref: '#/components/schemas/WmsMaterial'
+  /api/wms/materials/{materialId}/thickness:
+    post:
+      operationId: createWmsMaterialThickness
+      summary: Add thickness for one sheet material
+      parameters:
+        - name: materialId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [valueMm]
+              properties:
+                valueMm:
+                  type: number
+                stockSheets:
+                  type: integer
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [material]
+                properties:
+                  material:
+                    $ref: '#/components/schemas/WmsMaterial'
+  /api/wms/materials/sheets:
+    get:
+      operationId: listWmsSheets
+      summary: Query sheet inventory list
+      responses:
+        '200':
+          description: Sheet inventory
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsSheetsQueryResponse'
+    post:
+      operationId: createWmsSheet
+      summary: Create one stock sheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sheet]
+                properties:
+                  sheet:
+                    $ref: '#/components/schemas/WmsSheet'
+  /api/wms/materials/remnant-sheets:
+    post:
+      operationId: createWmsRemnantSheet
+      summary: Create one remnant sheet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sheet]
+                properties:
+                  sheet:
+                    $ref: '#/components/schemas/WmsSheet'
+  /api/wms/materials/sheets/query:
+    post:
+      operationId: queryWmsSheets
+      summary: Query sheets by advanced filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Query result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsSheetsQueryResponse'
+  /api/wms/materials/sheets/batch:
+    post:
+      operationId: batchOperateWmsSheets
+      summary: Batch operation for sheet inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Batch result
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/wms/materials/sheets/label-print:
+    post:
+      operationId: printWmsSheetLabels
+      summary: Print labels for sheets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Print task queued
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/wms/materials/process/{kind}:
+    get:
+      operationId: listWmsMaterialProcessConfigs
+      summary: Query sheet process configs
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [auto, cutting, quote]
+      responses:
+        '200':
+          description: Process configs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsProcessConfigListResponse'
+    post:
+      operationId: saveWmsMaterialProcessConfig
+      summary: Save one sheet process config
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [auto, cutting, quote]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created or updated
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/wms/pipes/catalog:
+    get:
+      operationId: listWmsPipesCatalog
+      summary: Query pipe material catalog
+      responses:
+        '200':
+          description: Pipe catalog
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsPipeCatalogResponse'
+    post:
+      operationId: createWmsPipeMaterial
+      summary: Create one pipe material
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pipe]
+                properties:
+                  pipe:
+                    $ref: '#/components/schemas/PipeMaterial'
+  /api/wms/pipes/{pipeId}/specs:
+    post:
+      operationId: createWmsPipeSpec
+      summary: Add one pipe spec
+      parameters:
+        - name: pipeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pipe]
+                properties:
+                  pipe:
+                    $ref: '#/components/schemas/PipeMaterial'
+  /api/wms/pipes/stocks:
+    get:
+      operationId: listWmsPipeStocks
+      summary: Query pipe stock list
+      responses:
+        '200':
+          description: Pipe stocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsPipeStocksQueryResponse'
+    post:
+      operationId: createWmsPipeStock
+      summary: Create one pipe stock record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [stock]
+                properties:
+                  stock:
+                    $ref: '#/components/schemas/PipeStockRecord'
+  /api/wms/pipes/stocks/query:
+    post:
+      operationId: queryWmsPipeStocks
+      summary: Query pipe stocks by advanced filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Query result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsPipeStocksQueryResponse'
+  /api/wms/pipes/stocks/batch:
+    post:
+      operationId: batchOperateWmsPipeStocks
+      summary: Batch operation for pipe stocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Batch result
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/wms/pipes/process/{kind}:
+    get:
+      operationId: listWmsPipeProcessConfigs
+      summary: Query pipe process configs
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [auto, cutting, quote]
+      responses:
+        '200':
+          description: Process configs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsProcessConfigListResponse'
+    post:
+      operationId: saveWmsPipeProcessConfig
+      summary: Save one pipe process config
+      parameters:
+        - name: kind
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [auto, cutting, quote]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: Created or updated
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/wms/ordering/material-options:
+    get:
+      operationId: listWmsMaterialOptionsForOrdering
+      summary: Readable material options for ordering create/filter flows
+      parameters:
+        - name: keyword
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Material options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WmsMaterialOptionsResponse'
+components:
+  schemas:
+    WmsMaterialThickness:
+      type: object
+      required: [id, valueMm, stockSheets]
+      properties:
+        id:
+          type: string
+        valueMm:
+          type: number
+        stockSheets:
+          type: integer
+    WmsMaterial:
+      type: object
+      required: [id, name, code, hidden, updatedAt, thicknesses]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        hidden:
+          type: boolean
+        updatedAt:
+          type: string
+        thicknesses:
+          type: array
+          items:
+            $ref: '#/components/schemas/WmsMaterialThickness'
+    WmsMaterialsCatalogResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WmsMaterial'
+        total:
+          type: integer
+    WmsSheet:
+      type: object
+      required: [id, materialId, materialName, thickness, width, height, quantity, source, status, location, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        materialId:
+          type: string
+        materialName:
+          type: string
+        thickness:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+        quantity:
+          type: integer
+        source:
+          type: string
+          enum: [plate, remnant]
+        status:
+          type: string
+          enum: [in_stock, reserved, hidden]
+        location:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    WmsSheetsQueryResponse:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WmsSheet'
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+    WmsProcessConfig:
+      type: object
+      required: [id, name, enabled, params, updatedAt]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        enabled:
+          type: boolean
+        params:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+        updatedAt:
+          type: string
+    WmsProcessConfigListResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WmsProcessConfig'
+        total:
+          type: integer
+    PipeSpec:
+      type: object
+      required: [id, outerDiameterMm, wallThicknessMm, materialGrade, stockBars]
+      properties:
+        id:
+          type: string
+        outerDiameterMm:
+          type: number
+        wallThicknessMm:
+          type: number
+        materialGrade:
+          type: string
+        stockBars:
+          type: integer
+    PipeMaterial:
+      type: object
+      required: [id, name, code, hidden, updatedAt, specs]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        hidden:
+          type: boolean
+        updatedAt:
+          type: string
+        specs:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipeSpec'
+    WmsPipeCatalogResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipeMaterial'
+        total:
+          type: integer
+    PipeStockRecord:
+      type: object
+      required: [id, pipeId, pipeName, specId, outerDiameterMm, wallThicknessMm, lengthMm, quantity, status, location, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        pipeId:
+          type: string
+        pipeName:
+          type: string
+        specId:
+          type: string
+        outerDiameterMm:
+          type: number
+        wallThicknessMm:
+          type: number
+        lengthMm:
+          type: number
+        quantity:
+          type: integer
+        status:
+          type: string
+          enum: [in_stock, reserved, hidden]
+        location:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    WmsPipeStocksQueryResponse:
+      type: object
+      required: [items, total, page, pageSize]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PipeStockRecord'
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+    WmsMaterialOption:
+      type: object
+      required: [id, label, type, code]
+      properties:
+        id:
+          type: string
+        label:
+          type: string
+        type:
+          type: string
+          enum: [SHEET, PIPE]
+        code:
+          type: string
+    WmsMaterialOptionsResponse:
+      type: object
+      required: [items, total]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WmsMaterialOption'
+        total:
+          type: integer

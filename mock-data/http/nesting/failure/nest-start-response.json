@@ -1,0 +1,25 @@
+{
+  "id": "nest-11",
+  "nestingId": "nest-11",
+  "status": "running",
+  "progress": 5,
+  "currentUtilization": 0.10,
+  "currentLayout": {
+    "id": "layout-nest-11",
+    "utilization": 0.78,
+    "parts": [
+      {
+        "partId": "part-1",
+        "partName": "Plate-01",
+        "position": { "x": 120, "y": 120 },
+        "rotation": 0,
+        "bbox": { "minX": 120, "minY": 120, "maxX": 340, "maxY": 240 }
+      }
+    ],
+    "placedParts": [
+      { "partId": "part-1", "x": 120, "y": 120, "rotation": 0 }
+    ],
+    "material": { "width": 2000, "height": 1000, "thickness": 6 }
+  },
+  "material": { "width": 2000, "height": 1000, "thickness": 6 }
+}

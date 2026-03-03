@@ -1,0 +1,9 @@
+{
+  "eventId": "evt-foundation-bom-version-rejected-edge-001",
+  "eventType": "foundation.bom.version.rejected",
+  "occurredAt": "2026-02-22T12:00:00Z",
+  "producer": "foundation",
+  "workspaceId": "workspace-edge",
+  "payloadVersion": "1.0.0",
+  "payload": {"versionId":"BOM-edge-rejected","status":"ARCHIVED","reason":"manual_review_failed"}
+}

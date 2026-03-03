@@ -1,0 +1,12 @@
+{
+  "jobs": [
+    {
+      "id": "nest-job-edge-001",
+      "status": "queued",
+      "progress": 0,
+      "utilization": 0,
+      "createdAt": "2026-02-10T10:05:00Z"
+    }
+  ],
+  "total": 1
+}

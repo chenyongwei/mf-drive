@@ -1,0 +1,9 @@
+{
+  "eventId": "evt-foundation-bom-version-adopted-edge-001",
+  "eventType": "foundation.bom.version.adopted",
+  "occurredAt": "2026-02-22T12:00:00Z",
+  "producer": "foundation",
+  "workspaceId": "workspace-edge",
+  "payloadVersion": "1.0.0",
+  "payload": {"versionId":"BOM-edge-active","status":"ACTIVE","adoptedBy":"planner-edge"}
+}

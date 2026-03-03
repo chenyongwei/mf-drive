@@ -1,0 +1,38 @@
+{
+  "accountAuthorized": true,
+  "accountAuthorizedAt": "2026-03-02T01:00:00Z",
+  "app": {
+    "appId": "wms",
+    "name": "WMS",
+    "route": "/wms/materials",
+    "clientId": "wms-web",
+    "enabledByUser": true,
+    "requiredBaseScope": "wms.read",
+    "launchMode": "MINI",
+    "miniSupported": true,
+    "l1Authorized": false,
+    "resourceGrantCount": 0,
+    "category": "inventory",
+    "tagline": "板材与管材库存全量管理",
+    "shortDescription": "覆盖库存、预占、消耗和工艺配置。",
+    "tags": ["wms", "inventory", "materials"],
+    "highlights": ["库存可视化", "工艺参数", "权限分级"],
+    "updatedAt": "2026-02-22T10:22:00Z",
+    "ratingAverage": 4.5,
+    "ratingCount": 74,
+    "installCount": 640,
+    "featured": false,
+    "longDescription": "WMS 应用提供板材与管材的生命周期管理，支持库存查询、预占、消耗、回滚、工艺配置和跨系统对账。",
+    "screenshots": [
+      "/assets/store/wms-1.png",
+      "/assets/store/wms-2.png"
+    ],
+    "version": "1.4.0",
+    "permissionScopes": [
+      "wms.read",
+      "wms.write.material",
+      "wms.write.pipe"
+    ],
+    "permissionsSummary": "读取库存并可按需申请写入权限，资源访问由二级授权控制。"
+  }
+}

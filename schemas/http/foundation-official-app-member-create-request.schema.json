@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-official-app-member-create-request.schema.json",
+  "type": "object",
+  "required": ["tenantId", "subject", "role"],
+  "properties": {
+    "tenantId": { "type": "string" },
+    "subject": { "type": "string" },
+    "role": { "type": "string", "enum": ["OWNER", "MEMBER"] },
+    "identityScopes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

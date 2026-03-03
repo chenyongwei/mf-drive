@@ -1,0 +1,13 @@
+name: base
+description: Stable baseline fixtures for local development
+http:
+  ordering: base
+  drawing: base
+  nesting: base
+events:
+  drawing.parts.ready: base
+  nesting.job.completed: base
+  ordering.order.updated: base
+failureInjection:
+  enabled: false
+  latencyMs: 0

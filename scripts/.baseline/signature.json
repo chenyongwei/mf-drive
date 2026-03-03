@@ -1,0 +1,1017 @@
+{
+  "openapi": {
+    "ordering.yaml": [
+      "GET /api/ordering/admin/summary:getAdminSummary",
+      "GET /api/ordering/materials/catalog:listOrderingMaterialCatalog",
+      "GET /api/ordering/materials/process/auto:listOrderingAutoProcessConfigs",
+      "GET /api/ordering/materials/process/cutting:listOrderingCuttingProcessConfigs",
+      "GET /api/ordering/materials/process/quote:listOrderingQuoteProcessConfigs",
+      "GET /api/ordering/materials/sheets:listOrderingSheets",
+      "GET /api/ordering/orders/boost-records:listOrderingOrderBoostRecords",
+      "GET /api/ordering/orders/folders:listOrderingOrderFolders",
+      "GET /api/ordering/orders:listOrderingOrders",
+      "GET /api/ordering/settings/boost-params:listOrderingBoostParams",
+      "GET /api/ordering/settings/general:getOrderingGeneralSettings",
+      "GET /api/ordering/settings/machines:listOrderingMachines",
+      "GET /api/ordering/settings/recycle:listOrderingRecycleItems",
+      "GET /api/ordering/settings/sorting-plans:listOrderingSortingPlans",
+      "GET /api/ordering/settings/suites:listOrderingSuites",
+      "GET /api/team-management/{teamId}/members/{memberId}/permissions:getTeamMemberPermissions",
+      "GET /api/workspace/current:getCurrentWorkspace",
+      "POST /api/identity/login:identityLogin",
+      "POST /api/ordering/materials/catalog:createOrderingMaterial",
+      "POST /api/ordering/materials/process/auto:upsertOrderingAutoProcessConfig",
+      "POST /api/ordering/materials/process/cutting:upsertOrderingCuttingProcessConfig",
+      "POST /api/ordering/materials/process/quote:upsertOrderingQuoteProcessConfig",
+      "POST /api/ordering/materials/remnant-sheets:createOrderingRemnantSheet",
+      "POST /api/ordering/materials/sheets/batch:batchOperateOrderingSheets",
+      "POST /api/ordering/materials/sheets/label-print:labelPrintOrderingSheets",
+      "POST /api/ordering/materials/sheets/query:queryOrderingSheets",
+      "POST /api/ordering/materials/sheets:createOrderingSheet",
+      "POST /api/ordering/materials/{materialId}/thickness:createOrderingMaterialThickness",
+      "POST /api/ordering/orders/folders:createOrderingOrderFolder",
+      "POST /api/ordering/orders/layouts/batch:batchOperateOrderingOrderLayouts",
+      "POST /api/ordering/orders/layouts/query:queryOrderingOrderLayouts",
+      "POST /api/ordering/orders/layouts/{layoutId}/schedule:scheduleOrderingOrderLayout",
+      "POST /api/ordering/orders/parts/batch:batchOperateOrderingOrderParts",
+      "POST /api/ordering/orders/parts/query:queryOrderingOrderParts",
+      "POST /api/ordering/orders:createOrderingOrder",
+      "POST /api/ordering/settings/boost-params:upsertOrderingBoostParam",
+      "POST /api/ordering/settings/machines:upsertOrderingMachine",
+      "POST /api/ordering/settings/recycle:operateOrderingRecycleItems",
+      "POST /api/ordering/settings/sorting-plans:upsertOrderingSortingPlan",
+      "POST /api/ordering/settings/suites:upsertOrderingSuite",
+      "PUT /api/ordering/settings/general:putOrderingGeneralSettings"
+    ],
+    "drawing.yaml": [
+      "DELETE /api/drawing/fonts/{fontId}:deleteDrawingFont",
+      "GET /api/drawing/documents/{fileId}/operations:getDrawingDocumentOperations",
+      "GET /api/drawing/documents/{fileId}:getDrawingDocument",
+      "GET /api/drawing/files/{fileId}/inspect/status:getDrawingInspectStatus",
+      "GET /api/drawing/files/{fileId}/inspect:inspectDrawingFile",
+      "GET /api/drawing/files/{fileId}/layers:listDrawingFileLayers",
+      "GET /api/drawing/files/{fileId}/part-recognition/parts:listDrawingFileRecognitionParts",
+      "GET /api/drawing/files/{fileId}/parts/{partId}/thumbnail:getDrawingFilePartThumbnail",
+      "GET /api/drawing/files/{fileId}/parts/{partId}:getDrawingFilePart",
+      "GET /api/drawing/files/{fileId}/parts:listDrawingFileParts",
+      "GET /api/drawing/files/{fileId}/status:getDrawingFileStatus",
+      "GET /api/drawing/files/{fileId}/thumbnail:getDrawingFileThumbnail",
+      "GET /api/drawing/files/{fileId}:getDrawingFile",
+      "GET /api/drawing/files:listDrawingFiles",
+      "GET /api/drawing/fonts:listDrawingFonts",
+      "GET /api/drawing/history/{fileId}/preview/{targetVersion}:previewDrawingHistoryVersion",
+      "GET /api/drawing/history/{fileId}/state:getDrawingHistoryState",
+      "GET /api/drawing/parts/{partId}:getDrawingPart",
+      "GET /api/drawing/parts:listDrawingParts",
+      "GET /api/drawing/prts/all:listDrawingPrtsAll",
+      "GET /api/drawing/prts/{partId}:getDrawingPrtsPart",
+      "GET /api/drawing/rules/templates:listDrawingRuleTemplates",
+      "POST /api/drawing/dimensions:createDrawingDimension",
+      "POST /api/drawing/documents/{fileId}/compact:compactDrawingDocument",
+      "POST /api/drawing/documents/{fileId}/convert:convertDrawingDocument",
+      "POST /api/drawing/documents/{fileId}/operations:appendDrawingDocumentOperations",
+      "POST /api/drawing/files/inspect-batch:inspectDrawingFilesBatch",
+      "POST /api/drawing/files/{fileId}/edit:editDrawingEntities",
+      "POST /api/drawing/files/{fileId}/entities:listDrawingFileEntitiesByIds",
+      "POST /api/drawing/files/{fileId}/fix-all:fixAllDrawingFileIssues",
+      "POST /api/drawing/files/{fileId}/part-recognition/analyze:analyzeDrawingPartRecognition",
+      "POST /api/drawing/files/{fileId}/part-recognition/force-set:forceSetDrawingParts",
+      "POST /api/drawing/files/{fileId}/part-recognition/recognize:recognizeDrawingParts",
+      "POST /api/drawing/files/{fileId}/part-recognition/unset:unsetDrawingParts",
+      "POST /api/drawing/fonts/upload:uploadDrawingFont",
+      "POST /api/drawing/history/{fileId}/commit:commitDrawingHistorySnapshot",
+      "POST /api/drawing/history/{fileId}/jump-to/{targetVersion}:jumpDrawingHistoryToVersion",
+      "POST /api/drawing/history/{fileId}/redo:redoDrawingHistory",
+      "POST /api/drawing/history/{fileId}/transform:transformDrawingHistoryOperation",
+      "POST /api/drawing/history/{fileId}/undo:undoDrawingHistory",
+      "POST /api/drawing/pdf/extract:extractDrawingPdf",
+      "POST /api/drawing/prts-upload:uploadDrawingPrts",
+      "POST /api/drawing/rules/apply:applyDrawingRules",
+      "POST /api/drawing/rules/preview:previewDrawingRules",
+      "POST /api/drawing/upload:uploadDrawingFile"
+    ],
+    "nesting.yaml": [
+      "DELETE /api/nesting/gcode/configs/{configId}:deleteGcodeConfig",
+      "GET /api/nesting/gcode/configs/{configId}:getGcodeConfig",
+      "GET /api/nesting/gcode/configs:listGcodeConfigs",
+      "GET /api/nesting/gcode/presets/{deviceType}:listGcodePresetsByDeviceType",
+      "GET /api/nesting/gcode/presets:listGcodePresets",
+      "GET /api/nesting/history/{workspaceId}/preview/{targetVersion}:previewNestingHistoryVersion",
+      "GET /api/nesting/history/{workspaceId}/state:getNestingHistoryState",
+      "GET /api/nesting/jobs/{jobId}/layouts/{layoutId}:getNestingJobLayout",
+      "GET /api/nesting/jobs/{jobId}/result:getNestingJobResult",
+      "GET /api/nesting/jobs/{jobId}/status:getNestingJobStatus",
+      "GET /api/nesting/jobs/{jobId}:getNestingJob",
+      "GET /api/nesting/jobs:listNestingJobs",
+      "GET /api/nesting/parts/quantities:listNestingPartQuantities",
+      "GET /api/nesting/parts/{partId}:getNestingPart",
+      "GET /api/nesting/parts:listNestingParts",
+      "GET /api/nesting/prts/all:listNestingPrtsAll",
+      "GET /api/nesting/prts/{partId}:getNestingPrtsPart",
+      "GET /api/nesting/toolpath/plan/{planId}:getToolpathPlan",
+      "POST /api/nesting/export/gcode:exportNestGcode",
+      "POST /api/nesting/export/{fileId}:exportNestingLayoutByFileId",
+      "POST /api/nesting/gcode/configs/{configId}/duplicate:duplicateGcodeConfig",
+      "POST /api/nesting/gcode/configs:createGcodeConfig",
+      "POST /api/nesting/gcode/files/{fileId}/export/gcode:exportGcodeByFileId",
+      "POST /api/nesting/gcode/preview:previewGcode",
+      "POST /api/nesting/history/{workspaceId}/commit:commitNestingHistorySnapshot",
+      "POST /api/nesting/history/{workspaceId}/jump-to/{targetVersion}:jumpNestingHistoryToVersion",
+      "POST /api/nesting/history/{workspaceId}/redo:redoNestingHistory",
+      "POST /api/nesting/history/{workspaceId}/undo:undoNestingHistory",
+      "POST /api/nesting/jobs/start:startNestingJob",
+      "POST /api/nesting/jobs/{jobId}/commit:commitNestingResult",
+      "POST /api/nesting/jobs/{jobId}/stop:stopNestingJob",
+      "POST /api/nesting/toolpath/check:checkToolpathPlan",
+      "POST /api/nesting/toolpath/plan:createToolpathPlan",
+      "PUT /api/nesting/gcode/configs/{configId}:updateGcodeConfig",
+      "PUT /api/nesting/parts/{partId}/quantity:updateNestingPartQuantity"
+    ],
+    "aps.yaml": [
+      "GET /api/aps/machines:listApsMachines",
+      "GET /api/aps/plans:listApsPlans",
+      "GET /api/aps/schedule-records:listApsScheduleRecords",
+      "GET /health:apsHealth",
+      "POST /api/aps/plans/batch-schedule:batchScheduleApsPlans",
+      "POST /api/aps/plans/{planId}/schedule:scheduleApsPlan"
+    ],
+    "crm.yaml": [
+      "GET /api/crm/customers/{customerId}:getCrmCustomer",
+      "GET /api/crm/customers:listCrmCustomers",
+      "POST /api/crm/customers:upsertCrmCustomer"
+    ],
+    "drive.yaml": [
+      "DELETE /api/drive/grants/{grantId}:revokeDriveCrossAppGrant",
+      "GET /api/drive/artifacts/{artifactId}/versions:listDriveArtifactVersions",
+      "GET /api/drive/artifacts/{artifactId}:getDriveArtifact",
+      "GET /api/drive/audit/logs:listDriveAuditLogs",
+      "GET /api/drive/containers:listDriveContainers",
+      "POST /api/drive/artifacts/init-upload:initDriveArtifactUpload",
+      "POST /api/drive/artifacts/query:queryDriveArtifacts",
+      "POST /api/drive/artifacts/{artifactId}/complete-upload:completeDriveArtifactUpload",
+      "POST /api/drive/artifacts/{artifactId}/download-url:getDriveArtifactDownloadUrl",
+      "POST /api/drive/artifacts/{artifactId}/grants:createDriveCrossAppGrant",
+      "POST /api/drive/containers:createDriveContainer",
+      "PUT /api/drive/artifacts/{artifactId}/acl:updateDriveArtifactAcl"
+    ],
+    "foundation-iam.yaml": [
+      "GET /api/foundation/apps/catalog:listFoundationAppsCatalog",
+      "GET /api/foundation/apps/marketplace/{appId}:getFoundationMarketplaceAppDetail",
+      "GET /api/foundation/apps/marketplace:listFoundationAppsMarketplace",
+      "GET /api/foundation/open-apps:listFoundationOpenApps",
+      "GET /api/foundation/security/activities:listFoundationSecurityActivities",
+      "GET /api/foundation/security/official-apps/{appId}/members:listOfficialAppMembers",
+      "GET /api/foundation/security/resource-grants:listFoundationResourceGrants",
+      "GET /oauth/account/session:foundationAccountSession",
+      "GET /oauth/authorize:foundationAuthorize",
+      "GET /oauth/jwks:foundationJwks",
+      "POST /api/foundation/apps/marketplace/{appId}/uninstall:uninstallFoundationMarketplaceApp",
+      "POST /api/foundation/open-apps/{openAppId}/credentials/rotate:rotateFoundationOpenAppCredentials",
+      "POST /api/foundation/open-apps:createFoundationOpenApp",
+      "POST /api/foundation/security/activities/{activityId}/confirm:confirmFoundationSecurityActivity",
+      "POST /api/foundation/security/grants/{grantId}/revoke:revokeFoundationSecurityGrant",
+      "POST /api/foundation/security/official-apps/{appId}/bootstrap:bootstrapOfficialAppAuthorization",
+      "POST /api/foundation/security/official-apps/{appId}/members/{membershipId}/revoke:revokeOfficialAppMember",
+      "POST /api/foundation/security/official-apps/{appId}/members:createOfficialAppMember",
+      "POST /api/foundation/security/pdp/evaluate:evaluateFoundationSecurityPdp",
+      "POST /api/foundation/security/resource-grants/{grantId}/revoke:revokeFoundationResourceGrant",
+      "POST /api/foundation/security/resource-grants:createFoundationResourceGrant",
+      "POST /oauth/account/authorize:foundationAccountAuthorize",
+      "POST /oauth/account/revoke:foundationAccountRevoke",
+      "POST /oauth/introspect:foundationIntrospect",
+      "POST /oauth/token:foundationToken"
+    ],
+    "foundation-ontology.yaml": [
+      "GET /api/foundation/ontology/export/{type}:exportFoundationOntologyType",
+      "GET /api/foundation/ontology/lineage/{type}/{key}:getFoundationOntologyLineage",
+      "GET /api/foundation/ontology/links:listFoundationOntologyLinks",
+      "GET /api/foundation/ontology/objects/{type}/{key}/links:listFoundationOntologyObjectLinks",
+      "GET /api/foundation/ontology/objects/{type}/{key}:getFoundationOntologyObject",
+      "GET /api/foundation/ontology/objects/{type}:listFoundationOntologyObjects",
+      "GET /api/foundation/ontology/odata/{type}:queryFoundationOntologyOData",
+      "GET /api/foundation/ontology/types/{type}:getFoundationOntologyType",
+      "GET /api/foundation/ontology/types:listFoundationOntologyTypes",
+      "POST /api/foundation/ontology/actions/{action}:executeFoundationOntologyAction",
+      "POST /api/foundation/ontology/import:importFoundationOntologyType",
+      "POST /api/foundation/ontology/search:searchFoundationOntology",
+      "POST /api/foundation/ontology/sync:syncFoundationOntology"
+    ],
+    "foundation-bom.yaml": [
+      "GET /api/foundation/bom/versions/{versionId}/diff:diffFoundationBomVersion",
+      "GET /api/foundation/bom/versions:listFoundationBomVersions",
+      "POST /api/foundation/bom/ebom/import:importFoundationEbom",
+      "POST /api/foundation/bom/mbom/submit:submitFoundationMbom",
+      "POST /api/foundation/bom/pbom/attach:attachFoundationPbom",
+      "POST /api/foundation/bom/versions/{versionId}/adopt:adoptFoundationBomVersion",
+      "POST /api/foundation/bom/versions/{versionId}/reject:rejectFoundationBomVersion"
+    ],
+    "foundation-material.yaml": [
+      "GET /api/foundation/materials/sheets/available:listFoundationAvailableSheets",
+      "POST /api/foundation/materials/sheets/consume:consumeFoundationSheets",
+      "POST /api/foundation/materials/sheets/release-reservation:releaseFoundationSheetReservation",
+      "POST /api/foundation/materials/sheets/reserve:reserveFoundationSheets",
+      "POST /api/foundation/materials/sheets/scrap:createFoundationScrapSheet"
+    ],
+    "foundation-mcp.yaml": [
+      "GET /mcp/v1/resources/sheets/available:mcpListSheetResource",
+      "POST /mcp/v1/tools/query_available_sheets:mcpToolQueryAvailableSheets",
+      "POST /mcp/v1/tools/reserve_sheets:mcpToolReserveSheets",
+      "POST /mcp/v1/tools/submit_nesting_result:mcpToolSubmitNestingResult"
+    ],
+    "wms.yaml": [
+      "GET /api/wms/materials/catalog:listWmsMaterialsCatalog",
+      "GET /api/wms/materials/process/{kind}:listWmsMaterialProcessConfigs",
+      "GET /api/wms/materials/sheets:listWmsSheets",
+      "GET /api/wms/ordering/material-options:listWmsMaterialOptionsForOrdering",
+      "GET /api/wms/pipes/catalog:listWmsPipesCatalog",
+      "GET /api/wms/pipes/process/{kind}:listWmsPipeProcessConfigs",
+      "GET /api/wms/pipes/stocks:listWmsPipeStocks",
+      "POST /api/wms/materials/catalog:createWmsMaterial",
+      "POST /api/wms/materials/process/{kind}:saveWmsMaterialProcessConfig",
+      "POST /api/wms/materials/remnant-sheets:createWmsRemnantSheet",
+      "POST /api/wms/materials/sheets/batch:batchOperateWmsSheets",
+      "POST /api/wms/materials/sheets/label-print:printWmsSheetLabels",
+      "POST /api/wms/materials/sheets/query:queryWmsSheets",
+      "POST /api/wms/materials/sheets:createWmsSheet",
+      "POST /api/wms/materials/{materialId}/thickness:createWmsMaterialThickness",
+      "POST /api/wms/pipes/catalog:createWmsPipeMaterial",
+      "POST /api/wms/pipes/process/{kind}:saveWmsPipeProcessConfig",
+      "POST /api/wms/pipes/stocks/batch:batchOperateWmsPipeStocks",
+      "POST /api/wms/pipes/stocks/query:queryWmsPipeStocks",
+      "POST /api/wms/pipes/stocks:createWmsPipeStock",
+      "POST /api/wms/pipes/{pipeId}/specs:createWmsPipeSpec"
+    ]
+  },
+  "asyncapi": [
+    "drawing.parts.ready",
+    "foundation.bom.version.adopted",
+    "foundation.bom.version.pending",
+    "foundation.bom.version.rejected",
+    "foundation.inventory.synced",
+    "foundation.sheet.consumption.committed",
+    "foundation.sheet.consumption.rolledback",
+    "foundation.sheet.reservation.created",
+    "nesting.job.completed",
+    "ordering.order.updated"
+  ],
+  "schemaRequired": {
+    "schemas/events/drawing.parts.ready.schema.json": [],
+    "schemas/events/event-envelope.schema.json": [
+      "eventId",
+      "eventType",
+      "occurredAt",
+      "payload",
+      "payloadVersion",
+      "producer",
+      "workspaceId"
+    ],
+    "schemas/events/foundation.bom.version.adopted.schema.json": [],
+    "schemas/events/foundation.bom.version.pending.schema.json": [],
+    "schemas/events/foundation.bom.version.rejected.schema.json": [],
+    "schemas/events/foundation.inventory.synced.schema.json": [],
+    "schemas/events/foundation.sheet.consumption.committed.schema.json": [],
+    "schemas/events/foundation.sheet.consumption.rolledback.schema.json": [],
+    "schemas/events/foundation.sheet.reservation.created.schema.json": [],
+    "schemas/events/nesting.job.completed.schema.json": [],
+    "schemas/events/ordering.order.updated.schema.json": [],
+    "schemas/http/aps-batch-schedule-response.schema.json": [
+      "affected",
+      "machine",
+      "records",
+      "success"
+    ],
+    "schemas/http/aps-machine-row.schema.json": [
+      "capacityHours",
+      "category",
+      "loadHours",
+      "machineId",
+      "name",
+      "status",
+      "updatedAt"
+    ],
+    "schemas/http/aps-machines-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/aps-plan-row.schema.json": [
+      "dueAt",
+      "layoutCode",
+      "machineId",
+      "material",
+      "orderCode",
+      "planCode",
+      "planId",
+      "priority",
+      "status",
+      "updatedAt"
+    ],
+    "schemas/http/aps-plan-schedule-response.schema.json": [
+      "machine",
+      "plan",
+      "record",
+      "success"
+    ],
+    "schemas/http/aps-plans-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total"
+    ],
+    "schemas/http/aps-schedule-record-row.schema.json": [
+      "action",
+      "createdAt",
+      "machineId",
+      "machineName",
+      "operator",
+      "planCode",
+      "planId",
+      "recordId",
+      "status"
+    ],
+    "schemas/http/aps-schedule-records-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total"
+    ],
+    "schemas/http/crm-customer-response.schema.json": [
+      "item"
+    ],
+    "schemas/http/crm-customer-upsert-response.schema.json": [
+      "item",
+      "updated"
+    ],
+    "schemas/http/crm-customers-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/drawing-edit-command-request.schema.json": [
+      "command",
+      "fileId",
+      "params"
+    ],
+    "schemas/http/drawing-edit-command-response.schema.json": [
+      "affectedEntityIds",
+      "deletedEntityIds",
+      "success",
+      "updatedEntities"
+    ],
+    "schemas/http/drawing-file-status-response.schema.json": [
+      "entities",
+      "entityCount",
+      "id",
+      "name",
+      "partCount",
+      "status"
+    ],
+    "schemas/http/drawing-files-response.schema.json": [
+      "files",
+      "total"
+    ],
+    "schemas/http/drawing-history-commit-snapshot-request.schema.json": [
+      "snapshot"
+    ],
+    "schemas/http/drawing-history-operation.schema.json": [
+      "operationData",
+      "operationType",
+      "timestamp",
+      "userId",
+      "username",
+      "version"
+    ],
+    "schemas/http/drawing-history-state-response.schema.json": [
+      "canRedo",
+      "canUndo",
+      "currentVersion",
+      "operations"
+    ],
+    "schemas/http/drawing-inspection-result.schema.json": [
+      "fileId",
+      "issues",
+      "summary",
+      "timestamp",
+      "tolerance"
+    ],
+    "schemas/http/drawing-part-recognition-analyze-response.schema.json": [
+      "fileId",
+      "fileVersion",
+      "inspection",
+      "recommendedActions",
+      "summary"
+    ],
+    "schemas/http/drawing-part-recognition-force-set-response.schema.json": [
+      "created",
+      "fileId",
+      "fileVersion",
+      "inspection"
+    ],
+    "schemas/http/drawing-part-recognition-recognize-response.schema.json": [
+      "fileId",
+      "fileVersion",
+      "inspection",
+      "recognized",
+      "skippedGroups"
+    ],
+    "schemas/http/drawing-part-recognition-unset-response.schema.json": [
+      "fileId",
+      "removedPartIds"
+    ],
+    "schemas/http/drawing-pdf-bom-row.schema.json": [
+      "rowIndex"
+    ],
+    "schemas/http/drawing-pdf-cad-contour.schema.json": [
+      "bbox",
+      "closed",
+      "entityIds",
+      "id",
+      "length"
+    ],
+    "schemas/http/drawing-pdf-cad-entity.schema.json": [
+      "geometry",
+      "id",
+      "type"
+    ],
+    "schemas/http/drawing-pdf-cad-result.schema.json": [
+      "contours",
+      "entities",
+      "page",
+      "stats",
+      "truncated"
+    ],
+    "schemas/http/drawing-pdf-extract-request.schema.json": [
+      "files"
+    ],
+    "schemas/http/drawing-pdf-extract-response.schema.json": [
+      "errors",
+      "jobId",
+      "results",
+      "summary"
+    ],
+    "schemas/http/drawing-pdf-extract-result.schema.json": [
+      "cad",
+      "confidence",
+      "errors",
+      "fileName",
+      "source",
+      "table",
+      "warnings"
+    ],
+    "schemas/http/drawing-pdf-table-attribute.schema.json": [
+      "key",
+      "value"
+    ],
+    "schemas/http/drawing-pdf-table-result.schema.json": [
+      "attributes",
+      "bomRows",
+      "fieldConfidence",
+      "strategyUsed",
+      "titleBlock"
+    ],
+    "schemas/http/drawing-pdf-title-block.schema.json": [],
+    "schemas/http/drive-artifacts-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/drive-containers-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-account-session-response.schema.json": [
+      "accountAuthorized"
+    ],
+    "schemas/http/foundation-app-catalog-item.schema.json": [
+      "appId",
+      "clientId",
+      "enabledByUser",
+      "l1Authorized",
+      "launchMode",
+      "miniSupported",
+      "name",
+      "requiredBaseScope",
+      "resourceGrantCount",
+      "route"
+    ],
+    "schemas/http/foundation-app-marketplace-categories.schema.json": [
+      "count",
+      "key",
+      "label"
+    ],
+    "schemas/http/foundation-app-marketplace-detail-response.schema.json": [
+      "accountAuthorized",
+      "app"
+    ],
+    "schemas/http/foundation-app-marketplace-item.schema.json": [
+      "appId",
+      "category",
+      "clientId",
+      "enabledByUser",
+      "featured",
+      "highlights",
+      "installCount",
+      "l1Authorized",
+      "launchMode",
+      "miniSupported",
+      "name",
+      "ratingAverage",
+      "ratingCount",
+      "requiredBaseScope",
+      "resourceGrantCount",
+      "route",
+      "shortDescription",
+      "tagline",
+      "tags",
+      "updatedAt"
+    ],
+    "schemas/http/foundation-apps-catalog-response.schema.json": [
+      "accountAuthorized",
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-apps-marketplace-response.schema.json": [
+      "accountAuthorized",
+      "categories",
+      "items",
+      "page",
+      "pageSize",
+      "total"
+    ],
+    "schemas/http/foundation-bom-versions-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-mcp-sheets-available-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-official-app-bootstrap-request.schema.json": [
+      "appId",
+      "tenantId"
+    ],
+    "schemas/http/foundation-official-app-bootstrap-response.schema.json": [
+      "created",
+      "membership",
+      "success"
+    ],
+    "schemas/http/foundation-official-app-member-create-request.schema.json": [
+      "role",
+      "subject",
+      "tenantId"
+    ],
+    "schemas/http/foundation-official-app-member-response.schema.json": [
+      "membership",
+      "success"
+    ],
+    "schemas/http/foundation-official-app-memberships-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-open-app-create-request.schema.json": [
+      "name",
+      "tenantId"
+    ],
+    "schemas/http/foundation-open-app-create-response.schema.json": [
+      "credential",
+      "openApp",
+      "success"
+    ],
+    "schemas/http/foundation-open-app-credential-rotate-response.schema.json": [
+      "credential",
+      "openAppId",
+      "success"
+    ],
+    "schemas/http/foundation-open-apps-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-resource-grant-create-request.schema.json": [
+      "actions",
+      "consumerAppId",
+      "endsAt",
+      "resourcePackId",
+      "selector",
+      "sourceAppId",
+      "startsAt",
+      "tenantId"
+    ],
+    "schemas/http/foundation-resource-grant-response.schema.json": [
+      "resourceGrant",
+      "success"
+    ],
+    "schemas/http/foundation-resource-grants-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-security-activities-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-security-ontology-vocab-response.schema.json": [
+      "dataDomains",
+      "defaults",
+      "purposes",
+      "retentions",
+      "revocationModes"
+    ],
+    "schemas/http/foundation-security-pdp-evaluate-request.schema.json": [
+      "action",
+      "consumerAppId",
+      "resourcePackId",
+      "selector",
+      "tenantId",
+      "token"
+    ],
+    "schemas/http/foundation-security-pdp-evaluate-response.schema.json": [
+      "action",
+      "allow",
+      "at",
+      "consumerAppId",
+      "decision",
+      "decisionId",
+      "principalId",
+      "principalType",
+      "reason",
+      "resourcePackId",
+      "tenantId"
+    ],
+    "schemas/http/foundation-security-policy-create-request.schema.json": [
+      "allowedConsumers",
+      "dataDomain",
+      "purpose",
+      "retention",
+      "revocationMode",
+      "sourceAppId"
+    ],
+    "schemas/http/foundation-security-policy-list-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/foundation-security-policy-response.schema.json": [
+      "legalGate",
+      "policy",
+      "success"
+    ],
+    "schemas/http/foundation-security-relationship-revoke-response.schema.json": [
+      "affectedGrantIds",
+      "scope",
+      "sourceAppId",
+      "success",
+      "targetAppId",
+      "updatedAt"
+    ],
+    "schemas/http/foundation-sheet-available-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/gcode-configs-response.schema.json": [
+      "data"
+    ],
+    "schemas/http/identity-login-response.schema.json": [
+      "expiresAt",
+      "token",
+      "user"
+    ],
+    "schemas/http/nest-commit-response.schema.json": [
+      "committedAt",
+      "nestingId",
+      "status"
+    ],
+    "schemas/http/nest-start-response.schema.json": [
+      "currentLayout",
+      "currentUtilization",
+      "id",
+      "nestingId",
+      "progress",
+      "status"
+    ],
+    "schemas/http/nesting-history-commit-snapshot-request.schema.json": [
+      "snapshot"
+    ],
+    "schemas/http/nesting-history-operation.schema.json": [
+      "operationData",
+      "operationType",
+      "timestamp",
+      "userId",
+      "username",
+      "version",
+      "workspaceId"
+    ],
+    "schemas/http/nesting-history-state-response.schema.json": [
+      "canRedo",
+      "canUndo",
+      "currentVersion",
+      "operations",
+      "snapshot"
+    ],
+    "schemas/http/nesting-jobs-response.schema.json": [
+      "jobs",
+      "total"
+    ],
+    "schemas/http/nesting-part-quantities-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/nesting-part-quantity-update-request.schema.json": [
+      "quantity"
+    ],
+    "schemas/http/nesting-part-quantity-update-response.schema.json": [
+      "mode",
+      "partId",
+      "persisted",
+      "quantity"
+    ],
+    "schemas/http/ordering-admin-summary-response.schema.json": [
+      "activeUsers",
+      "openOrders",
+      "overdueOrders"
+    ],
+    "schemas/http/ordering-job-boost-records-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-job-directories-response.schema.json": [
+      "directories",
+      "total"
+    ],
+    "schemas/http/ordering-job-directory-create-response.schema.json": [
+      "directory"
+    ],
+    "schemas/http/ordering-job-layout-schedule-response.schema.json": [
+      "boostRecord",
+      "layout",
+      "success"
+    ],
+    "schemas/http/ordering-job-layouts-batch-response.schema.json": [
+      "action",
+      "affected",
+      "machine",
+      "success"
+    ],
+    "schemas/http/ordering-job-layouts-query-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-job-parts-batch-response.schema.json": [
+      "action",
+      "affected",
+      "message",
+      "mock",
+      "success"
+    ],
+    "schemas/http/ordering-job-parts-query-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-jobs-response.schema.json": [
+      "directories",
+      "items",
+      "summary",
+      "total"
+    ],
+    "schemas/http/ordering-material-remnant-sheet-create-response.schema.json": [
+      "sheet"
+    ],
+    "schemas/http/ordering-material-sheet-create-response.schema.json": [
+      "sheet"
+    ],
+    "schemas/http/ordering-material-sheets-batch-response.schema.json": [
+      "action",
+      "affected",
+      "status",
+      "success"
+    ],
+    "schemas/http/ordering-material-sheets-label-print-response.schema.json": [
+      "affected",
+      "message",
+      "mock",
+      "success",
+      "taskId"
+    ],
+    "schemas/http/ordering-material-sheets-query-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-material-sheets-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-material-thickness-create-response.schema.json": [
+      "material"
+    ],
+    "schemas/http/ordering-materials-catalog-create-response.schema.json": [
+      "material"
+    ],
+    "schemas/http/ordering-materials-catalog-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-materials-process-auto-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-materials-process-cutting-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-materials-process-quote-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-order-boost-records-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/ordering-order-create-response.schema.json": [
+      "order"
+    ],
+    "schemas/http/ordering-order-directories-response.schema.json": [
+      "folders",
+      "total"
+    ],
+    "schemas/http/ordering-order-directory-create-response.schema.json": [
+      "folder"
+    ],
+    "schemas/http/ordering-order-layout-schedule-response.schema.json": [
+      "boostRecord",
+      "layout",
+      "success"
+    ],
+    "schemas/http/ordering-order-layouts-batch-response.schema.json": [
+      "action",
+      "affected",
+      "machine",
+      "success"
+    ],
+    "schemas/http/ordering-order-layouts-query-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-order-parts-batch-response.schema.json": [
+      "action",
+      "affected",
+      "message",
+      "mock",
+      "success"
+    ],
+    "schemas/http/ordering-order-parts-query-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-orders-response.schema.json": [
+      "orders",
+      "total"
+    ],
+    "schemas/http/ordering-settings-boost-params-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-settings-general-response.schema.json": [
+      "tabs",
+      "updatedAt"
+    ],
+    "schemas/http/ordering-settings-machines-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-settings-recycle-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-settings-sorting-plans-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/ordering-settings-suites-response.schema.json": [
+      "items",
+      "page",
+      "pageSize",
+      "total",
+      "totalPages"
+    ],
+    "schemas/http/pipe-material.schema.json": [
+      "code",
+      "hidden",
+      "id",
+      "name",
+      "specs",
+      "updatedAt"
+    ],
+    "schemas/http/pipe-spec.schema.json": [
+      "id",
+      "materialGrade",
+      "outerDiameterMm",
+      "stockBars",
+      "wallThicknessMm"
+    ],
+    "schemas/http/pipe-stock-record.schema.json": [
+      "createdAt",
+      "id",
+      "lengthMm",
+      "location",
+      "outerDiameterMm",
+      "pipeId",
+      "pipeName",
+      "quantity",
+      "specId",
+      "status",
+      "updatedAt",
+      "wallThicknessMm"
+    ],
+    "schemas/http/team-member-permissions-response.schema.json": [
+      "memberId",
+      "permissions",
+      "role"
+    ],
+    "schemas/http/toolpath-check-result.schema.json": [
+      "valid",
+      "violations",
+      "warnings"
+    ],
+    "schemas/http/toolpath-entry.schema.json": [
+      "contourId",
+      "direction",
+      "leadIn",
+      "leadOut",
+      "partId",
+      "startPointParam"
+    ],
+    "schemas/http/toolpath-override.schema.json": [],
+    "schemas/http/toolpath-plan-request.schema.json": [
+      "layout",
+      "mode",
+      "parameters",
+      "parts"
+    ],
+    "schemas/http/toolpath-plan-response.schema.json": [
+      "check",
+      "entries",
+      "generatedAt",
+      "metrics",
+      "mode",
+      "planId",
+      "segments",
+      "status",
+      "warnings"
+    ],
+    "schemas/http/toolpath-segment.schema.json": [
+      "from",
+      "kind",
+      "length",
+      "segmentId",
+      "sequence",
+      "to"
+    ],
+    "schemas/http/wms-auth-session.schema.json": [
+      "accessToken",
+      "grantId",
+      "introspectActive",
+      "scopes"
+    ],
+    "schemas/http/wms-material-option.schema.json": [
+      "code",
+      "id",
+      "label",
+      "type"
+    ],
+    "schemas/http/wms-material-options-response.schema.json": [
+      "items",
+      "total"
+    ],
+    "schemas/http/wms-scope.schema.json": [],
+    "schemas/http/workspace-current-response.schema.json": [
+      "type"
+    ]
+  }
+}

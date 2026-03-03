@@ -1,0 +1,23 @@
+name: contracts-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm ci
+      - name: Generate types
+        run: npm run generate-types
+      - name: Validate contracts
+        run: npm run validate-contracts
+      - name: Check breaking changes
+        run: npm run check-breaking

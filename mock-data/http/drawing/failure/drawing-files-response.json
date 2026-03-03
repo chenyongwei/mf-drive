@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "id": "drawing-file-failure-001",
+      "name": "broken_file.dxf",
+      "status": "error",
+      "createdAt": "2026-02-10T06:30:00Z"
+    }
+  ],
+  "total": 1
+}

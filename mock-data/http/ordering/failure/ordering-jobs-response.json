@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "id": "job-1",
+      "code": "JOB-2026-0001",
+      "name": "机柜门板-批次A",
+      "directoryId": "dir-2",
+      "status": "editing",
+      "owner": "alex",
+      "material": "Q235",
+      "createdAt": "2026-02-13T02:00:00.000Z",
+      "updatedAt": "2026-02-13T02:00:00.000Z",
+      "dueAt": "2026-02-13T02:00:00.000Z",
+      "partCount": 5,
+      "layoutCount": 2
+    }
+  ],
+  "total": 1,
+  "summary": {
+    "editing": 1
+  },
+  "directories": [
+    {
+      "id": "dir-2",
+      "name": "生产中",
+      "parentId": null,
+      "createdAt": "2026-02-13T02:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "files": [
+    {
+      "id": "drawing-file-001",
+      "name": "plate_a.dxf",
+      "status": "ready",
+      "createdAt": "2026-02-10T09:00:00Z"
+    },
+    {
+      "id": "drawing-file-002",
+      "name": "plate_b.dxf",
+      "status": "processing",
+      "createdAt": "2026-02-10T09:20:00Z"
+    }
+  ],
+  "total": 2
+}

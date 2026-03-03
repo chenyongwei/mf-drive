@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing.parts.ready.schema.json",
+  "allOf": [
+    { "$ref": "./event-envelope.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "drawing.parts.ready" },
+        "payloadVersion": { "type": "string", "enum": ["1.0.0", "2.0.0"] },
+        "payload": {
+          "type": "object",
+          "required": ["fileId", "partsCount", "parts"],
+          "properties": {
+            "fileId": { "type": "string" },
+            "partsCount": { "type": "integer", "minimum": 0 },
+            "parts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "partId",
+                  "outerContour",
+                  "innerContours",
+                  "sourceEntityIds",
+                  "bbox",
+                  "geometryVersion"
+                ],
+                "properties": {
+                  "partId": { "type": "string" },
+                  "outerContour": {
+                    "type": "object",
+                    "required": ["contourId", "closed", "points"],
+                    "properties": {
+                      "contourId": { "type": "string" },
+                      "closed": { "type": "boolean" },
+                      "points": {
+                        "type": "array",
+                        "minItems": 3,
+                        "items": {
+                          "type": "object",
+                          "required": ["x", "y"],
+                          "properties": {
+                            "x": { "type": "number" },
+                            "y": { "type": "number" }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "innerContours": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["contourId", "closed", "points"],
+                      "properties": {
+                        "contourId": { "type": "string" },
+                        "closed": { "type": "boolean" },
+                        "points": {
+                          "type": "array",
+                          "minItems": 3,
+                          "items": {
+                            "type": "object",
+                            "required": ["x", "y"],
+                            "properties": {
+                              "x": { "type": "number" },
+                              "y": { "type": "number" }
+                            },
+                            "additionalProperties": false
+                          }
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "sourceEntityIds": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "bbox": {
+                    "type": "object",
+                    "required": ["minX", "minY", "maxX", "maxY"],
+                    "properties": {
+                      "minX": { "type": "number" },
+                      "minY": { "type": "number" },
+                      "maxX": { "type": "number" },
+                      "maxY": { "type": "number" }
+                    },
+                    "additionalProperties": false
+                  },
+                  "geometryVersion": { "type": "string" }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

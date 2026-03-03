@@ -1,0 +1,12 @@
+{
+  "nestingId": "nest-demo-001",
+  "status": "committed",
+  "committedAt": "2026-02-22T12:00:00Z",
+  "records": [
+    {
+      "partId": "part-demo-001",
+      "sheetId": "sheet-demo-001",
+      "quantity": 1
+    }
+  ]
+}
