@@ -206,6 +206,18 @@ body {
   color: var(--drive-success);
 }
 
+.drive-banner-context {
+  background: #eef6ff;
+  border-color: #bdd6f3;
+  color: #1f4e76;
+}
+
+.drive-banner-context a {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
 .drive-layout {
   display: grid;
   grid-template-columns: minmax(220px, 0.9fr) minmax(420px, 1.8fr) minmax(260px, 1fr);
@@ -444,6 +456,12 @@ body {
 :root[data-mf-theme='dark'] .drive-banner-status {
   background: rgba(6, 78, 59, 0.32);
   border-color: #065f46;
+}
+
+:root[data-mf-theme='dark'] .drive-banner-context {
+  background: rgba(30, 58, 90, 0.38);
+  border-color: #1e40af;
+  color: #bae6fd;
 }
 
 :root[data-mf-theme='dark'] .drive-list-item.active {
