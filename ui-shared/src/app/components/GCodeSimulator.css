@@ -1,0 +1,232 @@
+.gcode-simulator {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #f9f9f9;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.simulator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.simulator-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.simulator-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.simulator-canvas {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: grab;
+}
+
+.simulator-canvas:active {
+  cursor: grabbing;
+}
+
+.simulator-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.progress-track {
+  flex: 1;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: width 0.1s;
+}
+
+.progress-text {
+  font-size: 14px;
+  color: #666;
+  min-width: 80px;
+  text-align: right;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.speed-label {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.speed-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  outline: none;
+}
+
+.speed-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.speed-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.speed-value {
+  font-size: 14px;
+  color: #333;
+  min-width: 50px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.current-command {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #f0f9ff;
+  border-left: 4px solid #3b82f6;
+  border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 13px;
+  color: #333;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.simulator-legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-line {
+  width: 24px;
+  height: 2px;
+}
+
+.legend-line.rapid {
+  background: #999;
+  border: 1px dashed #999;
+}
+
+.legend-line.linear {
+  background: #ef4444;
+}
+
+.legend-line.arc {
+  background: #22c55e;
+}
+
+.legend-text {
+  color: #666;
+}
+
+.simulator-info {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #666;
+}
+
+.simulator-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.simulator-info-row:last-child {
+  margin-bottom: 0;
+}
+
+.btn-control {
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.btn-control:hover {
+  background: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.btn-control:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-control.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.btn-play {
+  min-width: 80px;
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.btn-play:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-play.active {
+  background: #f59e0b;
+  border-color: #f59e0b;
+}
+
+.btn-play.active:hover {
+  background: #d97706;
+  border-color: #d97706;
+}
