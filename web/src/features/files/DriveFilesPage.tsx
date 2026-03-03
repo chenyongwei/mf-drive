@@ -73,6 +73,28 @@ export function DriveFilesPage() {
 
   const token = session.accessToken;
   const ready = session.status === 'ready' && token && session.tokenActive;
+  const securityCenterUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set('tab', 'resource-grants');
+    params.set('tenantId', 'tenant-001');
+    params.set('sourceAppId', 'drive');
+    params.set('consumerAppId', 'drive');
+    params.set('resourcePackId', 'drive.storage.containers.read');
+    params.set('action', 'read');
+    params.set('dataDomain', 'FILE');
+    params.set('objectType', 'Container');
+    if (typeof window !== 'undefined') {
+      params.set('returnTo', `${window.location.pathname}${window.location.search}`);
+    }
+    return `/foundation/security?${params.toString()}`;
+  }, []);
+  const showSecurityContextEntry = useMemo(() => (
+    session.status === 'needs_account'
+    || session.status === 'needs_authorization'
+    || session.status === 'error'
+    || Boolean(session.error)
+    || Boolean(error)
+  ), [error, session.error, session.status]);
 
   const selectedArtifact = useMemo(
     () => artifacts.find((artifact) => artifact.artifactId === selectedArtifactId) ?? null,
@@ -348,6 +370,15 @@ export function DriveFilesPage() {
       {session.error ? <div className="drive-banner drive-banner-error">{session.error}</div> : null}
       {error ? <div className="drive-banner drive-banner-error">{error}</div> : null}
       {status ? <div className="drive-banner drive-banner-status">{status}</div> : null}
+      {showSecurityContextEntry ? (
+        <div className="drive-banner drive-banner-context">
+          需要新增授权时请前往
+          {' '}
+          <a href={securityCenterUrl}>Foundation 安全中心</a>
+          {' '}
+          配置后返回。
+        </div>
+      ) : null}
 
         <main className="drive-layout">
         <MfSectionCard className="drive-panel">
