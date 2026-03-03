@@ -1,9 +1,0 @@
-{
-  "eventId": "evt-foundation-sheet-consumption-committed-failure-001",
-  "eventType": "foundation.sheet.consumption.committed",
-  "occurredAt": "2026-02-22T12:00:00Z",
-  "producer": "foundation",
-  "workspaceId": "workspace-failure",
-  "payloadVersion": "1.0.0",
-  "payload": {"recordId":"consume-failure-001","reservationId":"reserve-failure-001","sheetId":"sheet-failure-001","consumedQuantity":1}
-}

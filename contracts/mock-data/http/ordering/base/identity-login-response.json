@@ -1,9 +1,0 @@
-{
-  "token": "mock-token-base",
-  "expiresAt": "2026-02-11T10:00:00Z",
-  "user": {
-    "id": "user-001",
-    "email": "operator@example.com",
-    "role": "admin"
-  }
-}

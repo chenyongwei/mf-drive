@@ -1,9 +1,0 @@
-.DS_Store
-node_modules/
-dist/
-build/
-coverage/
-.vite/
-*.log
-.env
-.env.local

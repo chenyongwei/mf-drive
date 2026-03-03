@@ -1,9 +1,0 @@
-{
-  "eventId": "evt-foundation-sheet-reservation-created-edge-001",
-  "eventType": "foundation.sheet.reservation.created",
-  "occurredAt": "2026-02-22T12:00:00Z",
-  "producer": "foundation",
-  "workspaceId": "workspace-edge",
-  "payloadVersion": "1.0.0",
-  "payload": {"reservationId":"reserve-edge-001","sheetId":"sheet-edge-001","quantity":1,"status":"RESERVED"}
-}

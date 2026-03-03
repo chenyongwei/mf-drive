@@ -1,9 +1,0 @@
-{
-  "eventId": "evt-foundation-inventory-synced-failure-001",
-  "eventType": "foundation.inventory.synced",
-  "occurredAt": "2026-02-22T12:00:00Z",
-  "producer": "foundation",
-  "workspaceId": "workspace-failure",
-  "payloadVersion": "1.0.0",
-  "payload": {"syncId":"sync-failure-001","sheetCount":3,"source":"wms-adapter","status":"FAILED"}
-}

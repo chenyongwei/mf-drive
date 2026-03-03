@@ -1,5 +1,0 @@
-{
-  "memberId": 2,
-  "role": "admin",
-  "permissions": ["VIEW_PARTS","RUN_NESTING","EDIT_DRAWINGS"]
-}

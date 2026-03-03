@@ -1,9 +1,0 @@
-{
-  "token": "mock-token-failure",
-  "expiresAt": "2026-02-10T10:08:00Z",
-  "user": {
-    "id": "user-failure-001",
-    "email": "locked@example.com",
-    "role": "locked"
-  }
-}

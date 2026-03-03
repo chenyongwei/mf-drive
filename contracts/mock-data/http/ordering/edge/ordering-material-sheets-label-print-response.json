@@ -1,7 +1,0 @@
-{
-  "success": true,
-  "taskId": "print-12345",
-  "mock": true,
-  "affected": 2,
-  "message": "label print task queued (mock)"
-}
