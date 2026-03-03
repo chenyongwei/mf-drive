@@ -1,0 +1,37 @@
+{
+  "items": [
+    {
+      "activityId": "act-base-000",
+      "activityType": "ACCOUNT_AUTHORIZED",
+      "actor": "alex",
+      "scopes": ["foundation.account.authorized"],
+      "grantId": "account-session",
+      "status": "CONFIRMED",
+      "createdAt": "2026-02-22T08:55:00Z",
+      "confirmedAt": "2026-02-22T08:55:10Z"
+    },
+    {
+      "activityId": "act-base-001",
+      "activityType": "APP_INSTALLED",
+      "actor": "alex",
+      "scopes": ["mf.connect.ordering.wms.read"],
+      "grantId": "grant-base-001",
+      "appId": "wms",
+      "clientId": "wms-web",
+      "sourceAppId": "ordering",
+      "status": "CONFIRMED",
+      "createdAt": "2026-02-22T08:58:00Z",
+      "confirmedAt": "2026-02-22T08:58:10Z"
+    },
+    {
+      "activityId": "act-base-002",
+      "activityType": "GRANT_CREATED",
+      "actor": "alex",
+      "scopes": ["foundation.read", "foundation.write.material"],
+      "grantId": "grant-base-001",
+      "status": "PENDING_CONFIRMATION",
+      "createdAt": "2026-02-22T09:00:00Z"
+    }
+  ],
+  "total": 3
+}

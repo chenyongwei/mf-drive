@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-pdf-title-block.schema.json",
+  "type": "object",
+  "properties": {
+    "drawingNo": { "type": "string" },
+    "partName": { "type": "string" },
+    "projectName": { "type": "string" },
+    "material": { "type": "string" },
+    "surfaceTreatment": { "type": "string" },
+    "quantity": { "type": "string" },
+    "revision": { "type": "string" },
+    "date": { "type": "string" }
+  },
+  "additionalProperties": false
+}

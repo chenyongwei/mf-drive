@@ -1,0 +1,32 @@
+{
+  "planId": "tp-edge-001",
+  "mode": "AUTO",
+  "status": "invalid",
+  "entries": [],
+  "segments": [],
+  "metrics": {
+    "cutLength": 0,
+    "rapidLength": 0,
+    "pierceCount": 0,
+    "estimatedTimeSec": 0,
+    "thermalPenalty": 0
+  },
+  "check": {
+    "valid": false,
+    "violations": [
+      {
+        "code": "NO_VALID_CONTOUR",
+        "message": "no closed contour available",
+        "severity": "error"
+      }
+    ],
+    "warnings": []
+  },
+  "warnings": ["no executable segment generated"],
+  "appliedOverrides": {
+    "startPointOverrides": [],
+    "leadOverrides": [],
+    "sequenceOverrides": []
+  },
+  "generatedAt": "2026-02-17T08:10:00Z"
+}

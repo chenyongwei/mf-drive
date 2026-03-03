@@ -1,0 +1,121 @@
+version: 1
+services:
+  crm-api:
+    baseUrlEnv: CRM_API_URL
+    defaultBaseUrl: http://127.0.0.1:31215
+  ordering-api:
+    baseUrlEnv: ORDERING_API_URL
+    defaultBaseUrl: http://127.0.0.1:31206
+  drawing-api:
+    baseUrlEnv: DRAWING_API_URL
+    defaultBaseUrl: http://127.0.0.1:31204
+  nesting-api:
+    baseUrlEnv: NESTING_API_URL
+    defaultBaseUrl: http://127.0.0.1:31202
+  wms-api:
+    baseUrlEnv: WMS_API_URL
+    defaultBaseUrl: http://127.0.0.1:31209
+  drive-api:
+    baseUrlEnv: DRIVE_API_URL
+    defaultBaseUrl: http://127.0.0.1:31210
+  foundation-bom-api:
+    baseUrlEnv: FOUNDATION_BOM_API_URL
+    defaultBaseUrl: http://127.0.0.1:31303
+  foundation-material-api:
+    baseUrlEnv: FOUNDATION_MATERIAL_API_URL
+    defaultBaseUrl: http://127.0.0.1:31304
+  foundation-iam-api:
+    baseUrlEnv: FOUNDATION_IAM_API_URL
+    defaultBaseUrl: http://127.0.0.1:31301
+  aps-api:
+    baseUrlEnv: APS_API_URL
+    defaultBaseUrl: http://127.0.0.1:31213
+
+objectTypes:
+  Customer:
+    service: crm-api
+    list: GET /api/crm/customers
+    get: GET /api/crm/customers/{key}
+  SalesOrder:
+    service: ordering-api
+    list: GET /api/ordering/orders
+    get: GET /api/ordering/orders/{key}
+  OrderFolder:
+    service: ordering-api
+    list: GET /api/ordering/orders/folders
+  DrawingFile:
+    service: drawing-api
+    list: GET /api/drawing/files
+    get: GET /api/drawing/files/{key}
+  CadEntity:
+    service: drawing-api
+    list: GET /api/drawing/files/{fileId}/status
+  Part:
+    service: drawing-api
+    list: GET /api/drawing/prts/all
+    get: GET /api/drawing/prts/{key}
+  Font:
+    service: drawing-api
+    list: GET /api/drawing/fonts
+  NestingJob:
+    service: nesting-api
+    list: GET /api/nesting/jobs
+    get: GET /api/nesting/jobs/{key}
+  NestingLayout:
+    service: nesting-api
+    list: GET /api/nesting/jobs/{nestingId}/result
+  ToolpathPlan:
+    service: nesting-api
+    get: GET /api/nesting/toolpath/plan/{key}
+  GcodeConfig:
+    service: nesting-api
+    list: GET /api/nesting/gcode/configs
+  SheetMaterial:
+    service: wms-api
+    list: GET /api/wms/materials/catalog
+  Sheet:
+    service: wms-api
+    list: GET /api/wms/materials/sheets
+  PipeMaterial:
+    service: wms-api
+    list: GET /api/wms/pipes/catalog
+  PipeStock:
+    service: wms-api
+    list: GET /api/wms/pipes/stocks
+  ProcessConfig:
+    service: wms-api
+    list: GET /api/wms/materials/process/{kind}
+  Container:
+    service: drive-api
+    list: GET /api/drive/containers
+  Artifact:
+    service: drive-api
+    list: POST /api/drive/artifacts/query
+    get: GET /api/drive/artifacts/{key}
+  ArtifactVersion:
+    service: drive-api
+    list: GET /api/drive/artifacts/{artifactId}/versions
+  BomVersion:
+    service: foundation-bom-api
+    list: GET /api/foundation/bom/versions
+  FoundationSheet:
+    service: foundation-material-api
+    list: GET /api/foundation/materials/sheets/available
+  SheetReservation:
+    service: foundation-material-api
+    get: GET /api/foundation/materials/sheets/reservations/{key}
+  App:
+    service: foundation-iam-api
+    list: GET /api/foundation/apps/catalog
+  SecurityPolicy:
+    service: foundation-iam-api
+    list: GET /api/foundation/security/policies
+  ProductionPlan:
+    service: aps-api
+    list: GET /api/aps/plans
+  Machine:
+    service: aps-api
+    list: GET /api/aps/machines
+  ScheduleRecord:
+    service: aps-api
+    list: GET /api/aps/schedule-records

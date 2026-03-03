@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-history-state-response.schema.json",
+  "type": "object",
+  "required": ["currentVersion", "operations", "canUndo", "canRedo"],
+  "properties": {
+    "currentVersion": { "type": "integer", "minimum": 0 },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["operationType", "operationData", "userId", "username", "timestamp", "version"],
+        "properties": {
+          "id": { "type": ["integer", "string"] },
+          "fileId": { "type": "string" },
+          "operationType": { "type": "string" },
+          "entityId": { "type": "string" },
+          "entityIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "operationData": { "type": "object" },
+          "userId": { "type": "string" },
+          "username": { "type": "string" },
+          "timestamp": { "type": "integer" },
+          "version": { "type": "integer", "minimum": 0 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "canUndo": { "type": "boolean" },
+    "canRedo": { "type": "boolean" },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "operation": {
+      "type": ["object", "null"],
+      "required": ["operationType", "operationData", "userId", "username", "timestamp", "version"],
+      "properties": {
+        "id": { "type": ["integer", "string"] },
+        "fileId": { "type": "string" },
+        "operationType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "entityIds": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "operationData": { "type": "object" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "timestamp": { "type": "integer" },
+        "version": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

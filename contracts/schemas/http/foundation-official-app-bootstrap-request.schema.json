@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-official-app-bootstrap-request.schema.json",
+  "type": "object",
+  "required": ["tenantId", "appId"],
+  "properties": {
+    "tenantId": { "type": "string" },
+    "appId": {
+      "type": "string",
+      "enum": ["nesting", "drawing", "ordering", "crm", "aps", "wms", "drive", "foundation_workbench"]
+    }
+  },
+  "additionalProperties": false
+}

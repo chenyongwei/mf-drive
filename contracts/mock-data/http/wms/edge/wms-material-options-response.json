@@ -1,0 +1,11 @@
+{
+  "items": [
+    {
+      "id": "sheet:mat-edge-1",
+      "label": "板材 / EDGE / 极小库存",
+      "type": "SHEET",
+      "code": "EDGE"
+    }
+  ],
+  "total": 1
+}

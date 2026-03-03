@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "recordId": "record-failure-1",
+      "action": "single",
+      "planId": "plan-failure-1",
+      "planCode": "APS-FAIL-0001",
+      "machineId": "machine-2",
+      "machineName": "Laser-02",
+      "operator": "ops-oncall",
+      "status": "scheduled",
+      "note": "fallback schedule",
+      "createdAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20
+}

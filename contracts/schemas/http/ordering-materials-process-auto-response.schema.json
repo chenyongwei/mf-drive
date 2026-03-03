@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "items",
+    "total"
+  ],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "enabled",
+          "params",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "params": {
+            "type": "object",
+            "required": [
+              "leadIn",
+              "leadOut",
+              "microJoint"
+            ],
+            "properties": {
+              "leadIn": {
+                "type": "integer"
+              },
+              "leadOut": {
+                "type": "integer"
+              },
+              "microJoint": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "total": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": true
+}

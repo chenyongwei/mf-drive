@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation.bom.version.pending.schema.json",
+  "allOf": [
+    { "$ref": "./event-envelope.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "foundation.bom.version.pending" },
+        "payload": {
+          "type": "object",
+          "required": ["versionId", "status", "triggerSource", "affectedPartIds"],
+          "properties": {
+            "versionId": { "type": "string" },
+            "status": { "const": "PENDING_ADOPTION" },
+            "triggerSource": { "type": "string" },
+            "affectedPartIds": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

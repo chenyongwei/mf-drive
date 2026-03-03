@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation.bom.version.rejected.schema.json",
+  "allOf": [
+    { "$ref": "./event-envelope.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "eventType": { "const": "foundation.bom.version.rejected" },
+        "payload": {
+          "type": "object",
+          "required": ["versionId", "status", "reason"],
+          "properties": {
+            "versionId": { "type": "string" },
+            "status": { "const": "ARCHIVED" },
+            "reason": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

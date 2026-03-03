@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "nest-start-response.schema.json",
+  "type": "object",
+  "required": ["id", "nestingId", "status", "progress", "currentUtilization", "currentLayout"],
+  "properties": {
+    "id": { "type": "string" },
+    "nestingId": { "type": "string" },
+    "status": { "type": "string" },
+    "progress": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "currentUtilization": { "type": "number", "minimum": 0, "maximum": 1 },
+    "currentLayout": {
+      "type": "object",
+      "required": ["id", "utilization", "parts", "placedParts", "material"],
+      "properties": {
+        "id": { "type": "string" },
+        "utilization": { "type": "number", "minimum": 0, "maximum": 1 },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["partId", "partName", "position", "bbox", "rotation"],
+            "properties": {
+              "partId": { "type": "string" },
+              "partName": { "type": "string" },
+              "rotation": { "type": "number" },
+              "position": {
+                "type": "object",
+                "required": ["x", "y"],
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" }
+                },
+                "additionalProperties": false
+              },
+              "bbox": {
+                "type": "object",
+                "required": ["minX", "minY", "maxX", "maxY"],
+                "properties": {
+                  "minX": { "type": "number" },
+                  "minY": { "type": "number" },
+                  "maxX": { "type": "number" },
+                  "maxY": { "type": "number" }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "placedParts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["partId", "x", "y", "rotation"],
+            "properties": {
+              "partId": { "type": "string" },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "rotation": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "material": {
+          "type": "object",
+          "required": ["width", "height", "thickness"],
+          "properties": {
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "thickness": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "material": {
+      "type": "object",
+      "required": ["width", "height", "thickness"],
+      "properties": {
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "thickness": { "type": "number" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

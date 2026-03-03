@@ -1,0 +1,13 @@
+{
+  "eventId": "evt-drawing-edge-001",
+  "eventType": "drawing.parts.ready",
+  "occurredAt": "2026-02-10T10:02:00Z",
+  "producer": "drawing-api",
+  "workspaceId": "workspace-edge",
+  "payloadVersion": "2.0.0",
+  "payload": {
+    "fileId": "drawing-file-edge-001",
+    "partsCount": 0,
+    "parts": []
+  }
+}

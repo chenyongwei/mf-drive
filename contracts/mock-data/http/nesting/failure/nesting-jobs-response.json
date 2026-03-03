@@ -1,0 +1,12 @@
+{
+  "jobs": [
+    {
+      "id": "nest-job-failure-001",
+      "status": "failed",
+      "progress": 30,
+      "utilization": 0.2,
+      "createdAt": "2026-02-10T10:06:00Z"
+    }
+  ],
+  "total": 1
+}

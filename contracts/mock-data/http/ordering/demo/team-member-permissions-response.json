@@ -1,0 +1,5 @@
+{
+  "memberId": 2,
+  "role": "member",
+  "permissions": ["VIEW_PARTS","RUN_NESTING"]
+}

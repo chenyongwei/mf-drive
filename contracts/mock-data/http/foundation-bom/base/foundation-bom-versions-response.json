@@ -1,0 +1,15 @@
+{
+  "items": [
+        {
+          "versionId": "BOM-REL-005",
+          "stage": "MBOM",
+          "status": "PENDING_ADOPTION",
+          "createdAt": "2026-02-22T09:10:00Z",
+          "createdBy": "tekla-adapter",
+          "partCount": 42,
+          "parentVersionId": "BOM-REL-004",
+          "changeSummary": "Tekla geometry dimension update"
+        }
+      ],
+  "total": 1
+}

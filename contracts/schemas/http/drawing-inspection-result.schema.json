@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-inspection-result.schema.json",
+  "type": "object",
+  "required": ["fileId", "timestamp", "tolerance", "summary", "issues"],
+  "properties": {
+    "fileId": { "type": "string" },
+    "timestamp": { "type": "integer" },
+    "tolerance": { "type": "number" },
+    "summary": {
+      "type": "object",
+      "required": ["total", "info", "warning", "error"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "info": { "type": "integer", "minimum": 0 },
+        "warning": { "type": "integer", "minimum": 0 },
+        "error": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "level", "message", "location"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "level": { "type": "string" },
+          "message": { "type": "string" },
+          "fileId": { "type": "string" },
+          "entities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "location": {
+            "type": "object",
+            "required": ["position"],
+            "properties": {
+              "position": {
+                "type": "object",
+                "required": ["x", "y"],
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" }
+                },
+                "additionalProperties": true
+              },
+              "radius": { "type": "number" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

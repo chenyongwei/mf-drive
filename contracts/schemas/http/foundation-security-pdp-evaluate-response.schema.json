@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "foundation-security-pdp-evaluate-response.schema.json",
+  "type": "object",
+  "required": [
+    "decisionId",
+    "allow",
+    "decision",
+    "reason",
+    "tenantId",
+    "principalType",
+    "principalId",
+    "consumerAppId",
+    "resourcePackId",
+    "action",
+    "at"
+  ],
+  "properties": {
+    "decisionId": {
+      "type": "string"
+    },
+    "allow": {
+      "type": "boolean"
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "ALLOW",
+        "DENY"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "matchedGrantId": {
+      "type": "string"
+    },
+    "tenantId": {
+      "type": "string"
+    },
+    "principalType": {
+      "type": "string",
+      "enum": [
+        "USER",
+        "OPEN_APP"
+      ]
+    },
+    "principalId": {
+      "type": "string"
+    },
+    "consumerAppId": {
+      "type": "string",
+      "enum": [
+        "nesting",
+        "drawing",
+        "ordering",
+        "crm",
+        "aps",
+        "wms",
+        "drive",
+        "foundation_workbench"
+      ]
+    },
+    "resourcePackId": {
+      "type": "string"
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "read",
+        "write",
+        "share",
+        "delete"
+      ]
+    },
+    "at": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

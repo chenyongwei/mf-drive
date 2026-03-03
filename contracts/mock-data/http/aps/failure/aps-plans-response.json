@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "planId": "plan-failure-1",
+      "planCode": "APS-FAIL-0001",
+      "orderCode": "ORD-FAIL-0201",
+      "layoutCode": "L-FAIL-0201",
+      "material": "Q235-6mm",
+      "priority": 1,
+      "dueAt": "2026-02-23T08:00:00Z",
+      "status": "blocked",
+      "machineId": null,
+      "updatedAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20
+}

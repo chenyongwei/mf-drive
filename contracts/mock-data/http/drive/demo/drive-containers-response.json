@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "containerId": "ctr-demo-shared",
+      "tenantId": "tenant-demo",
+      "ownerAppId": "ordering",
+      "mode": "MY_DRIVE",
+      "name": "Demo Shared Drawings",
+      "quotaBytes": 107374182400,
+      "usedBytes": 21474836480,
+      "createdAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 1
+}

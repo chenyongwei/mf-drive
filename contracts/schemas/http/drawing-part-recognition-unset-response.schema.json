@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-part-recognition-unset-response.schema.json",
+  "type": "object",
+  "required": ["fileId", "removedPartIds"],
+  "properties": {
+    "fileId": { "type": "string" },
+    "removedPartIds": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": true
+}

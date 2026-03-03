@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "sheet"
+  ],
+  "properties": {
+    "sheet": {
+      "type": "object",
+      "required": [
+        "id",
+        "materialId",
+        "materialName",
+        "thickness",
+        "width",
+        "height",
+        "quantity",
+        "source",
+        "status",
+        "location",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "materialId": {
+          "type": "string"
+        },
+        "materialName": {
+          "type": "string"
+        },
+        "thickness": {
+          "type": "integer"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "source": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

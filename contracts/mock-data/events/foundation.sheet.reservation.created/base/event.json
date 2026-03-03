@@ -1,0 +1,9 @@
+{
+  "eventId": "evt-foundation-sheet-reservation-created-base-001",
+  "eventType": "foundation.sheet.reservation.created",
+  "occurredAt": "2026-02-22T12:00:00Z",
+  "producer": "foundation",
+  "workspaceId": "workspace-base",
+  "payloadVersion": "1.0.0",
+  "payload": {"reservationId":"reserve-base-001","sheetId":"sheet-base-001","quantity":1,"status":"RESERVED"}
+}

@@ -1,0 +1,21 @@
+{
+  "material": {
+    "id": "mat-1",
+    "name": "Q235",
+    "code": "Q235",
+    "hidden": false,
+    "updatedAt": "2026-02-13T02:00:00.000Z",
+    "thicknesses": [
+      {
+        "id": "thk-1",
+        "valueMm": 2,
+        "stockSheets": 12
+      },
+      {
+        "id": "thk-9",
+        "valueMm": 4,
+        "stockSheets": 6
+      }
+    ]
+  }
+}

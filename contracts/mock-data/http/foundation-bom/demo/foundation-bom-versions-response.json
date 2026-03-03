@@ -1,0 +1,15 @@
+{
+  "items": [
+        {
+          "versionId": "BOM-REL-DEMO-003",
+          "stage": "PBOM",
+          "status": "ACTIVE",
+          "createdAt": "2026-02-22T10:10:00Z",
+          "createdBy": "capp-adapter",
+          "partCount": 16,
+          "parentVersionId": "BOM-REL-DEMO-002",
+          "changeSummary": "Demo process route attached"
+        }
+      ],
+  "total": 1
+}

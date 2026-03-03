@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "drawing-file-status-response.schema.json",
+  "type": "object",
+  "required": ["id", "name", "status", "entityCount", "partCount", "entities"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "status": { "type": "string" },
+    "entityCount": { "type": "integer", "minimum": 0 },
+    "partCount": { "type": "integer", "minimum": 0 },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "geometry"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "layer": { "type": "string" },
+          "geometry": { "type": "object" }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

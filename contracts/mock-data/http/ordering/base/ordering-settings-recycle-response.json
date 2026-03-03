@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "id": "cfg-6",
+      "name": "历史客户-X",
+      "code": "REC-001",
+      "enabled": false,
+      "updatedAt": "2026-02-13T02:00:00.000Z",
+      "tags": [
+        "customer"
+      ]
+    }
+  ],
+  "total": 1,
+  "page": 1,
+  "pageSize": 20,
+  "totalPages": 1
+}

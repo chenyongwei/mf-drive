@@ -1,0 +1,7 @@
+{
+  "success": true,
+  "action": "mes-push",
+  "affected": 2,
+  "message": "mes-push accepted in mock mode",
+  "mock": true
+}

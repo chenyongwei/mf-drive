@@ -1,0 +1,59 @@
+{
+  "eventId": "evt-drawing-base-001",
+  "eventType": "drawing.parts.ready",
+  "occurredAt": "2026-02-10T10:00:00Z",
+  "producer": "drawing-api",
+  "workspaceId": "workspace-001",
+  "payloadVersion": "2.0.0",
+  "payload": {
+    "fileId": "drawing-file-001",
+    "partsCount": 2,
+    "parts": [
+      {
+        "partId": "part-001",
+        "outerContour": {
+          "contourId": "part-001-outer",
+          "closed": true,
+          "points": [
+            { "x": 0, "y": 0 },
+            { "x": 120, "y": 0 },
+            { "x": 120, "y": 80 },
+            { "x": 0, "y": 80 }
+          ]
+        },
+        "innerContours": [
+          {
+            "contourId": "part-001-inner-1",
+            "closed": true,
+            "points": [
+              { "x": 30, "y": 20 },
+              { "x": 90, "y": 20 },
+              { "x": 90, "y": 60 },
+              { "x": 30, "y": 60 }
+            ]
+          }
+        ],
+        "sourceEntityIds": ["ent-001-outer", "ent-001-inner-1"],
+        "bbox": { "minX": 0, "minY": 0, "maxX": 120, "maxY": 80 },
+        "geometryVersion": "geom-v2-001"
+      },
+      {
+        "partId": "part-002",
+        "outerContour": {
+          "contourId": "part-002-outer",
+          "closed": true,
+          "points": [
+            { "x": 140, "y": 0 },
+            { "x": 260, "y": 0 },
+            { "x": 260, "y": 70 },
+            { "x": 140, "y": 70 }
+          ]
+        },
+        "innerContours": [],
+        "sourceEntityIds": ["ent-002-outer"],
+        "bbox": { "minX": 140, "minY": 0, "maxX": 260, "maxY": 70 },
+        "geometryVersion": "geom-v2-002"
+      }
+    ]
+  }
+}

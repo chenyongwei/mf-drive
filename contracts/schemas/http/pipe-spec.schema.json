@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "outerDiameterMm", "wallThicknessMm", "materialGrade", "stockBars"],
+  "properties": {
+    "id": { "type": "string" },
+    "outerDiameterMm": { "type": "number" },
+    "wallThicknessMm": { "type": "number" },
+    "materialGrade": { "type": "string" },
+    "stockBars": { "type": "integer" }
+  },
+  "additionalProperties": false
+}

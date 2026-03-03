@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "label", "type", "code"],
+  "properties": {
+    "id": { "type": "string" },
+    "label": { "type": "string" },
+    "type": { "type": "string", "enum": ["SHEET", "PIPE"] },
+    "code": { "type": "string" }
+  },
+  "additionalProperties": false
+}

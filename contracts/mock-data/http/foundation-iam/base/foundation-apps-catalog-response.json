@@ -1,0 +1,94 @@
+{
+  "accountAuthorized": true,
+  "accountAuthorizedAt": "2026-03-02T01:00:00Z",
+  "items": [
+    {
+      "appId": "nesting",
+      "name": "套料",
+      "route": "/nesting/workbench",
+      "clientId": "nesting-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "foundation.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "installedAt": "2026-02-22T09:02:00Z",
+      "l1Authorized": true,
+      "membershipRole": "OWNER",
+      "resourceGrantCount": 1,
+      "authorizationWindow": {
+        "startsAt": "2026-03-02T00:00:00Z",
+        "endsAt": "2026-04-01T00:00:00Z"
+      }
+    },
+    {
+      "appId": "drawing",
+      "name": "图纸",
+      "route": "/drawing/editor",
+      "clientId": "drawing-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "foundation.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "l1Authorized": false,
+      "resourceGrantCount": 0
+    },
+    {
+      "appId": "ordering",
+      "name": "订单",
+      "route": "/ordering/orders",
+      "clientId": "ordering-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "foundation.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "installedAt": "2026-02-22T09:04:00Z",
+      "l1Authorized": true,
+      "membershipRole": "OWNER",
+      "resourceGrantCount": 2,
+      "authorizationWindow": {
+        "startsAt": "2026-03-02T00:00:00Z",
+        "endsAt": "2026-04-01T00:00:00Z"
+      }
+    },
+    {
+      "appId": "wms",
+      "name": "WMS",
+      "route": "/wms/materials",
+      "clientId": "wms-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "wms.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "l1Authorized": false,
+      "resourceGrantCount": 0
+    },
+    {
+      "appId": "foundation_workbench",
+      "name": "Foundation 工作台",
+      "route": "/foundation/workbench/",
+      "clientId": "foundation-workbench-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "foundation.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "installedAt": "2026-02-22T09:01:00Z",
+      "l1Authorized": true,
+      "membershipRole": "OWNER",
+      "resourceGrantCount": 0
+    },
+    {
+      "appId": "aps",
+      "name": "APS 排产",
+      "route": "/aps/plans",
+      "clientId": "aps-web",
+      "enabledByUser": true,
+      "requiredBaseScope": "aps.read",
+      "launchMode": "MINI",
+      "miniSupported": true,
+      "installedAt": "2026-02-23T14:30:00Z",
+      "l1Authorized": false,
+      "resourceGrantCount": 0
+    }
+  ],
+  "total": 6
+}

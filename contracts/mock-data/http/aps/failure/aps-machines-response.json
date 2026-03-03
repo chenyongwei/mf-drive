@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "machineId": "machine-2",
+      "name": "Laser-02",
+      "category": "LASER",
+      "status": "maintenance",
+      "capacityHours": 16,
+      "loadHours": 16,
+      "updatedAt": "2026-02-23T08:00:00Z"
+    }
+  ],
+  "total": 1
+}
