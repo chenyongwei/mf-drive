@@ -53,13 +53,66 @@ async function run() {
   });
   assert.equal(initUploadRes.status, 200);
   const initUploadPayload = await initUploadRes.json();
+  const versionOneContent = Buffer.from('DRAWING-V1', 'utf8').toString('base64');
 
   const completeUploadRes = await fetch(`${runtime.base}/api/drive/artifacts/${initUploadPayload.artifactId}/complete-upload`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ versionId: initUploadPayload.versionId, etag: 'etag-self-test', sizeBytes: 1024 }),
+    body: JSON.stringify({
+      versionId: initUploadPayload.versionId,
+      etag: 'etag-self-test-v1',
+      sizeBytes: 1024,
+      contentBase64: versionOneContent,
+    }),
   });
   assert.equal(completeUploadRes.status, 200);
+
+  const appendUploadRes = await fetch(`${runtime.base}/api/drive/artifacts/init-upload`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      artifactId: initUploadPayload.artifactId,
+      containerId: createContainerPayload.container.containerId,
+      artifactType: 'DRAWING',
+      fileName: 'self-test.dxf',
+      mimeType: 'application/dxf',
+      sizeBytes: 2048,
+    }),
+  });
+  assert.equal(appendUploadRes.status, 200);
+  const appendUploadPayload = await appendUploadRes.json();
+  const versionTwoContent = Buffer.from('DRAWING-V2', 'utf8').toString('base64');
+
+  const appendCompleteRes = await fetch(`${runtime.base}/api/drive/artifacts/${initUploadPayload.artifactId}/complete-upload`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      versionId: appendUploadPayload.versionId,
+      etag: 'etag-self-test-v2',
+      sizeBytes: 2048,
+      contentBase64: versionTwoContent,
+    }),
+  });
+  assert.equal(appendCompleteRes.status, 200);
+
+  const versionsRes = await fetch(`${runtime.base}/api/drive/artifacts/${initUploadPayload.artifactId}/versions`);
+  assert.equal(versionsRes.status, 200);
+  const versionsPayload = await versionsRes.json();
+  assert.equal(versionsPayload.total, 2);
+
+  const downloadUrlRes = await fetch(`${runtime.base}/api/drive/artifacts/${initUploadPayload.artifactId}/download-url`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ versionId: appendUploadPayload.versionId }),
+  });
+  assert.equal(downloadUrlRes.status, 200);
+  const downloadUrlPayload = await downloadUrlRes.json();
+  assert.equal(typeof downloadUrlPayload.downloadUrl, 'string');
+
+  const downloadRes = await fetch(String(downloadUrlPayload.downloadUrl));
+  assert.equal(downloadRes.status, 200);
+  const downloadPayload = await downloadRes.text();
+  assert.equal(downloadPayload, 'DRAWING-V2');
 
   const queryRes = await fetch(`${runtime.base}/api/drive/artifacts/query`, {
     method: 'POST',
