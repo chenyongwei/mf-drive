@@ -364,7 +364,7 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
   const skipAuth = normalizeString(env.DRIVE_SKIP_AUTH, 'false').toLowerCase() === 'true'
     || (mode === 'mock' && normalizeString(env.DRIVE_SKIP_AUTH_IN_MOCK, 'false').toLowerCase() === 'true');
   const enforceContainerPdp = normalizeString(env.DRIVE_ENFORCE_CONTAINER_PDP, 'true').toLowerCase() === 'true';
-  const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31301').replace(/\/$/, '');
+  const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31121').replace(/\/$/, '');
   const cache = new Map<string, TokenCacheRecord>();
 
   function requiredScopes(req: Request): string[] | null {
