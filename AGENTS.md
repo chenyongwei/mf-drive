@@ -10,7 +10,7 @@
    - `/Users/alex/Code/mf/MEMORY_INDEX.md`
    - `/Users/alex/Code/mf/memory/MEMORY_REPO_MANAGEMENT_RULES_2026-02-11.md`
    - `/Users/alex/Code/mf/AGENTS.md`
-2. 默认先在根仓执行 `npm run session:start` 绑定当前 AI session 的 worktree + slot。
+2. 默认直接在主工作目录实施；若需记录/管理当前会话，可在根仓执行 `npm run session:start`，但该命令不再创建 worktree，也不再分配 slot。
 3. 只在当前子目录内改动业务代码，不跨目录误改。
 4. 完成改动后执行本仓最小校验：
 - `npm run contract:test`
