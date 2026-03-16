@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import cors from 'cors';
 import express, { type Express, type Request, type Response } from 'express';
 import { createPool, type Pool, type RowDataPacket } from 'mysql2/promise';
@@ -113,6 +114,7 @@ type IntrospectResponse = {
 type ObjectStoreBridge = {
   ready: Promise<void>;
   putVersionObject: (artifactId: string, versionId: string, payload: Buffer, mimeType: string) => Promise<void>;
+  getVersionObject: (artifactId: string, versionId: string) => Promise<Buffer | null>;
 };
 
 type PdpDecisionResponse = {
@@ -132,9 +134,30 @@ const FAILURE_STATUS: Record<FailureKind, number> = {
 };
 
 const AUTH_CACHE_TTL_MS = 30_000;
+const SIGNED_URL_TTL_MS = 10 * 60_000;
 
 function nowIso(): string {
   return new Date().toISOString();
+}
+
+function buildSignedPayload(artifactId: string, versionId: string, expiresAtMs: number): string {
+  return `${artifactId}:${versionId}:${expiresAtMs}`;
+}
+
+function signDownloadPayload(secret: string, artifactId: string, versionId: string, expiresAtMs: number): string {
+  return crypto
+    .createHmac('sha256', secret)
+    .update(buildSignedPayload(artifactId, versionId, expiresAtMs))
+    .digest('hex');
+}
+
+function safeSignatureEquals(left: string, right: string): boolean {
+  const leftBuffer = Buffer.from(left, 'utf8');
+  const rightBuffer = Buffer.from(right, 'utf8');
+  if (leftBuffer.length !== rightBuffer.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(leftBuffer, rightBuffer);
 }
 
 function normalizeString(value: unknown, fallback = ''): string {
@@ -214,6 +237,14 @@ function ensureDefaultContainers(state: DriveState, now: () => string): boolean 
   }
 
   return changed;
+}
+
+async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
+  const chunks: Buffer[] = [];
+  for await (const chunk of stream) {
+    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks);
 }
 
 function resolveScenario(env: NodeJS.ProcessEnv): MockScenario {
@@ -333,7 +364,7 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
   const skipAuth = normalizeString(env.DRIVE_SKIP_AUTH, 'false').toLowerCase() === 'true'
     || (mode === 'mock' && normalizeString(env.DRIVE_SKIP_AUTH_IN_MOCK, 'false').toLowerCase() === 'true');
   const enforceContainerPdp = normalizeString(env.DRIVE_ENFORCE_CONTAINER_PDP, 'true').toLowerCase() === 'true';
-  const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31301').replace(/\/$/, '');
+  const iamUrl = normalizeString(env.FOUNDATION_IAM_URL, 'http://127.0.0.1:31121').replace(/\/$/, '');
   const cache = new Map<string, TokenCacheRecord>();
 
   function requiredScopes(req: Request): string[] | null {
@@ -342,7 +373,10 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
       return null;
     }
 
-    if (path === '/api/drive/artifacts/query') {
+    if (
+      path === '/api/drive/artifacts/query'
+      || /^\/api\/drive\/artifacts\/[^/]+\/download-url$/.test(path)
+    ) {
       return [
         'drive.appdata.read',
         'drive.drive.read',
@@ -380,6 +414,9 @@ function createAuthMiddleware(env: NodeJS.ProcessEnv, mode: RuntimeMode) {
       return true;
     }
     if (path === '/api/drive/artifacts/query') {
+      return true;
+    }
+    if (/^\/api\/drive\/artifacts\/[^/]+\/download-url$/.test(path)) {
       return true;
     }
     if (path === '/api/drive/containers' && method === 'GET') {
@@ -699,9 +736,16 @@ function createStateStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, scenario: M
 
 function createObjectStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, endpoint: string, bucket: string): ObjectStoreBridge {
   if (mode !== 'live') {
+    const mockObjects = new Map<string, Buffer>();
     return {
       ready: Promise.resolve(),
-      putVersionObject: async () => undefined,
+      putVersionObject: async (artifactId: string, versionId: string, payload: Buffer) => {
+        mockObjects.set(`${artifactId}/${versionId}`, Buffer.from(payload));
+      },
+      getVersionObject: async (artifactId: string, versionId: string) => {
+        const payload = mockObjects.get(`${artifactId}/${versionId}`);
+        return payload ? Buffer.from(payload) : null;
+      },
     };
   }
 
@@ -738,6 +782,20 @@ function createObjectStore(mode: RuntimeMode, env: NodeJS.ProcessEnv, endpoint: 
         'Content-Type': mimeType || 'application/octet-stream',
       });
     },
+    getVersionObject: async (artifactId: string, versionId: string) => {
+      await ready;
+      const objectKey = `${artifactId}/${versionId}`;
+      try {
+        const stream = await client.getObject(bucket, objectKey);
+        return streamToBuffer(stream);
+      } catch (error) {
+        const code = String((error as { code?: string })?.code ?? '');
+        if (code === 'NoSuchKey' || code === 'NotFound') {
+          return null;
+        }
+        throw error;
+      }
+    },
   };
 }
 
@@ -759,11 +817,22 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
   const store = createStateStore(mode, env, scenario);
   const objectStore = createObjectStore(mode, env, minioEndpoint, minioBucket);
   const state = store.state;
+  const signedUrlSecret = normalizeString(env.DRIVE_SIGNED_URL_SECRET, 'drive-signed-url-secret');
   const buildObjectUrl = (kind: 'upload' | 'download', artifactId: string, versionId: string): string => {
     if (mode !== 'live') {
       return `https://minio.local/mock-${kind}/${artifactId}/${versionId}`;
     }
     return `${minioEndpoint}/${minioBucket}/${artifactId}/${versionId}`;
+  };
+  const buildSignedDownloadUrl = (req: Request, artifactId: string, versionId: string) => {
+    const expiresAtMs = Date.now() + SIGNED_URL_TTL_MS;
+    const signature = signDownloadPayload(signedUrlSecret, artifactId, versionId, expiresAtMs);
+    const origin = `${req.protocol}://${req.get('host')}`;
+    const downloadPath = `/api/drive/public/artifacts/${encodeURIComponent(artifactId)}/versions/${encodeURIComponent(versionId)}/download?expires=${expiresAtMs}&sig=${signature}`;
+    return {
+      downloadUrl: `${origin}${downloadPath}`,
+      expiresAt: new Date(expiresAtMs).toISOString(),
+    };
   };
   const applyFailure: ApplyFailure = (req, res, defaultFailure) => {
     if (mode === 'live') {
@@ -811,6 +880,55 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     });
   });
 
+  app.get('/api/drive/public/artifacts/:artifactId/versions/:versionId/download', async (req, res) => {
+    const artifactId = normalizeString(req.params.artifactId);
+    const versionId = normalizeString(req.params.versionId);
+    const expiresAtMs = Number.parseInt(normalizeString(req.query.expires), 10);
+    const signature = normalizeString(req.query.sig);
+
+    if (!artifactId || !versionId || !Number.isFinite(expiresAtMs) || !signature) {
+      res.status(400).json({ error: 'invalid signed download url' });
+      return;
+    }
+    if (Date.now() > expiresAtMs) {
+      res.status(403).json({ error: 'signed download url expired' });
+      return;
+    }
+
+    const expectedSignature = signDownloadPayload(signedUrlSecret, artifactId, versionId, expiresAtMs);
+    if (!safeSignatureEquals(signature, expectedSignature)) {
+      res.status(403).json({ error: 'signed download url signature mismatch' });
+      return;
+    }
+
+    const artifact = state.artifacts.find((item) => item.artifactId === artifactId);
+    if (!artifact) {
+      res.status(404).json({ error: 'artifact not found' });
+      return;
+    }
+    const version = artifact.versions.find((item) => item.versionId === versionId);
+    if (!version) {
+      res.status(404).json({ error: 'version not found' });
+      return;
+    }
+
+    const payload = await objectStore.getVersionObject(artifactId, versionId);
+    if (!payload) {
+      res.status(404).json({ error: 'artifact payload not found' });
+      return;
+    }
+
+    const safeFileName = artifact.displayName.replace(/["\r\n]/g, '_');
+    res.setHeader('Content-Type', artifact.mimeType || 'application/octet-stream');
+    res.setHeader('Content-Length', String(payload.length));
+    res.setHeader('Cache-Control', 'private, max-age=60');
+    res.setHeader('Content-Disposition', `inline; filename="${safeFileName}"`);
+    if (version.etag && version.etag !== 'pending') {
+      res.setHeader('ETag', version.etag);
+    }
+    res.send(payload);
+  });
+
   app.use('/api/drive', createAuthMiddleware(env, mode));
 
   app.get('/api/drive/containers', async (req, res) => {
@@ -854,6 +972,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     if (!ensureMockMode(mode, res)) return;
     if (await applyFailure(req, res, '409')) return;
 
+    const requestedArtifactId = normalizeString(req.body?.artifactId);
     const containerId = normalizeString(req.body?.containerId);
     const artifactType = normalizeString(req.body?.artifactType).toUpperCase();
     const fileName = normalizeString(req.body?.fileName);
@@ -869,40 +988,78 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
       return;
     }
 
-    const artifactId = allocateId(state, 'artifact', 'art');
     const versionId = allocateId(state, 'version', 'ver');
     const createdAt = nowIso();
-    const version: DriveArtifactVersion = {
-      versionId,
-      versionNo: 1,
-      sizeBytes: Math.max(0, normalizeNumber(req.body?.sizeBytes, 0)),
-      etag: 'pending',
-      createdAt,
-    };
+    const existingArtifact = requestedArtifactId
+      ? state.artifacts.find((item) => item.artifactId === requestedArtifactId)
+      : null;
+    if (requestedArtifactId && !existingArtifact) {
+      res.status(404).json({ error: 'artifact not found' });
+      return;
+    }
 
-    const artifact: DriveArtifact = {
-      artifactId,
-      tenantId: container.tenantId,
-      containerId: container.containerId,
-      artifactType: artifactType as ArtifactType,
-      ownerAppId: container.ownerAppId,
-      displayName: fileName,
-      mimeType,
-      currentVersionId: versionId,
-      projectId: normalizeString(req.body?.projectId) || undefined,
-      createdAt,
-      updatedAt: createdAt,
-      versions: [version],
-    };
+    let artifact: DriveArtifact;
+    let artifactId: string;
+    let version: DriveArtifactVersion;
 
-    state.artifacts.unshift(artifact);
-    state.aclByArtifact[artifact.artifactId] = [
-      {
-        principalType: 'APP',
-        principalId: artifact.ownerAppId,
-        permissions: ['read', 'write', 'delete', 'share'],
-      },
-    ];
+    if (existingArtifact) {
+      if (existingArtifact.containerId !== container.containerId) {
+        res.status(409).json({ error: 'artifact container mismatch' });
+        return;
+      }
+      if (existingArtifact.artifactType !== artifactType) {
+        res.status(409).json({ error: 'artifact type mismatch' });
+        return;
+      }
+
+      artifact = existingArtifact;
+      artifactId = existingArtifact.artifactId;
+      version = {
+        versionId,
+        versionNo: existingArtifact.versions.length + 1,
+        sizeBytes: Math.max(0, normalizeNumber(req.body?.sizeBytes, 0)),
+        etag: 'pending',
+        createdAt,
+      };
+      artifact.displayName = fileName || artifact.displayName;
+      artifact.mimeType = mimeType || artifact.mimeType;
+      artifact.projectId = normalizeString(req.body?.projectId) || artifact.projectId;
+      artifact.updatedAt = createdAt;
+      artifact.versions.push(version);
+    } else {
+      artifactId = allocateId(state, 'artifact', 'art');
+      version = {
+        versionId,
+        versionNo: 1,
+        sizeBytes: Math.max(0, normalizeNumber(req.body?.sizeBytes, 0)),
+        etag: 'pending',
+        createdAt,
+      };
+
+      artifact = {
+        artifactId,
+        tenantId: container.tenantId,
+        containerId: container.containerId,
+        artifactType: artifactType as ArtifactType,
+        ownerAppId: container.ownerAppId,
+        displayName: fileName,
+        mimeType,
+        currentVersionId: versionId,
+        projectId: normalizeString(req.body?.projectId) || undefined,
+        createdAt,
+        updatedAt: createdAt,
+        versions: [version],
+      };
+
+      state.artifacts.unshift(artifact);
+      state.aclByArtifact[artifact.artifactId] = [
+        {
+          principalType: 'APP',
+          principalId: artifact.ownerAppId,
+          permissions: ['read', 'write', 'delete', 'share'],
+        },
+      ];
+    }
 
     appendAudit(state, {
       action: 'artifact.init_upload',
@@ -1077,8 +1234,7 @@ export function createApp(env: NodeJS.ProcessEnv = process.env): Express {
     res.json({
       artifactId,
       versionId,
-      downloadUrl: buildObjectUrl('download', artifactId, versionId),
-      expiresAt: new Date(Date.now() + 10 * 60_000).toISOString(),
+      ...buildSignedDownloadUrl(req, artifactId, versionId),
     });
   });
 
