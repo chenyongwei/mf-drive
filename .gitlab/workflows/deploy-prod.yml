@@ -2,7 +2,7 @@ default:
   before_script:
     - command -v git >/dev/null
     - command -v bash >/dev/null
-    - git clone --depth 1 --branch main "https://oauth2:${GITLAB_TEMPLATE_TOKEN:-$CI_JOB_TOKEN}@git.fscut.com/mf/mf.git" .platform-root
+    - git clone --depth 1 --branch dev "https://oauth2:${GITLAB_TEMPLATE_TOKEN:-$CI_JOB_TOKEN}@git.fscut.com/mf/mf.git" .platform-root
 
 deploy_prod:
   stage: deploy_prod
