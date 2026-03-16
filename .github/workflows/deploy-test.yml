@@ -1,0 +1,37 @@
+name: deploy-test
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  deploy_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out platform tooling
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf
+          path: .platform-root
+          token: ${{ secrets.GITHUB_REPO_READ_TOKEN }}
+          fetch-depth: 1
+
+      - name: Run deploy-test
+        env:
+          MF_CURRENT_REPO_ROOT: ${{ github.workspace }}
+          
+        run: ./.platform-root/.github/scripts/entrypoint.sh github deploy-test "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
+
+      - name: Upload build outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: drive-test-output
+          path: .ci-out
+          if-no-files-found: error

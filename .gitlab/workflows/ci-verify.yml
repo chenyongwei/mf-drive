@@ -1,0 +1,18 @@
+default:
+  before_script:
+    - command -v git >/dev/null
+    - command -v bash >/dev/null
+    - git clone --depth 1 --branch main "https://oauth2:${GITLAB_TEMPLATE_TOKEN:-$CI_JOB_TOKEN}@git.fscut.com/mf/mf.git" .platform-root
+
+stages:
+  - verify
+  - deploy_test
+  - deploy_stg
+  - deploy_prod
+
+ci_verify:
+  stage: verify
+  rules:
+    - if: '$CI_COMMIT_BRANCH'
+  script:
+    - MF_CURRENT_REPO_ROOT="$CI_PROJECT_DIR" ./.platform-root/.github/scripts/entrypoint.sh gitlab ci "$CI_PROJECT_DIR/.gitlab/scripts/repo-config.sh"

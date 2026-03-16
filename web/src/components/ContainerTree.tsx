@@ -153,6 +153,7 @@ export function ContainerTree({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
+              data-testid="container-create-open"
               variant="ghost"
               size="icon"
               className="h-6 w-6"
@@ -180,6 +181,7 @@ export function ContainerTree({
           </DialogHeader>
           <div className="grid gap-3 py-2">
             <Input
+              data-testid="container-create-name"
               placeholder="容器名称"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -200,7 +202,7 @@ export function ContainerTree({
             </div>
           </div>
           <DialogFooter>
-            <Button size="sm" onClick={() => void handleCreate()} disabled={creating || !newName.trim()}>
+            <Button data-testid="container-create-submit" size="sm" onClick={() => void handleCreate()} disabled={creating || !newName.trim()}>
               {creating ? '创建中...' : '创建'}
             </Button>
           </DialogFooter>

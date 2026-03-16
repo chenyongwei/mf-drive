@@ -1,0 +1,49 @@
+name: deploy-stg
+
+on:
+  push:
+    branches:
+      - 'release/**'
+
+permissions:
+  contents: write
+
+jobs:
+  deploy_stg:
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.capture.outputs.release_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out platform tooling
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf
+          path: .platform-root
+          token: ${{ secrets.GITHUB_REPO_READ_TOKEN }}
+          fetch-depth: 1
+
+      - name: Run deploy-stg
+        env:
+          MF_CURRENT_REPO_ROOT: ${{ github.workspace }}
+          
+        run: ./.platform-root/.github/scripts/entrypoint.sh github deploy-stg "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
+
+      - id: capture
+        name: Capture release tag
+        run: echo "release_tag=$(cat .ci-out/release-tag.txt)" >> "$GITHUB_OUTPUT"
+      - name: Upload stg outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: drive-stg-output
+          path: .ci-out
+          if-no-files-found: error
+
+  promote_prod:
+    needs: deploy_stg
+    uses: ./.github/workflows/deploy-prod.yml
+    with:
+      release_tag: ${{ needs.deploy_stg.outputs.release_tag }}
+    secrets: inherit
