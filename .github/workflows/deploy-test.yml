@@ -38,7 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: chenyongwei/mf
-          ref: main
+          ref: codex/20260316-resolve-origin-into-fscut
           path: .platform-root
           token: ${{ env.GH_REPO_READ_TOKEN }}
           fetch-depth: 1
