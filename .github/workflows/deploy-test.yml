@@ -54,3 +54,4 @@ jobs:
           name: drive-test-output
           path: .ci-out
           if-no-files-found: error
+          include-hidden-files: true
