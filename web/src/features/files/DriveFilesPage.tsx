@@ -73,22 +73,6 @@ export function DriveFilesPage() {
     || Boolean(error)
   ), [error, session.error, session.status]);
 
-  const securityCenterUrl = useMemo(() => {
-    const params = new URLSearchParams();
-    params.set('tab', 'resource-grants');
-    params.set('tenantId', 'tenant-001');
-    params.set('sourceAppId', 'drive');
-    params.set('consumerAppId', 'drive');
-    params.set('resourcePackId', 'drive.storage.containers.read');
-    params.set('action', 'read');
-    params.set('dataDomain', 'FILE');
-    params.set('objectType', 'Container');
-    if (typeof window !== 'undefined') {
-      params.set('returnTo', `${window.location.pathname}${window.location.search}`);
-    }
-    return `/foundation/security?${params.toString()}`;
-  }, []);
-
   const showSecurityEntry = useMemo(
     () =>
       session.status === 'needs_account' ||
