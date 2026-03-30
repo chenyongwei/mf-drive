@@ -59,6 +59,14 @@ jobs:
           ln -sfn "$GITHUB_WORKSPACE/.deps/ui-shared" "$GITHUB_WORKSPACE/../ui-shared"
       - name: Install contracts dependency workspace
         run: npm ci --prefix ./.deps/contracts
+      - name: Install and build cad-kernel dependency workspace
+        run: |
+          npm ci --prefix ./.deps/cad-kernel
+          npm run build --prefix ./.deps/cad-kernel
+      - name: Install and build ui-shared dependency workspace
+        run: |
+          npm ci --prefix ./.deps/ui-shared
+          npm run build --prefix ./.deps/ui-shared
       - name: Check out platform tooling
         uses: actions/checkout@v4
         with:
