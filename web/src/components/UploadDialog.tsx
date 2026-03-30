@@ -55,6 +55,7 @@ export function UploadDialog({ open, onOpenChange, onUpload, disabled, uploading
           <div>
             <label className="mb-1 block text-xs font-medium text-slate-500">选择文件</label>
             <Input
+              data-testid="upload-file-input"
               type="file"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               className="text-xs file:text-xs file:mr-2"
@@ -102,7 +103,7 @@ export function UploadDialog({ open, onOpenChange, onUpload, disabled, uploading
           <Button variant="outline" size="sm" onClick={() => onOpenChange(false)}>
             取消
           </Button>
-          <Button size="sm" onClick={() => void handleSubmit()} disabled={disabled || uploading || !file}>
+          <Button data-testid="upload-submit" size="sm" onClick={() => void handleSubmit()} disabled={disabled || uploading || !file}>
             {uploading ? '上传中...' : '上传'}
           </Button>
         </DialogFooter>

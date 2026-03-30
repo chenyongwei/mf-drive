@@ -138,7 +138,7 @@ export function FileListView({
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onUploadOpen} disabled={disabled}>
+            <Button data-testid="upload-open" variant="ghost" size="icon" className="h-7 w-7" onClick={onUploadOpen} disabled={disabled}>
               <Upload className="h-3.5 w-3.5" />
             </Button>
           </TooltipTrigger>
@@ -174,6 +174,7 @@ export function FileListView({
                 return (
                   <tr
                     key={artifact.artifactId}
+                    data-testid={`artifact-row-${artifact.artifactId}`}
                     className={cn(
                       'group cursor-pointer border-b border-slate-100 transition-colors dark:border-slate-800',
                       isSelected
@@ -203,6 +204,7 @@ export function FileListView({
                     </td>
                     <td className="px-2 py-2 text-right">
                       <Button
+                        data-testid="artifact-download-submit"
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6 opacity-0 group-hover:opacity-100"

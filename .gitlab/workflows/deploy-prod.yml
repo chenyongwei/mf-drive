@@ -1,0 +1,19 @@
+default:
+  before_script:
+    - command -v git >/dev/null
+    - command -v bash >/dev/null
+    - git clone --depth 1 --branch dev "https://oauth2:${GITLAB_TEMPLATE_TOKEN:-$CI_JOB_TOKEN}@git.fscut.com/mf/mf.git" .platform-root
+
+deploy_prod:
+  stage: deploy_prod
+  needs:
+    - deploy_stg
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^release\/.+$/'
+  script:
+    - export MF_CI_RELEASE_TAG="${CI_COMMIT_BRANCH#release/}"
+    - MF_CURRENT_REPO_ROOT="$CI_PROJECT_DIR" ./.platform-root/.github/scripts/entrypoint.sh gitlab deploy-prod "$CI_PROJECT_DIR/.gitlab/scripts/repo-config.sh"
+  artifacts:
+    when: always
+    paths:
+      - .ci-out/

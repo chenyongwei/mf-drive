@@ -1,0 +1,57 @@
+name: deploy-test
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  deploy_test:
+    runs-on: ubuntu-latest
+    env:
+      GH_REPO_READ_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN || secrets.GITHUB_REPO_READ_TOKEN }}
+      GH_ACR_REGISTRY: ${{ secrets.GH_ACR_REGISTRY || secrets.ACR_REGISTRY }}
+      GH_ACR_USERNAME: ${{ secrets.GH_ACR_USERNAME || secrets.ACR_USERNAME }}
+      GH_ACR_PASSWORD: ${{ secrets.GH_ACR_PASSWORD || secrets.ACR_PASSWORD }}
+      GH_DEPLOY_HOST: ${{ secrets.GH_DEPLOY_HOST || secrets.SYNOLOGY_HOST || 'ds423p.kingway.link' }}
+      GH_DEPLOY_PORT: ${{ secrets.GH_DEPLOY_PORT || vars.SYNOLOGY_PORT || '22222' }}
+      GH_DEPLOY_USER: ${{ secrets.GH_DEPLOY_USER || secrets.SYNOLOGY_USER || 'alex' }}
+      GH_DEPLOY_SSH_KEY: ${{ secrets.GH_DEPLOY_SSH_KEY || secrets.SYNOLOGY_SSH_KEY }}
+      GH_DEPLOY_PASSWORD: ${{ secrets.GH_DEPLOY_PASSWORD || secrets.SYNOLOGY_SUDO_PASSWORD }}
+      GH_DEPLOY_KNOWN_HOSTS: ${{ secrets.GH_DEPLOY_KNOWN_HOSTS || secrets.SYNOLOGY_KNOWN_HOSTS }}
+      GH_DEPLOY_PATH: ${{ vars.GH_DEPLOY_TEST_PATH || vars.SYNOLOGY_DEPLOY_TEST_PATH }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate platform token
+        run: |
+          set -euo pipefail
+          [[ -n "${GH_REPO_READ_TOKEN:-}" ]] || {
+            echo "::error::Missing GH_REPO_READ_TOKEN or GITHUB_REPO_READ_TOKEN."
+            exit 1
+          }
+      - name: Check out platform tooling
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf
+          ref: codex/20260316-resolve-origin-into-fscut
+          path: .platform-root
+          token: ${{ env.GH_REPO_READ_TOKEN }}
+          fetch-depth: 1
+
+      - name: Run deploy-test
+        env:
+          MF_CURRENT_REPO_ROOT: ${{ github.workspace }}
+        run: ./.platform-root/.github/scripts/entrypoint.sh github deploy-test "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
+
+      - name: Upload build outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: drive-test-output
+          path: .ci-out
+          if-no-files-found: error
+          include-hidden-files: true

@@ -1,0 +1,46 @@
+name: deploy-prod
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: release tag to promote
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy_prod:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check out platform tooling
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf
+          ref: dev
+          path: .platform-root
+          token: ${{ secrets.GITHUB_REPO_READ_TOKEN }}
+          fetch-depth: 1
+
+      - name: Run deploy-prod
+        env:
+          MF_CURRENT_REPO_ROOT: ${{ github.workspace }}
+          MF_CI_RELEASE_TAG: ${{ inputs.release_tag }}
+        run: ./.platform-root/.github/scripts/entrypoint.sh github deploy-prod "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
+
+      - name: Upload prod outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: drive-prod-output
+          path: .ci-out
+          if-no-files-found: error

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import '@platform/ui-shared/bootstrap';
+import '@platform/ui-shared/mf-dock/styles.css';
 import { initMfThemeSync } from '@platform/ui-shared/mf-theme';
 import App from './App';
 

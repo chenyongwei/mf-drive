@@ -50,7 +50,6 @@ export function DriveFilesPage() {
 
   const token = session.accessToken;
   const ready = session.status === 'ready' && token && session.tokenActive;
-
   const securityCenterUrl = useMemo(() => {
     const params = new URLSearchParams();
     params.set('tab', 'resource-grants');
@@ -66,6 +65,13 @@ export function DriveFilesPage() {
     }
     return `/foundation/security?${params.toString()}`;
   }, []);
+  const showSecurityContextEntry = useMemo(() => (
+    session.status === 'needs_account'
+    || session.status === 'needs_authorization'
+    || session.status === 'error'
+    || Boolean(session.error)
+    || Boolean(error)
+  ), [error, session.error, session.status]);
 
   const showSecurityEntry = useMemo(
     () =>

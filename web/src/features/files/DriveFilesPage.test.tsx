@@ -101,6 +101,13 @@ describe('DriveFilesPage', () => {
       expect(listDriveContainers).toHaveBeenCalled();
     });
 
+    // Open the create container dialog first
+    await userEvent.click(screen.getByTestId('container-create-open'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('container-create-name')).toBeInTheDocument();
+    });
+
     await userEvent.type(screen.getByTestId('container-create-name'), '新容器');
     await userEvent.click(screen.getByTestId('container-create-submit'));
 
@@ -141,6 +148,13 @@ describe('DriveFilesPage', () => {
 
     await waitFor(() => {
       expect(listDriveContainers).toHaveBeenCalled();
+    });
+
+    // Open the upload dialog first
+    await userEvent.click(screen.getByTestId('upload-open'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('upload-file-input')).toBeInTheDocument();
     });
 
     const file = new File(['content'], 'demo.dxf', { type: 'application/dxf' });
