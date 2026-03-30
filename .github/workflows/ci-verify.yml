@@ -14,22 +14,62 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      GH_REPO_READ_TOKEN: ${{ secrets.GH_REPO_READ_TOKEN || secrets.GITHUB_REPO_READ_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Validate platform tooling secret
+        run: |
+          set -euo pipefail
+          if [[ -z "${GH_REPO_READ_TOKEN:-}" ]]; then
+            echo "::error::Missing GH_REPO_READ_TOKEN or GITHUB_REPO_READ_TOKEN."
+            exit 1
+          fi
+      - name: Check out contracts dependency
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf-contracts
+          ref: dev
+          path: .deps/contracts
+          token: ${{ env.GH_REPO_READ_TOKEN }}
+          fetch-depth: 1
+      - name: Check out cad-kernel dependency
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf-cad-kernel
+          ref: dev
+          path: .deps/cad-kernel
+          token: ${{ env.GH_REPO_READ_TOKEN }}
+          fetch-depth: 1
+      - name: Check out ui-shared dependency
+        uses: actions/checkout@v4
+        with:
+          repository: chenyongwei/mf-ui-shared
+          ref: dev
+          path: .deps/ui-shared
+          token: ${{ env.GH_REPO_READ_TOKEN }}
+          fetch-depth: 1
+      - name: Link sibling dependency workspaces
+        run: |
+          set -euo pipefail
+          ln -sfn "$GITHUB_WORKSPACE/.deps/contracts" "$GITHUB_WORKSPACE/../contracts"
+          ln -sfn "$GITHUB_WORKSPACE/.deps/cad-kernel" "$GITHUB_WORKSPACE/../cad-kernel"
+          ln -sfn "$GITHUB_WORKSPACE/.deps/ui-shared" "$GITHUB_WORKSPACE/../ui-shared"
       - name: Check out platform tooling
         uses: actions/checkout@v4
         with:
           repository: chenyongwei/mf
           ref: dev
           path: .platform-root
-          token: ${{ secrets.GITHUB_REPO_READ_TOKEN }}
+          token: ${{ env.GH_REPO_READ_TOKEN }}
           fetch-depth: 1
 
       - name: Run ci
         env:
           MF_CURRENT_REPO_ROOT: ${{ github.workspace }}
-          
-        run: ./.platform-root/.github/scripts/entrypoint.sh github ci "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
-
+          GH_REPO_READ_TOKEN: ${{ env.GH_REPO_READ_TOKEN }}
+        run: |
+          export GITHUB_REPO_READ_TOKEN="${GH_REPO_READ_TOKEN}"
+          ./.platform-root/.github/scripts/entrypoint.sh github ci "$GITHUB_WORKSPACE/.github/scripts/repo-config.sh"
