@@ -57,6 +57,8 @@ jobs:
           ln -sfn "$GITHUB_WORKSPACE/.deps/contracts" "$GITHUB_WORKSPACE/../contracts"
           ln -sfn "$GITHUB_WORKSPACE/.deps/cad-kernel" "$GITHUB_WORKSPACE/../cad-kernel"
           ln -sfn "$GITHUB_WORKSPACE/.deps/ui-shared" "$GITHUB_WORKSPACE/../ui-shared"
+      - name: Install contracts dependency workspace
+        run: npm ci --prefix ./.deps/contracts
       - name: Check out platform tooling
         uses: actions/checkout@v4
         with:
